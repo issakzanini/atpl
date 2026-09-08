@@ -1,1 +1,796 @@
+<meta charset="utf-8">
+<title>Navigation &amp; Flight Planning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F7F5EE;
+  --surface:#FFFFFF;
+  --surface-2:#EFEBDF;
+  --ink:#221F14;
+  --muted:#6A6452;
+  --line:#D7D1BE;
+  --line-soft:#E7E2D3;
+  --gold:#8A6508;
+  --blu:#2C5578;
+  --grn:#2E6B3E;
+  --caution:#A83A22;
+  --accent:#8A6508;
+  --accent-wash:#F3EDDC;
+  --caution-wash:#F8EAE4;
+  --shadow:0 1px 2px rgba(34,31,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#15130D; --surface:#1E1B13; --surface-2:#29251A; --ink:#EBE7DA;
+    --muted:#A79F8C; --line:#3A3427; --line-soft:#2C2820;
+    --gold:#F0C05A; --blu:#7FB0D8; --grn:#74C489; --caution:#EF9075;
+    --accent:#F0C05A; --accent-wash:#251F12; --caution-wash:#271812;
+    --shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15130D; --surface:#1E1B13; --surface-2:#29251A; --ink:#EBE7DA;
+  --muted:#A79F8C; --line:#3A3427; --line-soft:#2C2820;
+  --gold:#F0C05A; --blu:#7FB0D8; --grn:#74C489; --caution:#EF9075;
+  --accent:#F0C05A; --accent-wash:#251F12; --caution-wash:#271812;
+  --shadow:0 1px 2px rgba(0,0,0,.45);
+}
 
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono,.num,td.n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+.masthead{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast-in{max-width:1080px;margin:0 auto;padding:26px 24px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;justify-content:space-between}
+.mast-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.subj-code{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  letter-spacing:.1em;color:var(--surface);background:var(--gold);padding:5px 9px;border-radius:2px}
+h1{margin:0;font-size:44px;line-height:.98;font-weight:700;letter-spacing:.005em}
+.mast-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;max-width:46ch}
+.mast-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:1.9;letter-spacing:.04em}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+.rail{position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.rail-in{max-width:1080px;margin:0 auto;padding:9px 24px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.rail a{flex:0 0 auto;text-decoration:none;color:var(--muted);
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;padding:5px 10px;border-radius:3px;white-space:nowrap}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .rc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);margin-right:5px}
+.rail .sep{flex:0 0 auto;width:1px;background:var(--line);margin:2px 6px}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.part-band{display:flex;align-items:baseline;gap:14px;margin:46px 0 -14px;
+  padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.part-band .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--surface);background:var(--ink);padding:3px 8px;border-radius:2px;letter-spacing:.09em}
+.part-band .pt{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;letter-spacing:.02em}
+.part-band .pd{font-size:13.5px;color:var(--muted);margin-left:auto;text-align:right}
+
+section{padding:46px 0 8px;border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.1em}
+h2{margin:0;font-size:31px;font-weight:700;line-height:1.08}
+.lede{margin:2px 0 26px;color:var(--muted);font-size:15px;max-width:64ch}
+h3{margin:30px 0 8px;font-size:16px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--ink);padding-bottom:5px;border-bottom:1px solid var(--line)}
+p{margin:0 0 12px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 26px;align-items:start}
+ul.tight,ol.tight{margin:0 0 12px;padding-left:19px;max-width:68ch}
+ul.tight li,ol.tight li{margin-bottom:5px}
+b,strong{font-weight:600}
+.k{color:var(--accent);font-weight:600}
+
+.numbers{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);
+  border-radius:2px;padding:15px 18px;margin:18px 0;box-shadow:var(--shadow)}
+.numbers .nh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:9px}
+.nlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 26px;margin:0}
+.nrow{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:4px 0;border-bottom:1px dotted var(--line-soft);font-size:14.5px}
+.nrow:last-child{border-bottom:0}
+.nrow span:first-child{color:var(--muted)}
+.nrow .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13.5px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.tw{overflow-x:auto;margin:14px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:440px}
+th{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.07em;text-align:left;
+  border-bottom:1.5px solid var(--ink);padding:6px 10px 5px;color:var(--ink)}
+td{padding:6px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+tbody tr:hover{background:var(--surface-2)}
+
+.caution{background:var(--caution-wash);border:1px solid var(--caution);border-radius:2px;
+  padding:12px 15px;margin:16px 0;font-size:15px}
+.caution .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--caution);display:block;margin-bottom:3px}
+.caution p{margin:0;max-width:none}
+
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:16px 16px 10px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink)}
+figcaption{margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);
+  font-size:13.5px;color:var(--muted);line-height:1.5}
+figcaption b{color:var(--ink)}
+
+.qbank{margin:30px 0 10px;background:var(--surface-2);border-radius:3px;padding:16px 18px 18px}
+.qb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.qb-title{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.qb-title em{font-style:normal;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.reveal{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);background:transparent;
+  border:1px solid var(--accent);border-radius:2px;padding:4px 11px;cursor:pointer}
+.reveal:hover{background:var(--accent);color:var(--surface)}
+.reveal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q{border-bottom:1px solid var(--line);padding:0}
+details.q:last-of-type{border-bottom:0}
+details.q summary{cursor:pointer;list-style:none;padding:9px 30px 9px 0;position:relative;
+  font-size:15.5px;line-height:1.45}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";position:absolute;right:4px;top:8px;
+  font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:17px;line-height:1.4}
+details.q[open] summary::after{content:"\2212";color:var(--accent)}
+details.q summary:hover{color:var(--accent)}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q .a{margin:0 0 12px;padding:9px 13px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:0 2px 2px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.6;max-width:none}
+details.q .a .why{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--muted);line-height:1.5}
+details.q .a .flag{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--caution);line-height:1.5}
+
+.work{background:var(--surface);border:1px dashed var(--line);border-radius:2px;
+  padding:13px 16px;margin:16px 0;font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75}
+.work .wh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.work .res{color:var(--accent);font-weight:600}
+
+footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24px;margin-top:40px}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:34px} h2{font-size:26px}
+  .mast-meta{text-align:left} body{font-size:16px}
+  .part-band{flex-wrap:wrap} .part-band .pd{margin-left:0;text-align:left;width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div class="mast-title">
+      <span class="subj-code">061 &middot; 033</span>
+      <div>
+        <h1>Navigation &amp; Flight Planning</h1>
+        <p class="mast-sub">Revision sheet for airline selection screening &mdash; theory, diagrams and the real question bank, by syllabus topic.</p>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div><b>223</b> questions in the bank</div>
+      <div>EASA ATPL(A) &middot; CAE Oxford 060-1 / 030-2</div>
+      <div>Click a question to reveal</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Topics">
+  <div class="rail-in">
+    <a href="#earth"><span class="rc">01</span>Earth &amp; Distance</a>
+    <a href="#mag"><span class="rc">02</span>Magnetism</a>
+    <a href="#time"><span class="rc">03</span>Time</a>
+    <a href="#charts"><span class="rc">04</span>Charts</a>
+    <a href="#dr"><span class="rc">05</span>DR &amp; Calculations</a>
+    <span class="sep"></span>
+    <a href="#fuel"><span class="rc">06</span>Fuel Policy</a>
+    <a href="#levels"><span class="rc">07</span>Levels &amp; Minima</a>
+    <a href="#psr"><span class="rc">08</span>PSR &amp; ETP</a>
+    <a href="#mb"><span class="rc">09</span>Mass &amp; Balance</a>
+  </div>
+</nav>
+
+<main>
+
+<div class="part-band">
+  <span class="pn">061</span>
+  <span class="pt">GENERAL NAVIGATION</span>
+  <span class="pd">The Earth, magnetism, time, charts, dead reckoning</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 01 EARTH &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="earth">
+  <div class="sec-head"><span class="eyebrow">061 01</span><h2>The Earth, Direction &amp; Distance</h2></div>
+  <p class="lede">Two formulas &mdash; departure and convergency &mdash; generate most of the calculation questions in this subject.</p>
+
+  <div class="numbers">
+    <div class="nh">Constants worth memorising</div>
+    <div class="nlist">
+      <div class="nrow"><span>1&deg; of latitude</span><span class="v">60 NM</span></div>
+      <div class="nrow"><span>1 minute of latitude</span><span class="v">1 NM</span></div>
+      <div class="nrow"><span>1 NM</span><span class="v">6080 ft / 1852 m</span></div>
+      <div class="nrow"><span>1 statute mile</span><span class="v">5280 ft</span></div>
+      <div class="nrow"><span>Earth's compression</span><span class="v">&asymp; 1/298</span></div>
+      <div class="nrow"><span>Sun's rate of travel</span><span class="v">15&deg; of longitude / hour</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Great circle vs rhumb line</h3>
+      <ul class="tight">
+        <li><b>Great circle</b> &mdash; the shortest distance between two points; its plane passes through the centre of the Earth. Its direction <b>changes continuously</b> except along a meridian or the equator.</li>
+        <li><b>Rhumb line</b> &mdash; a line of <b>constant direction</b>, cutting every meridian at the same angle. Longer than the great circle, and always lies on the <b>equatorial side</b> of it.</li>
+        <li>Meridians and the equator are <b>both</b> great circles and rhumb lines. Parallels of latitude (except the equator) are rhumb lines only.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>The two formulas</h3>
+      <ul class="tight">
+        <li><b>Departure</b> &mdash; the east&ndash;west distance along a parallel:<br>
+          <code>Distance (NM) = ch.long (min) &times; cos(latitude)</code></li>
+        <li><b>Convergency</b> &mdash; the angle at which two meridians converge:<br>
+          <code>Convergency = ch.long (&deg;) &times; sin(mean latitude)</code></li>
+        <li>Convergency therefore <b>changes as the sine of latitude</b>: zero at the equator, maximum at the poles.</li>
+        <li><b>Conversion angle</b> = &frac12; convergency &mdash; the difference between the great circle and rhumb line track.</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 740 300" role="img" aria-label="Meridians converging towards the pole, showing that east-west distance along a parallel shrinks with the cosine of latitude">
+      <!-- globe outline -->
+      <circle cx="200" cy="160" r="118" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <!-- equator -->
+      <ellipse cx="200" cy="160" rx="118" ry="30" fill="none" stroke="currentColor" stroke-width="1.5"/>
+      <!-- parallel 60 -->
+      <ellipse cx="200" cy="101" rx="59" ry="15" fill="none" stroke="#8A6508" stroke-width="2.2"/>
+      <!-- meridians -->
+      <ellipse cx="200" cy="160" rx="40" ry="118" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".55"/>
+      <ellipse cx="200" cy="160" rx="80" ry="118" fill="none" stroke="currentColor" stroke-width="1.1" opacity=".55"/>
+      <line x1="200" y1="42" x2="200" y2="278" stroke="currentColor" stroke-width="1.1" opacity=".55"/>
+      <circle cx="200" cy="42" r="4" fill="currentColor"/>
+      <text x="200" y="32" font-size="11.5" text-anchor="middle" fill="currentColor">POLE</text>
+      <text x="330" y="166" font-size="11.5" fill="currentColor">equator &mdash; 60 NM per degree</text>
+      <text x="270" y="96" font-size="11.5" fill="#8A6508" font-weight="600">60&deg;N &mdash; 30 NM per degree</text>
+
+      <!-- right side: the cosine relationship -->
+      <line x1="440" y1="250" x2="700" y2="250" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="440" y1="250" x2="440" y2="70" stroke="currentColor" stroke-width="1.6"/>
+      <text x="700" y="272" font-size="11.5" text-anchor="end" fill="currentColor">LATITUDE</text>
+      <text x="434" y="64" font-size="11.5" text-anchor="middle" fill="currentColor">NM per degree of longitude</text>
+      <polyline points="440,86 483,88 526,96 569,110 612,133 655,168 698,250"
+                fill="none" stroke="#8A6508" stroke-width="2.6"/>
+      <text x="446" y="246" font-size="11" fill="currentColor">0&deg;</text>
+      <text x="569" y="266" font-size="11" text-anchor="middle" fill="currentColor">60&deg;</text>
+      <text x="694" y="266" font-size="11" text-anchor="end" fill="currentColor">90&deg;</text>
+      <line x1="569" y1="110" x2="569" y2="250" stroke="#8A6508" stroke-width="1.1" stroke-dasharray="4 4"/>
+      <line x1="440" y1="110" x2="569" y2="110" stroke="#8A6508" stroke-width="1.1" stroke-dasharray="4 4"/>
+      <text x="446" y="104" font-size="11" fill="#8A6508">30 NM</text>
+      <circle cx="569" cy="110" r="4" fill="#8A6508"/>
+      <text x="580" y="128" font-size="11" fill="#8A6508">cos 60&deg; = 0.5</text>
+    </svg>
+    <figcaption><b>Meridians converge, so a degree of longitude shrinks as you go north.</b> At the equator it is 60 NM; at 60&deg; latitude, cos 60&deg; = 0.5, so it is 30 NM. This one relationship is the departure formula, and it is why 60&deg; of longitude at 60&deg;N measures 1800 NM rather than 3600.</figcaption>
+  </figure>
+
+  <div class="work">
+    <div class="wh">Worked example &mdash; departure</div>
+    What is the distance along 60&deg;N between 25&deg;W and 85&deg;W?<br><br>
+    Change of longitude = 85 &minus; 25 = 60&deg; = 3600 minutes<br>
+    Distance = 3600 &times; cos 60&deg; = 3600 &times; 0.5 = <span class="res">1800 NM</span><br><br>
+    Same method, 10&deg;E to 40&deg;E on 60&deg;N: 30&deg; = 1800 min &times; 0.5 = <span class="res">900 NM</span>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; earth &amp; distance</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the distance on 60&deg; latitude between 25&deg;W and 85&deg;W?</summary><p class="a">1800 NM</p></details>
+    <details class="q"><summary>What is the distance from 10&deg;E to 40&deg;E on 60&deg;N?</summary><p class="a">900 NM<span class="why">30&deg; &times; 60 &times; cos 60&deg; = 1800 &times; 0.5.</span></p></details>
+    <details class="q"><summary>How does the convergency of any two meridians change with latitude?</summary><p class="a">It changes as the sine of latitude</p></details>
+    <details class="q"><summary>You travel 10&deg; of latitude along a meridian at GS 360 kt. How long does it take?</summary><p class="a">100 minutes<span class="why">10&deg; = 600 NM; at 6 NM per minute that is 100 min.</span></p></details>
+    <details class="q"><summary>You take off with TH 270&deg; for 500 NM, then TH 360&deg; for 500 NM, then TH 090&deg; for 500 NM. Where is your final longitude?</summary><p class="a">East of the starting point<span class="why">The eastbound leg is flown at a higher latitude, where a degree of longitude is shorter &mdash; so 500 NM east covers more longitude than 500 NM west did.</span></p></details>
+    <details class="q"><summary>How many degrees of longitude does the sun travel in 2 hours?</summary><p class="a">30&deg;<span class="why">15&deg; per hour.</span></p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 02 MAGNETISM &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="mag">
+  <div class="sec-head"><span class="eyebrow">061 02</span><h2>Magnetism &amp; Direction</h2></div>
+  <p class="lede">Variation, deviation and the directive force. Learn the conversion chain once and never lose a mark here.</p>
+
+  <div class="work">
+    <div class="wh">The conversion chain</div>
+    True &nbsp;&mdash;(variation)&rarr;&nbsp; Magnetic &nbsp;&mdash;(deviation)&rarr;&nbsp; Compass<br><br>
+    <b>West is best, East is least</b> &mdash; going from True to Compass, <b>add</b> West and <b>subtract</b> East.<br>
+    Reverse the signs when going from Compass back to True.<br><br>
+    <b>Example:</b> TH 320&deg;, VAR 5&deg;W, DEV 2&deg;E<br>
+    MH = 320 + 5 = 325&deg; &nbsp;&rarr;&nbsp; CH = 325 &minus; 2 = <span class="res">323&deg;</span>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Definitions</h3>
+      <ul class="tight">
+        <li><b>Variation</b> &mdash; the angle between <b>True North and Magnetic North</b>. Maximum value <b>180&deg;</b>. It <b>varies slowly over time</b>.</li>
+        <li><b>Deviation</b> &mdash; the angle between <b>Magnetic North and Compass North</b>, caused by the aircraft's own magnetism. It <b>changes with heading</b> because the aircraft's undesired poles move relative to the Earth's field.</li>
+        <li><b>Isogonals</b> join points of equal variation; they <b>converge at the geographic and magnetic poles</b>.</li>
+        <li>An <b>agonic line</b> joins points of <b>zero variation</b>.</li>
+        <li><b>True North</b> is defined by the orientation of the <b>local meridian</b>.</li>
+        <li><b>Magnetic North</b> is the direction of the <b>horizontal component</b> of the Earth's field.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>The compass near the poles</h3>
+      <ul class="tight">
+        <li>The Earth's field has a horizontal and a vertical component. Only the <b>horizontal component</b> provides the <b>directive force</b> that aligns the needle.</li>
+        <li>With increasing magnetic latitude the field dips more steeply, so the <b>horizontal component weakens</b> and the <b>directive force decreases</b> &mdash; the compass becomes sluggish and finally useless.</li>
+        <li>At the magnetic poles a freely suspended needle stands <b>vertical</b>: there is no horizontal component at all.</li>
+        <li>The <b>long-term periodic change</b> in the Earth's field shows up as the <b>slow movement of the magnetic poles</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; magnetism</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>You are on TH 320&deg; with VAR 5&deg;W and DEV 2&deg;E. What is the compass heading?</summary><p class="a">323&deg;</p></details>
+    <details class="q"><summary>The angle between True North and Magnetic North is called:</summary><p class="a">Variation</p></details>
+    <details class="q"><summary>Compass deviation is the angle between:</summary><p class="a">Magnetic North and Compass North</p></details>
+    <details class="q"><summary>Deviation applied to magnetic heading gives:</summary><p class="a">Compass heading</p></details>
+    <details class="q"><summary>The value of magnetic variation is a maximum of:</summary><p class="a">180&deg;</p></details>
+    <details class="q"><summary>Isogonals are lines of equal:</summary><p class="a">Magnetic variation &mdash; and they converge at the geographic and magnetic poles</p></details>
+    <details class="q"><summary>An agonic line connects:</summary><p class="a">Positions with 0&deg; variation</p></details>
+    <details class="q"><summary>What defines the direction of True North?</summary><p class="a">The orientation of the local meridian</p></details>
+    <details class="q"><summary>Magnetic North is:</summary><p class="a">The direction of the horizontal component of the Earth's magnetic field</p></details>
+    <details class="q"><summary>Why does deviation change with heading?</summary><p class="a">The aircraft's undesired magnetic poles move relative to the Earth's field</p></details>
+    <details class="q"><summary>What does the directive force do?</summary><p class="a">It aligns the compass needle</p></details>
+    <details class="q"><summary>With an increase in magnetic latitude there will be a decrease in:</summary><p class="a">The directive force</p></details>
+    <details class="q"><summary>Why does the magnetic compass become unreliable near the magnetic poles?</summary><p class="a">The horizontal component becomes so weak that the directive force is insufficient</p></details>
+    <details class="q"><summary>The magnetic poles are the only positions where:</summary><p class="a">A freely suspended compass needle will stand vertical</p></details>
+    <details class="q"><summary>The long-term periodic change in the Earth's magnetic field:</summary><p class="a">Is reflected in the slow movement of the magnetic poles</p></details>
+    <details class="q"><summary>What is the accuracy of a magnetic heading indicator corrected for deviation?</summary><p class="a">&plusmn;10&deg;</p></details>
+    <details class="q"><summary>Maximum error of a directional gyro due to Earth rotation (rate error)?</summary><p class="a">15&deg; per hour<span class="why">The full rate at the poles; it varies with the sine of latitude.</span></p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 03 TIME &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="time">
+  <div class="sec-head"><span class="eyebrow">061 03</span><h2>Time</h2></div>
+  <p class="lede">Solar versus sidereal, and why the length of the day is not constant.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Sidereal day</b> &mdash; one rotation relative to a distant star. <b>Constant duration</b>, about 23 h 56 min.</li>
+        <li><b>Apparent solar day</b> &mdash; the period between two successive transits of the <b>true sun</b> over the same meridian. It is <b>longer</b> than the sidereal day <b>because the Earth's rotation and its orbital motion are in the same direction</b> &mdash; the Earth must turn a little further to face the sun again.</li>
+        <li>Its length is <b>not constant</b>, because the Earth's orbital speed varies around its <b>elliptical orbit</b> and because of the inclination of the ecliptic.</li>
+        <li>The <b>mean sun</b> is a fiction that travels at a constant rate, giving <b>Local Mean Time</b>. At <b>0000 LMT the mean sun is in transit with the observer's anti-meridian</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Standard time</b> is set by <b>the legal authorities</b> of a country and does not necessarily follow the 15&deg; zones.</li>
+        <li>The main reason day and night vary in length through the year is the <b>inclination of the ecliptic to the equator</b> &mdash; the 23.5&deg; tilt.</li>
+        <li>Near the <b>equinoxes</b> the influence of latitude on daylight duration is at its <b>smallest</b>.</li>
+        <li>Crossing the <b>International Date Line</b> from the east: <b>you lose one day</b>.</li>
+      </ul>
+      <div class="work">
+        <div class="wh">Worked example &mdash; standard time</div>
+        Ecuador is UTC&minus;5. It is 0325 UTC on 21 January.<br>
+        0325 &minus; 5 h = <span class="res">2225 on 20 January</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; time</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Which statement is correct about the apparent solar day?</summary><p class="a">It is the period between two successive transits of the true sun through the same meridian</p></details>
+    <details class="q"><summary>Why is the solar day longer than the sidereal day?</summary><p class="a">The Earth's rotation and its orbital motion are in the same direction</p></details>
+    <details class="q"><summary>The sidereal day is:</summary><p class="a">Of constant duration</p></details>
+    <details class="q"><summary>Why is the apparent solar day not of constant length?</summary><p class="a">The Earth's orbital speed varies because of its elliptical orbit</p></details>
+    <details class="q"><summary>At 0000 Local Mean Time:</summary><p class="a">The mean sun is in transit with the observer's anti-meridian</p></details>
+    <details class="q"><summary>What is the meaning of standard time?</summary><p class="a">The time set by the legal authorities for a country or part of a country &mdash; it does not necessarily follow the 15&deg; zones</p></details>
+    <details class="q"><summary>The main reason day and night durations vary during the year?</summary><p class="a">The inclination of the ecliptic to the equator</p></details>
+    <details class="q"><summary>Which statement about duration of daylight is true?</summary><p class="a">Close to the equinoxes the influence of latitude is at its smallest</p></details>
+    <details class="q"><summary>Crossing the International Date Line from the east:</summary><p class="a">You lose one day</p></details>
+    <details class="q"><summary>Standard time in Ecuador (UTC&minus;5) at 0325 UTC on 21 January?</summary><p class="a">2225 on 20 January</p></details>
+    <details class="q"><summary>Location A 50&deg;N 030&deg;W and B 50&deg;S 030&deg;W on 27 November &mdash; compare sunrise and sunset.</summary><p class="a">Sunrise later at A than B, and sunset earlier at A than B<span class="why">In late November the southern hemisphere has the long days.</span></p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 04 CHARTS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="charts">
+  <div class="sec-head"><span class="eyebrow">061 04</span><h2>Charts &amp; Projections</h2></div>
+  <p class="lede">Two projections carry the whole topic. What matters is what a straight line means on each.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 290" role="img" aria-label="Comparison of a great circle and a rhumb line drawn on a Mercator chart and on a Lambert conformal conic chart">
+      <!-- MERCATOR -->
+      <text x="20" y="22" font-size="14" font-weight="600" fill="#2C5578">DIRECT MERCATOR</text>
+      <text x="20" y="38" font-size="11.5" fill="currentColor">meridians parallel, equally spaced, vertical</text>
+      <rect x="20" y="52" width="330" height="170" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <g stroke="currentColor" stroke-width=".9" opacity=".45">
+        <line x1="86" y1="52" x2="86" y2="222"/><line x1="152" y1="52" x2="152" y2="222"/>
+        <line x1="218" y1="52" x2="218" y2="222"/><line x1="284" y1="52" x2="284" y2="222"/>
+        <line x1="20" y1="96" x2="350" y2="96"/><line x1="20" y1="146" x2="350" y2="146"/><line x1="20" y1="192" x2="350" y2="192"/>
+      </g>
+      <!-- rhumb line straight -->
+      <line x1="52" y1="188" x2="318" y2="92" stroke="#8A6508" stroke-width="2.6"/>
+      <text x="200" y="160" font-size="11.5" fill="#8A6508" font-weight="600">RHUMB LINE &mdash; straight</text>
+      <!-- great circle curved, concave to equator (poleward bulge) -->
+      <path d="M52 188 Q185 108 318 92" fill="none" stroke="#2E6B3E" stroke-width="2.6" stroke-dasharray="7 4"/>
+      <text x="160" y="104" font-size="11.5" fill="#2E6B3E" font-weight="600">GREAT CIRCLE &mdash; curved</text>
+      <text x="185" y="244" font-size="11" text-anchor="middle" fill="currentColor">Scale expands as the secant of latitude</text>
+      <text x="185" y="260" font-size="11" text-anchor="middle" fill="currentColor">GC curves toward the nearer pole</text>
+
+      <!-- LAMBERT -->
+      <text x="410" y="22" font-size="14" font-weight="600" fill="#2C5578">LAMBERT CONFORMAL CONIC</text>
+      <text x="410" y="38" font-size="11.5" fill="currentColor">meridians converge, parallels are arcs</text>
+      <rect x="410" y="52" width="330" height="170" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <g stroke="currentColor" stroke-width=".9" opacity=".45">
+        <line x1="470" y1="222" x2="512" y2="52"/><line x1="530" y1="222" x2="551" y2="52"/>
+        <line x1="590" y1="222" x2="590" y2="52"/><line x1="650" y1="222" x2="629" y2="52"/>
+        <line x1="710" y1="222" x2="668" y2="52"/>
+        <path d="M415 100 Q590 82 738 100" fill="none"/>
+        <path d="M415 150 Q590 130 738 150" fill="none"/>
+        <path d="M415 200 Q590 178 738 200" fill="none"/>
+      </g>
+      <!-- great circle nearly straight -->
+      <line x1="446" y1="190" x2="706" y2="96" stroke="#2E6B3E" stroke-width="2.6"/>
+      <text x="576" y="118" font-size="11.5" fill="#2E6B3E" font-weight="600">GREAT CIRCLE &mdash; almost straight</text>
+      <!-- rhumb line curved -->
+      <path d="M446 190 Q580 170 706 96" fill="none" stroke="#8A6508" stroke-width="2.6" stroke-dasharray="7 4"/>
+      <text x="560" y="196" font-size="11.5" fill="#8A6508" font-weight="600">RHUMB LINE &mdash; curved</text>
+      <text x="575" y="244" font-size="11" text-anchor="middle" fill="currentColor">Scale correct along the two standard parallels</text>
+      <text x="575" y="260" font-size="11" text-anchor="middle" fill="currentColor">GC concave to the parallel of origin</text>
+    </svg>
+    <figcaption><b>The projection decides which line is straight.</b> On a Mercator the meridians are forced parallel, so a constant-direction track plots as a straight line and the great circle bulges poleward. On a Lambert the meridians converge as they really do, so the great circle plots almost straight &mdash; which is why Lambert is the en-route chart and Mercator is not.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3>Direct Mercator</h3>
+      <ul class="tight">
+        <li>Meridians are <b>parallel, equally spaced, vertical straight lines</b>.</li>
+        <li><b>Rhumb lines are straight</b>; great circles curve <b>concave to the equator</b>.</li>
+        <li>Scale is <b>correct at the equator</b> and expands as the <b>secant of latitude</b>.</li>
+        <li>Conformal, but useless near the poles.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Lambert conformal conic</h3>
+      <ul class="tight">
+        <li><b>Chart convergence is constant</b> and does not change with latitude; it equals <b>ch.long &times; sin(parallel of origin)</b>.</li>
+        <li>Earth convergency is most accurately represented <b>at the parallel of origin</b>.</li>
+        <li><b>Scale is constant along a parallel</b> and correct along <b>the two standard parallels</b>.</li>
+        <li>Great circles that are not meridians are <b>curves concave to the parallel of origin</b>; a straight line approximates a great circle best <b>near the parallel of origin</b>.</li>
+        <li>The angular difference between initial and final true track on a straight line equals the <b>chart convergence</b>.</li>
+        <li>It must be <b>processed mathematically to obtain conformality</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="work">
+    <div class="wh">Worked example &mdash; scale</div>
+    A chart scale of 1:20 000 means 1 unit on the chart is 20 000 of the same units on the Earth.<br>
+    5 cm &times; 20 000 = 100 000 cm = <span class="res">1000 m</span>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; charts</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>On a Direct Mercator chart, meridians are:</summary><p class="a">Parallel, equally spaced, vertical straight lines</p></details>
+    <details class="q"><summary>On a Lambert conformal conic chart the convergence of the meridians:</summary><p class="a">Is the same as Earth convergency at the parallel of origin</p></details>
+    <details class="q"><summary>How does chart convergence change with latitude on a Lambert projection?</summary><p class="a">It is constant and does not change with latitude</p></details>
+    <details class="q"><summary>On a Lambert chart, great circles that are not meridians are:</summary><p class="a">Curves concave to the parallel of origin</p></details>
+    <details class="q"><summary>The scale on a Lambert conformal conic chart:</summary><p class="a">Is constant along a parallel of latitude</p></details>
+    <details class="q"><summary>On a Lambert chart with two standard parallels, the quoted scale is correct:</summary><p class="a">Along the two standard parallels</p></details>
+    <details class="q"><summary>A straight line on a Lambert chart between two longitudes has an angular difference between initial and final true track equal to:</summary><p class="a">Chart convergence</p></details>
+    <details class="q"><summary>A straight line on a Lambert chart approximates a great circle most accurately:</summary><p class="a">If the straight line is close to the parallel of origin</p></details>
+    <details class="q"><summary>The chart convergency between two locations on a Lambert chart depends on:</summary><p class="a">The latitude of the parallel of origin and the difference in longitude</p></details>
+    <details class="q"><summary>Why do Lambert charts have to be processed mathematically?</summary><p class="a">To obtain conformality</p></details>
+    <details class="q"><summary>What distance on the Earth is 5 cm on a chart of scale 1:20 000?</summary><p class="a">1000 m</p></details>
+    <details class="q"><summary>How is relief depicted on VFR charts?</summary><p class="a">Contour lines, colours, spot elevations and shading</p></details>
+    <details class="q"><summary>What is layer tinting on charts?</summary><p class="a">Colours used to indicate elevation ranges</p></details>
+    <details class="q"><summary>Which features make the best visual checkpoints for a low-level VFR flight?</summary><p class="a">A large lake, a radio mast and a power station<span class="why">Unique, vertical or large-area features. Streets and forest patches are too repetitive.</span></p></details>
+    <details class="q"><summary>In which conditions is there the highest risk of CFIT?</summary><p class="a">Overcast sky with a low ceiling and snow-covered ground</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 05 DR &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="dr">
+  <div class="sec-head"><span class="eyebrow">061 05</span><h2>Dead Reckoning &amp; In-Flight Calculations</h2></div>
+  <p class="lede">The mental arithmetic a selection test actually times you on. Learn the four rules of thumb and practise them cold.</p>
+
+  <div class="numbers">
+    <div class="nh">Rules of thumb</div>
+    <div class="nlist">
+      <div class="nrow"><span>1-in-60 rule</span><span class="v">1 NM off in 60 NM = 1&deg;</span></div>
+      <div class="nrow"><span>Rate of descent, 3&deg;</span><span class="v">GS &times; 5</span></div>
+      <div class="nrow"><span>Rate of descent, x %</span><span class="v">GS &times; x &times; 1.013</span></div>
+      <div class="nrow"><span>Descent gradient 3&deg;</span><span class="v">300 ft per NM</span></div>
+      <div class="nrow"><span>Top of descent</span><span class="v">height (ft) / 300 = NM</span></div>
+      <div class="nrow"><span>Crosswind 30/45/60&deg;</span><span class="v">&frac12; &middot; 0.7 &middot; 0.87</span></div>
+      <div class="nrow"><span>NM per minute</span><span class="v">GS / 60</span></div>
+      <div class="nrow"><span>VHF range</span><span class="v">1.23 &times; &radic;height (ft)</span></div>
+    </div>
+  </div>
+
+  <div class="work">
+    <div class="wh">Worked examples from the bank</div>
+    <b>Rate of descent, 3&deg; glide, GS 175 kt:</b><br>
+    RoD = GS &times; 5 = 175 &times; 5 = <span class="res">875 ft/min</span><br><br>
+    <b>Rate of descent, 6.5 % glide, GS 175 kt:</b><br>
+    RoD = 0.065 &times; 175 &times; 101.3 = <span class="res">&asymp; 1137 ft/min</span><br><br>
+    <b>Distance to threshold, altitude 1400 ft, elevation 500 ft, 3&deg; slope:</b><br>
+    Height above threshold = 900 ft; at 300 ft per NM &rarr; <span class="res">3 NM</span><br><br>
+    <b>Crosswind, RWY 32, wind 350/30:</b><br>
+    Angle 30&deg; &rarr; 30 &times; 0.5 = <span class="res">15 kt</span><br><br>
+    <b>Headwind, RWY 32, wind 250/30:</b><br>
+    Angle 70&deg; &rarr; 30 &times; cos 70&deg; = 30 &times; 0.34 = <span class="res">&asymp; 10 kt</span>
+  </div>
+
+  <h3>Speed and Mach</h3>
+  <ul class="tight">
+    <li><b>Mach = TAS / local speed of sound</b>, and the LSS depends on <b>temperature only</b>: a = 39 &times; &radic;T(K) kt.</li>
+    <li><b>Descending at constant TAS</b>: the air warms, the LSS rises, so <b>Mach decreases</b>.</li>
+    <li><b>OAT decreasing at constant TAS</b>: the LSS falls, so <b>Mach increases</b>.</li>
+  </ul>
+
+  <div class="caution">
+    <span class="ch">Two answers in this bank do not add up</span>
+    <p><b>"Climb 20 000 ft in the next 50 NM at GS 300 kt"</b> &mdash; the printed answer is 1000 ft/min. At 300 kt you cover 50 NM in <b>10 minutes</b>, so the requirement is <b>2000 ft/min</b>. <b>"TT 281&deg;, VAR 7&deg;E, drift 10&deg; left"</b> &mdash; the printed answer is 185&deg;. Drift left means you head right of track, so TH = 281 + 10 = 291&deg;, and MH = 291 &minus; 7 = <b>284&deg;</b>. Use the method, not the printed number.</p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; DR &amp; calculations</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>You are on a 3&deg; glide slope at GS 175 kt. What is your rate of descent?</summary><p class="a">875 ft/min</p></details>
+    <details class="q"><summary>You are on a 6.5 % glide slope at GS 175 kt. What is your rate of descent?</summary><p class="a">Approximately 1137 ft/min</p></details>
+    <details class="q"><summary>Current altitude 1400 ft, elevation 500 ft &mdash; what is the distance to the threshold?</summary><p class="a">3 NM</p></details>
+    <details class="q"><summary>You need to climb 20 000 ft in the next 50 NM at GS 300 kt. Required rate of climb?</summary><p class="a">The bank prints 1000 ft/min<span class="flag">Check this. 50 NM at 300 kt takes 10 minutes, so 20 000 ft in 10 minutes needs <b>2000 ft/min</b>. The printed figure would only be right for half the height or twice the distance.</span></p></details>
+    <details class="q"><summary>Landing RWY 32, wind 350/30 &mdash; crosswind component?</summary><p class="a">15 kt</p></details>
+    <details class="q"><summary>Landing RWY 32, wind 250/30 &mdash; headwind component?</summary><p class="a">10 kt</p></details>
+    <details class="q"><summary>TT 281&deg;, VAR 7&deg;E, drift 10&deg; left &mdash; magnetic heading to maintain?</summary><p class="a">The bank prints 185&deg;<span class="flag">Almost certainly a typo. Drift left means heading right of track: TH = 281 + 10 = 291&deg;, then MH = 291 &minus; 7 (East) = <b>284&deg;</b>.</span></p></details>
+    <details class="q"><summary>When descending at constant TAS, what happens to Mach number?</summary><p class="a">Mach decreases<span class="why">Warmer air means a higher speed of sound.</span></p></details>
+    <details class="q"><summary>If OAT decreases at constant TAS:</summary><p class="a">Mach number increases</p></details>
+  </div>
+</section>
+
+<div class="part-band">
+  <span class="pn">033</span>
+  <span class="pt">FLIGHT PLANNING</span>
+  <span class="pd">Fuel, levels, PSR and ETP, mass and balance</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 06 FUEL &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="fuel">
+  <div class="sec-head"><span class="eyebrow">033 01</span><h2>Fuel Policy</h2></div>
+  <p class="lede">Seven layers, in order. The diagram is the answer to every "which fuel is that" question.</p>
+
+  <figure>
+    <svg viewBox="0 0 720 340" role="img" aria-label="Stacked diagram of the fuel policy layers from taxi fuel up to extra fuel">
+      <g font-size="12">
+        <!-- stack, bottom to top -->
+        <rect x="60" y="272" width="330" height="38" fill="#8A6508" opacity=".30" stroke="#8A6508" stroke-width="1.2"/>
+        <text x="225" y="296" text-anchor="middle" fill="currentColor" font-weight="600">TAXI FUEL</text>
+        <text x="404" y="296" fill="currentColor">All pre-departure operations. Excludes taxi on arrival.</text>
+
+        <rect x="60" y="230" width="330" height="38" fill="#8A6508" opacity=".45" stroke="#8A6508" stroke-width="1.2"/>
+        <text x="225" y="254" text-anchor="middle" fill="currentColor" font-weight="600">TRIP FUEL</text>
+        <text x="404" y="254" fill="currentColor">Take-off to landing at destination.</text>
+
+        <rect x="60" y="188" width="330" height="38" fill="#2C5578" opacity=".28" stroke="#2C5578" stroke-width="1.2"/>
+        <text x="225" y="212" text-anchor="middle" fill="currentColor" font-weight="600">CONTINGENCY</text>
+        <text x="404" y="212" fill="currentColor">5 % of trip fuel (or 5 min holding, whichever is greater).</text>
+
+        <rect x="60" y="146" width="330" height="38" fill="#2C5578" opacity=".42" stroke="#2C5578" stroke-width="1.2"/>
+        <text x="225" y="170" text-anchor="middle" fill="currentColor" font-weight="600">ALTERNATE FUEL</text>
+        <text x="404" y="170" fill="currentColor">Missed approach, climb, cruise and landing at the alternate.</text>
+
+        <rect x="60" y="104" width="330" height="38" fill="#A83A22" opacity=".34" stroke="#A83A22" stroke-width="1.6"/>
+        <text x="225" y="122" text-anchor="middle" fill="currentColor" font-weight="600">FINAL RESERVE</text>
+        <text x="225" y="136" text-anchor="middle" fill="currentColor" font-size="11">30 min holding at 1500 ft (jets) &middot; 45 min (pistons)</text>
+        <text x="404" y="128" fill="#A83A22" font-weight="600">Planning to use it is prohibited.</text>
+
+        <rect x="60" y="62" width="330" height="38" fill="#2E6B3E" opacity=".28" stroke="#2E6B3E" stroke-width="1.2"/>
+        <text x="225" y="86" text-anchor="middle" fill="currentColor" font-weight="600">ADDITIONAL FUEL</text>
+        <text x="404" y="86" fill="currentColor">Isolated aerodrome or ETOPS. Only when the stack below is insufficient.</text>
+
+        <rect x="60" y="20" width="330" height="38" fill="currentColor" opacity=".12" stroke="currentColor" stroke-width="1.2" stroke-dasharray="6 4"/>
+        <text x="225" y="44" text-anchor="middle" fill="currentColor" font-weight="600">EXTRA FUEL</text>
+        <text x="404" y="44" fill="currentColor">At the commander's discretion.</text>
+      </g>
+      <line x1="46" y1="20" x2="46" y2="310" stroke="currentColor" stroke-width="1.4"/>
+      <text x="38" y="316" font-size="11" text-anchor="end" fill="currentColor">0</text>
+      <text x="30" y="170" font-size="11.5" text-anchor="middle" fill="currentColor" transform="rotate(-90 30 170)">TOTAL FUEL ON BOARD</text>
+      <line x1="52" y1="104" x2="52" y2="310" stroke="#A83A22" stroke-width="2.4"/>
+      <text x="120" y="330" font-size="11" fill="#A83A22" font-weight="600">Minimum required fuel = taxi + trip + contingency + alternate + final reserve</text>
+    </svg>
+    <figcaption><b>Everything above the final reserve is planning; the final reserve itself is untouchable.</b> Reaching your destination with less than final reserve remaining is a fuel emergency, which is why it is <b>prohibited to plan its use</b>. Additional fuel appears only when the layers below cannot get you to an alternate in the isolated-aerodrome or ETOPS case.</figcaption>
+  </figure>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; fuel policy</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What does trip fuel cover?</summary><p class="a">Fuel used between take-off and landing at the destination</p></details>
+    <details class="q"><summary>What does taxi fuel cover?</summary><p class="a">All pre-departure operations &mdash; it does not include taxiing at the arrival airport</p></details>
+    <details class="q"><summary>How much is contingency fuel?</summary><p class="a">5 % of trip fuel, or 5 minutes holding, whichever is greater</p></details>
+    <details class="q"><summary>What is the final reserve for a jet, and for a piston aeroplane?</summary><p class="a">30 minutes holding at 1500 ft for jets; 45 minutes of cruise for pistons</p></details>
+    <details class="q"><summary>What happens if you use final reserve fuel?</summary><p class="a">It constitutes a fuel emergency &mdash; planning to use it is prohibited</p></details>
+    <details class="q"><summary>When is additional fuel required?</summary><p class="a">Only when trip + contingency + alternate + final reserve is insufficient to proceed to an alternate &mdash; for example isolated aerodrome or ETOPS operations</p></details>
+    <details class="q"><summary>What is extra fuel?</summary><p class="a">Fuel added at the commander's discretion</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 07 LEVELS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="levels">
+  <div class="sec-head"><span class="eyebrow">033 02</span><h2>Cruising Levels &amp; Minimum Altitudes</h2></div>
+  <p class="lede">The semicircular rule and the chart alphabet.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Semicircular cruising levels</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Magnetic track</th><th>IFR</th><th>VFR</th></tr></thead>
+          <tbody>
+            <tr><td><b>Easterly</b> 000&ndash;179&deg;</td><td class="n">Odd</td><td class="n">Odd + 500</td></tr>
+            <tr><td><b>Westerly</b> 180&ndash;359&deg;</td><td class="n">Even</td><td class="n">Even + 500</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Convert to <b>magnetic track</b> before deciding easterly or westerly. VFR levels apply only up to <b>FL285</b>.</p>
+      <h3>Minimum heights</h3>
+      <ul class="tight">
+        <li><b>Congested areas</b>: 1000 ft above the highest obstacle within a <b>600 m radius</b>.</li>
+        <li><b>Elsewhere</b>: <b>500 ft (150 m)</b> above the ground.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Chart minimum altitudes</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Symbol</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td class="n">FL number only</td><td><b>MEA</b> &mdash; minimum en-route altitude (obstacle clearance <em>and</em> navigation signal)</td></tr>
+            <tr><td class="n">number "a"</td><td><b>MORA</b> &mdash; minimum off-route altitude, 10 NM either side of route</td></tr>
+            <tr><td class="n">number "T"</td><td><b>MOCA</b> &mdash; minimum obstruction clearance altitude</td></tr>
+            <tr><td class="n">MAA</td><td>Maximum authorised altitude</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><b>MEA</b> is the one that guarantees both obstacle clearance and navigation coverage; MOCA guarantees obstacle clearance only.</p>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; levels &amp; minima</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>VFR cruising levels for an easterly and a westerly magnetic track?</summary><p class="a">Easterly (000&ndash;179&deg;): odd + 500. Westerly (180&ndash;359&deg;): even + 500</p></details>
+    <details class="q"><summary>IFR cruising levels, easterly and westerly?</summary><p class="a">Easterly odd, westerly even</p></details>
+    <details class="q"><summary>Minimum height over a congested area?</summary><p class="a">1000 ft above the highest obstacle within a 600 m radius</p></details>
+    <details class="q"><summary>Minimum height elsewhere?</summary><p class="a">500 ft (150 m) above the ground</p></details>
+    <details class="q"><summary>What does a flight level number alone indicate on a chart?</summary><p class="a">MEA &mdash; minimum en-route altitude</p></details>
+    <details class="q"><summary>What is MORA, and over what width?</summary><p class="a">Minimum off-route altitude, covering 10 NM either side of the route</p></details>
+    <details class="q"><summary>What does a number followed by "T" indicate?</summary><p class="a">MOCA &mdash; minimum obstruction clearance altitude</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 08 PSR &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="psr">
+  <div class="sec-head"><span class="eyebrow">033 03</span><h2>PSR, ETP &amp; the Planning Formulas</h2></div>
+  <p class="lede">Two points on a route that answer two different questions: how far can I go and still get back, and where does it stop mattering which way I turn.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 270" role="img" aria-label="Route from departure to destination showing the equal time point and the point of safe return with their formulas">
+      <line x1="60" y1="120" x2="700" y2="120" stroke="currentColor" stroke-width="2.6"/>
+      <circle cx="60" cy="120" r="7" fill="currentColor"/>
+      <circle cx="700" cy="120" r="7" fill="currentColor"/>
+      <text x="60" y="104" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">DEPARTURE</text>
+      <text x="700" y="104" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">DESTINATION</text>
+
+      <!-- ETP -->
+      <line x1="420" y1="88" x2="420" y2="152" stroke="#2E6B3E" stroke-width="2.4"/>
+      <circle cx="420" cy="120" r="6" fill="#2E6B3E"/>
+      <text x="420" y="78" font-size="12.5" text-anchor="middle" fill="#2E6B3E" font-weight="600">ETP</text>
+      <text x="420" y="176" font-size="11.5" text-anchor="middle" fill="#2E6B3E">equal time to turn back or press on</text>
+      <text x="420" y="194" font-size="11.5" text-anchor="middle" fill="#2E6B3E" font-family="monospace">D&#8202;ETP = D &times; H / (O + H)</text>
+
+      <!-- PSR -->
+      <line x1="255" y1="96" x2="255" y2="144" stroke="#A83A22" stroke-width="2.4"/>
+      <circle cx="255" cy="120" r="6" fill="#A83A22"/>
+      <text x="255" y="86" font-size="12.5" text-anchor="middle" fill="#A83A22" font-weight="600">PSR</text>
+      <text x="255" y="222" font-size="11.5" text-anchor="middle" fill="#A83A22">last point you can still return with fuel remaining</text>
+      <text x="255" y="240" font-size="11.5" text-anchor="middle" fill="#A83A22" font-family="monospace">T&#8202;PSR = E &times; H / (O + H)</text>
+
+      <!-- arrows -->
+      <path d="M420 140 L560 140" stroke="#2E6B3E" stroke-width="1.6" marker-end="url(#na)"/>
+      <path d="M420 140 L280 140" stroke="#2E6B3E" stroke-width="1.6" marker-end="url(#na)"/>
+      <defs><marker id="na" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#2E6B3E"/></marker></defs>
+      <text x="600" y="144" font-size="11" fill="currentColor">O = GS on</text>
+      <text x="150" y="144" font-size="11" text-anchor="end" fill="currentColor">H = GS home</text>
+    </svg>
+    <figcaption><b>Both formulas share the same denominator, and both put the "home" groundspeed on top.</b> The ETP asks a <em>distance</em> question and uses total route distance D; the PSR asks an <em>endurance</em> question and uses safe endurance E. A headwind outbound pushes the ETP <em>towards</em> the destination and the PSR <em>closer</em> to home.</figcaption>
+  </figure>
+
+  <div class="numbers">
+    <div class="nh">Flight planning formulas</div>
+    <div class="nlist">
+      <div class="nrow"><span>Air distance / ground distance</span><span class="v">NAM/TAS = NGM/GS</span></div>
+      <div class="nrow"><span>Ground miles</span><span class="v">NGM = NAM + (WC &times; T/60)</span></div>
+      <div class="nrow"><span>Mach number</span><span class="v">TAS / LSS</span></div>
+      <div class="nrow"><span>Local speed of sound</span><span class="v">39 &times; &radic;T(K) kt</span></div>
+      <div class="nrow"><span>VHF range</span><span class="v">1.23 &times; &radic;h (ft) NM</span></div>
+      <div class="nrow"><span>PSR distance</span><span class="v">E &times; O &times; H / (O + H)</span></div>
+    </div>
+  </div>
+
+  <p><b>NAM</b> is a nautical air mile &mdash; distance through the air mass. <b>NGM</b> is a nautical ground mile. The wind component converts one into the other, and the ratio NAM/TAS = NGM/GS is how you move between them in a fuel calculation.</p>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; PSR &amp; ETP</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the relationship between NAM, NGM, TAS and GS?</summary><p class="a">NAM / TAS = NGM / GS</p></details>
+    <details class="q"><summary>How do you convert air miles to ground miles?</summary><p class="a">NGM = NAM + (wind component &times; time in minutes / 60)</p></details>
+    <details class="q"><summary>What is the PSR formula, and what do the letters mean?</summary><p class="a">Time to PSR = E &times; H / (O + H). E = safe endurance, O = groundspeed out, H = groundspeed home<span class="why">Time to the PSR is computed with all-engines TAS.</span></p></details>
+    <details class="q"><summary>What is the ETP formula?</summary><p class="a">Distance to ETP = D &times; H / (O + H), where D is the total distance</p></details>
+    <details class="q"><summary>What is the VHF range formula?</summary><p class="a">Range (NM) = 1.23 &times; &radic;height in feet</p></details>
+    <details class="q"><summary>How do you calculate Mach number, and what does the local speed of sound depend on?</summary><p class="a">Mach = TAS / LSS; the LSS depends on temperature only</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 09 M&B &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="mb">
+  <div class="sec-head"><span class="eyebrow">033 04</span><h2>Mass &amp; Balance Basics</h2></div>
+  <p class="lede">Three definitions and one subtraction. Free marks.</p>
+
+  <div class="work">
+    <div class="wh">The mass chain</div>
+    <b>Dry Operating Mass (DOM)</b> = aircraft + crew + equipment, no fuel, no traffic load<br>
+    <b>Zero Fuel Mass (ZFM)</b> = DOM + traffic load<br>
+    <b>Take-Off Mass (TOM)</b> = DOM + traffic load + take-off fuel &nbsp;=&nbsp; ZFM + fuel<br>
+    <b>Landing Mass</b> = TOM &minus; trip fuel<br><br>
+    <b>Example:</b> TOM 117 000 kg, traffic load 18 000 kg, fuel 46 000 kg<br>
+    DOM = 117 000 &minus; 18 000 &minus; 46 000 = <span class="res">53 000 kg</span>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; mass &amp; balance</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Take-off mass 117 000 kg, traffic load 18 000 kg, fuel 46 000 kg &mdash; what is the dry operating mass?</summary><p class="a">53 000 kg</p></details>
+    <details class="q"><summary>The actual take-off mass is equivalent to:</summary><p class="a">Dry operating mass plus the take-off fuel and the traffic load</p></details>
+    <details class="q"><summary>The actual zero fuel mass is equivalent to:</summary><p class="a">Dry operating mass plus the traffic load</p></details>
+    <details class="q"><summary>Maximum tyre speed can limit lift-off speed &mdash; which speed is used?</summary><p class="a">Ground speed</p></details>
+    <details class="q"><summary>The speed V2 is:</summary><p class="a">The take-off safety speed</p></details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>Navigation &amp; Flight Planning</b> &mdash; revision sheet for airline selection screening</div>
+    <div>Built from the Selection question bank and the ATPL flight planning summaries</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.qbank').forEach(function(bank){
+  var btn = bank.querySelector('.reveal');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var items = bank.querySelectorAll('details.q');
+    var opening = btn.textContent.trim() === 'Reveal all';
+    items.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'Hide all' : 'Reveal all';
+  });
+});
+</script>
