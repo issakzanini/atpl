@@ -1,1 +1,1074 @@
+<meta charset="utf-8">
+<title>Air Law &amp; Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F1F6F6;
+  --surface:#FFFFFF;
+  --surface-2:#E7EFEF;
+  --ink:#112326;
+  --muted:#586E70;
+  --line:#C4D4D5;
+  --line-soft:#DBE6E6;
+  --tur:#0C7580;
+  --cor:#B04A34;
+  --ind:#4A4E9E;
+  --caution:#A06A08;
+  --accent:#0C7580;
+  --accent-wash:#E2EFF0;
+  --caution-wash:#F7EFDC;
+  --shadow:0 1px 2px rgba(17,35,38,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C1516; --surface:#131F21; --surface-2:#1B2A2C; --ink:#DFEAEA;
+    --muted:#8FA5A6; --line:#294042; --line-soft:#1F3234;
+    --tur:#45C8D4; --cor:#E8927A; --ind:#9B9EE8; --caution:#E5A93F;
+    --accent:#45C8D4; --accent-wash:#12262A; --caution-wash:#241E12;
+    --shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C1516; --surface:#131F21; --surface-2:#1B2A2C; --ink:#DFEAEA;
+  --muted:#8FA5A6; --line:#294042; --line-soft:#1F3234;
+  --tur:#45C8D4; --cor:#E8927A; --ind:#9B9EE8; --caution:#E5A93F;
+  --accent:#45C8D4; --accent-wash:#12262A; --caution-wash:#241E12;
+  --shadow:0 1px 2px rgba(0,0,0,.45);
+}
 
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono,.num,td.n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+.masthead{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast-in{max-width:1080px;margin:0 auto;padding:26px 24px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;justify-content:space-between}
+.mast-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.subj-code{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  letter-spacing:.1em;color:var(--surface);background:var(--tur);padding:5px 9px;border-radius:2px}
+h1{margin:0;font-size:44px;line-height:.98;font-weight:700;letter-spacing:.005em}
+.mast-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;max-width:46ch}
+.mast-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:1.9;letter-spacing:.04em}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+.rail{position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.rail-in{max-width:1080px;margin:0 auto;padding:9px 24px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.rail a{flex:0 0 auto;text-decoration:none;color:var(--muted);
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;padding:5px 10px;border-radius:3px;white-space:nowrap}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .rc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);margin-right:5px}
+.rail .sep{flex:0 0 auto;width:1px;background:var(--line);margin:2px 6px}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.part-band{display:flex;align-items:baseline;gap:14px;margin:46px 0 -14px;
+  padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.part-band .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--surface);background:var(--ink);padding:3px 8px;border-radius:2px;letter-spacing:.09em}
+.part-band .pt{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;letter-spacing:.02em}
+.part-band .pd{font-size:13.5px;color:var(--muted);margin-left:auto;text-align:right}
+
+section{padding:46px 0 8px;border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.1em}
+h2{margin:0;font-size:31px;font-weight:700;line-height:1.08}
+.lede{margin:2px 0 26px;color:var(--muted);font-size:15px;max-width:64ch}
+h3{margin:30px 0 8px;font-size:16px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--ink);padding-bottom:5px;border-bottom:1px solid var(--line)}
+p{margin:0 0 12px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 26px;align-items:start}
+ul.tight{margin:0 0 12px;padding-left:19px;max-width:68ch}
+ul.tight li{margin-bottom:5px}
+b,strong{font-weight:600}
+.k{color:var(--accent);font-weight:600}
+
+.numbers{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--tur);
+  border-radius:2px;padding:15px 18px;margin:18px 0;box-shadow:var(--shadow)}
+.numbers .nh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:9px}
+.nlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 26px;margin:0}
+.nrow{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:4px 0;border-bottom:1px dotted var(--line-soft);font-size:14.5px}
+.nrow:last-child{border-bottom:0}
+.nrow span:first-child{color:var(--muted)}
+.nrow .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13.5px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.tw{overflow-x:auto;margin:14px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:440px}
+th{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.07em;text-align:left;
+  border-bottom:1.5px solid var(--ink);padding:6px 10px 5px;color:var(--ink)}
+td{padding:6px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+tbody tr:hover{background:var(--surface-2)}
+
+.caution{background:var(--caution-wash);border:1px solid var(--caution);border-radius:2px;
+  padding:12px 15px;margin:16px 0;font-size:15px}
+.caution .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--caution);display:block;margin-bottom:3px}
+.caution p{margin:0;max-width:none}
+
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:16px 16px 10px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink)}
+figcaption{margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);
+  font-size:13.5px;color:var(--muted);line-height:1.5}
+figcaption b{color:var(--ink)}
+
+.qbank{margin:30px 0 10px;background:var(--surface-2);border-radius:3px;padding:16px 18px 18px}
+.qb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.qb-title{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.qb-title em{font-style:normal;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.reveal{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);background:transparent;
+  border:1px solid var(--accent);border-radius:2px;padding:4px 11px;cursor:pointer}
+.reveal:hover{background:var(--accent);color:var(--surface)}
+.reveal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q{border-bottom:1px solid var(--line);padding:0}
+details.q:last-of-type{border-bottom:0}
+details.q summary{cursor:pointer;list-style:none;padding:9px 30px 9px 0;position:relative;
+  font-size:15.5px;line-height:1.45}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";position:absolute;right:4px;top:8px;
+  font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:17px;line-height:1.4}
+details.q[open] summary::after{content:"\2212";color:var(--accent)}
+details.q summary:hover{color:var(--accent)}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q .a{margin:0 0 12px;padding:9px 13px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:0 2px 2px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.6;max-width:none}
+details.q .a .why{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--muted);line-height:1.5}
+details.q .a .flag{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--caution);line-height:1.5}
+
+.work{background:var(--surface);border:1px dashed var(--line);border-radius:2px;
+  padding:13px 16px;margin:16px 0;font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75}
+.work .wh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.work .res{color:var(--accent);font-weight:600}
+
+footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24px;margin-top:40px}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:34px} h2{font-size:26px}
+  .mast-meta{text-align:left} body{font-size:16px}
+  .part-band{flex-wrap:wrap} .part-band .pd{margin-left:0;text-align:left;width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div class="mast-title">
+      <span class="subj-code">010 &middot; 070 &middot; 090</span>
+      <div>
+        <h1>Air Law &amp; Operations</h1>
+        <p class="mast-sub">Revision sheet for airline selection screening &mdash; theory, diagrams and the real question bank, by syllabus topic.</p>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div><b>233</b> questions &middot; <b>10</b> topics</div>
+      <div>EASA ATPL(A) &middot; ICAO Annexes &middot; EU 965/2012</div>
+      <div>Click a question to reveal</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Topics">
+  <div class="rail-in">
+    <a href="#intl"><span class="rc">01</span>International Law</a>
+    <a href="#airspace"><span class="rc">02</span>Airspace &amp; Separation</a>
+    <a href="#ad"><span class="rc">03</span>Aerodromes</a>
+    <a href="#wake"><span class="rc">04</span>Wake Turbulence</a>
+    <a href="#procs"><span class="rc">05</span>Procedures</a>
+    <span class="sep"></span>
+    <a href="#ops"><span class="rc">06</span>Operations</a>
+    <a href="#cabin"><span class="rc">07</span>Cabin &amp; Equipment</a>
+    <a href="#fuel"><span class="rc">08</span>Fuel &amp; Alternates</a>
+    <a href="#haz"><span class="rc">09</span>Hazards &amp; Emergencies</a>
+    <span class="sep"></span>
+    <a href="#rt"><span class="rc">10</span>Radiotelephony</a>
+  </div>
+</nav>
+
+<main>
+
+<div class="part-band">
+  <span class="pn">010</span>
+  <span class="pt">AIR LAW</span>
+  <span class="pd">Conventions, airspace, aerodromes, PANS-OPS</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 01 INTERNATIONAL LAW &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="intl">
+  <div class="sec-head"><span class="eyebrow">010 01</span><h2>International Law &amp; Documents</h2></div>
+  <p class="lede">Which convention covers what, which Annex is which, and the paperwork that must be aboard. Pure recall &mdash; and free marks if you have the lists.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Convention</th><th>Covers</th></tr></thead>
+      <tbody>
+        <tr><td><b>Chicago</b> 1944</td><td>Founded ICAO; sovereignty of airspace; the Annexes</td></tr>
+        <tr><td><b>Rome</b> 1952</td><td><b>Damage caused on the surface</b> by foreign aircraft</td></tr>
+        <tr><td><b>Warsaw</b> 1929 / <b>Montreal</b> 1999</td><td>Carrier <b>liability</b> to passengers and cargo</td></tr>
+        <tr><td><b>Tokyo</b> 1963</td><td>Offences committed on board</td></tr>
+        <tr><td><b>Hague</b> 1970 / <b>Montreal</b> 1971</td><td>Unlawful seizure and acts against aviation safety</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>ICAO Annexes worth knowing</h3>
+      <ul class="tight">
+        <li><b>2</b> Rules of the Air &middot; <b>3</b> Meteorology &middot; <b>4</b> Charts</li>
+        <li><b>6</b> Operation of Aircraft (the <b>flight time</b> definition used for FTL)</li>
+        <li><b>9</b> <b>Facilitation</b> &mdash; movement of passengers across borders</li>
+        <li><b>11</b> ATS &middot; <b>12</b> Search and Rescue &middot; <b>13</b> Accident Investigation</li>
+        <li><b>14</b> Aerodromes &middot; <b>17</b> Security &middot; <b>19</b> Safety Management</li>
+      </ul>
+      <h3>AIP structure</h3>
+      <ul class="tight">
+        <li><b>GEN</b> &mdash; general, national rules. <b>ENR</b> &mdash; en-route: <b>holding, approach and departure procedures</b>, airspace. <b>AD</b> &mdash; aerodromes.</li>
+        <li><b>AIRAC</b> &mdash; a document released at <b>fixed notification intervals</b> (28 days), so operationally significant changes take effect on common dates.</li>
+        <li><b>SAR organisation details</b> are published in the <b>AIP</b>; coordination is by the <b>Rescue Coordination Centre</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Certificates &amp; licensing</h3>
+      <ul class="tight">
+        <li><b>Certificate of Airworthiness</b> is required for <b>any flight operation</b>. Continuing structural integrity is ensured by the <b>State of Design</b>.</li>
+        <li><b>AOC</b> applies to an <b>operator conducting commercial air operations</b>.</li>
+        <li><b>Registration marks</b>: at least <b>30 cm</b> high.</li>
+        <li><b>Recent experience</b>: <b>3 take-offs and 3 landings</b> as pilot flying in the last <b>90 days</b>.</li>
+        <li><b>Class 1 medical</b> after age 40 in single-pilot commercial operations: validity drops from <b>12 to 6 months</b>. Only <b>the authority</b> may remove a limitation.</li>
+        <li>An <b>EASA Implementing Rule is hard law</b>; AMC and GM are soft law.</li>
+      </ul>
+      <h3>Accidents</h3>
+      <ul class="tight">
+        <li>An <b>accident</b> is fatal or serious injury, substantial damage, or a missing aircraft, occurring <b>between the moment anyone boards and the moment all have disembarked</b>. Landing-gear damage while taxiing with no injury still counts as an accident.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; international law</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Which convention covers surface damage caused by a foreign aircraft?</summary><p class="a">The Rome Convention</p></details>
+    <details class="q"><summary>Which convention governs liability limitations for commercial cargo?</summary><p class="a">The Montreal Convention</p></details>
+    <details class="q"><summary>Which ICAO Annex facilitates the movement of passengers?</summary><p class="a">Annex 9 &mdash; Facilitation</p></details>
+    <details class="q"><summary>The ICAO Annex 6 definition of "flight time" is used for:</summary><p class="a">Flight and duty time regulations</p></details>
+    <details class="q"><summary>Which AIP section contains holding, approach and departure procedures?</summary><p class="a">ENR &mdash; En-route</p></details>
+    <details class="q"><summary>What is the purpose of AIRAC?</summary><p class="a">A document released at fixed notification intervals</p></details>
+    <details class="q"><summary>Where are SAR organisation details found, and who coordinates?</summary><p class="a">In the AIP; coordination by the Rescue Coordination Centre</p></details>
+    <details class="q"><summary>An EASA Implementing Rule is:</summary><p class="a">Hard law</p></details>
+    <details class="q"><summary>When is a Certificate of Airworthiness required?</summary><p class="a">For any flight operation</p></details>
+    <details class="q"><summary>Who ensures the continuing structural integrity programme?</summary><p class="a">The State of Design</p></details>
+    <details class="q"><summary>An Air Operator Certificate is applicable to:</summary><p class="a">An operator conducting commercial air operations</p></details>
+    <details class="q"><summary>Minimum height of aircraft registration marks?</summary><p class="a">At least 30 cm</p></details>
+    <details class="q"><summary>Commander recent experience requirement?</summary><p class="a">3 take-offs and 3 landings as pilot flying in the last 90 days</p></details>
+    <details class="q"><summary>ATPL medical validity after age 40 in single-pilot commercial operations?</summary><p class="a">Reduces from 12 months to 6 months</p></details>
+    <details class="q"><summary>Who can remove a Class 1 medical limitation?</summary><p class="a">The authority</p></details>
+    <details class="q"><summary>What is the definition of an accident?</summary><p class="a">Fatal or serious injury occurring between boarding and disembarking</p></details>
+    <details class="q"><summary>Landing gear damage while taxiing with no injury &mdash; how is it classified?</summary><p class="a">An accident &mdash; follow accident procedures</p></details>
+    <details class="q"><summary>Which record contains aircraft operation, crew names and duty assignments?</summary><p class="a">The journey log</p></details>
+    <details class="q"><summary>When must a flight plan be filed?</summary><p class="a">When flying IFR</p></details>
+    <details class="q"><summary>Delay of 30 minutes beyond EOBT for a controlled flight &mdash; what must you do?</summary><p class="a">Amend the flight plan or submit a new one and cancel the old</p></details>
+    <details class="q"><summary>ATS flight plan Item 9 &mdash; what does the letter L indicate?</summary><p class="a">Maximum certificated take-off mass of 7000 kg or less</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 02 AIRSPACE &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="airspace">
+  <div class="sec-head"><span class="eyebrow">010 02</span><h2>Airspace, Rules of the Air &amp; Separation</h2></div>
+  <p class="lede">Classes and their minima, the semicircular level system, RVSM, and the separation numbers.</p>
+
+  <div class="numbers">
+    <div class="nh">Levels &amp; separation</div>
+    <div class="nlist">
+      <div class="nrow"><span>Vertical sep. below FL290</span><span class="v">1000 ft</span></div>
+      <div class="nrow"><span>RVSM band</span><span class="v">FL290 &ndash; FL410</span></div>
+      <div class="nrow"><span>RVSM vertical sep.</span><span class="v">1000 ft</span></div>
+      <div class="nrow"><span>Non-RVSM above FL290</span><span class="v">2000 ft</span></div>
+      <div class="nrow"><span>Above FL410</span><span class="v">2000 ft</span></div>
+      <div class="nrow"><span>RVSM deviation threshold</span><span class="v">&plusmn;300 ft (&plusmn;90 m)</span></div>
+      <div class="nrow"><span>NAT MNPS lateral</span><span class="v">60 NM</span></div>
+      <div class="nrow"><span>Transition layer minimum</span><span class="v">1000 ft</span></div>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 760 320" role="img" aria-label="Vertical separation bands showing 1000 ft below FL290, the RVSM band FL290 to FL410 at 1000 ft, and 2000 ft above FL410">
+      <line x1="120" y1="290" x2="120" y2="26" stroke="currentColor" stroke-width="1.6"/>
+      <!-- band: above FL410 -->
+      <rect x="122" y="34" width="520" height="58" fill="currentColor" opacity=".07"/>
+      <line x1="122" y1="46" x2="642" y2="46" stroke="currentColor" stroke-width="1.4"/>
+      <line x1="122" y1="80" x2="642" y2="80" stroke="currentColor" stroke-width="1.4"/>
+      <text x="114" y="50" font-size="11.5" text-anchor="end" fill="currentColor">FL450</text>
+      <text x="114" y="84" font-size="11.5" text-anchor="end" fill="currentColor">FL430</text>
+      <text x="656" y="68" font-size="12.5" fill="currentColor" font-weight="600">2000 ft</text>
+      <text x="656" y="84" font-size="11" fill="currentColor">above FL410</text>
+
+      <!-- RVSM band -->
+      <rect x="122" y="100" width="520" height="128" fill="#0C7580" opacity=".13"/>
+      <line x1="122" y1="112" x2="642" y2="112" stroke="#0C7580" stroke-width="1.6"/>
+      <line x1="122" y1="141" x2="642" y2="141" stroke="#0C7580" stroke-width="1.6"/>
+      <line x1="122" y1="170" x2="642" y2="170" stroke="#0C7580" stroke-width="1.6"/>
+      <line x1="122" y1="199" x2="642" y2="199" stroke="#0C7580" stroke-width="1.6"/>
+      <text x="114" y="116" font-size="11.5" text-anchor="end" fill="#0C7580">FL410</text>
+      <text x="114" y="145" font-size="11.5" text-anchor="end" fill="#0C7580">FL400</text>
+      <text x="114" y="174" font-size="11.5" text-anchor="end" fill="#0C7580">FL390</text>
+      <text x="114" y="203" font-size="11.5" text-anchor="end" fill="#0C7580">FL290</text>
+      <text x="656" y="150" font-size="12.5" fill="#0C7580" font-weight="600">1000 ft &mdash; RVSM</text>
+      <text x="656" y="166" font-size="11" fill="#0C7580">FL290 to FL410 inclusive</text>
+      <text x="656" y="182" font-size="11" fill="#0C7580">deviation limit &plusmn;300 ft</text>
+
+      <!-- below FL290 -->
+      <rect x="122" y="212" width="520" height="72" fill="currentColor" opacity=".07"/>
+      <line x1="122" y1="228" x2="642" y2="228" stroke="currentColor" stroke-width="1.4"/>
+      <line x1="122" y1="256" x2="642" y2="256" stroke="currentColor" stroke-width="1.4"/>
+      <text x="114" y="232" font-size="11.5" text-anchor="end" fill="currentColor">FL280</text>
+      <text x="114" y="260" font-size="11.5" text-anchor="end" fill="currentColor">FL270</text>
+      <text x="656" y="246" font-size="12.5" fill="currentColor" font-weight="600">1000 ft</text>
+      <text x="656" y="262" font-size="11" fill="currentColor">below FL290</text>
+
+      <text x="380" y="308" font-size="11.5" text-anchor="middle" fill="currentColor">Semicircular system: <tspan font-weight="600">IFR at whole thousands</tspan>, <tspan font-weight="600">VFR at +500 ft</tspan> &mdash; VFR levels only up to FL285.</text>
+    </svg>
+    <figcaption><b>RVSM is the exception, not the rule.</b> Above FL290 the standard is 2000 ft; inside the FL290&ndash;FL410 band, aircraft approved and equipped for Reduced Vertical Separation Minima may use 1000 ft. Lose the equipment and you lose the band. Above FL410 it reverts to 2000 ft.</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Class</th><th>Flights</th><th>Separation provided</th><th>VMC minima</th></tr></thead>
+      <tbody>
+        <tr><td class="n"><b>A</b></td><td>IFR only</td><td>All from all</td><td>&mdash;</td></tr>
+        <tr><td class="n"><b>B</b></td><td>IFR + VFR</td><td><b>All from all &mdash; IFR separated from VFR</b></td><td>8 km &ge;10 000 ft, 5 km below; 1500 m / 300 m from cloud</td></tr>
+        <tr><td class="n"><b>C</b></td><td>IFR + VFR</td><td>IFR from IFR and VFR; VFR from IFR only</td><td>As above</td></tr>
+        <tr><td class="n"><b>D</b></td><td>IFR + VFR</td><td>IFR from IFR; traffic info on VFR</td><td>As above</td></tr>
+        <tr><td class="n"><b>E</b></td><td>IFR + VFR</td><td>IFR from IFR; traffic info as far as practical</td><td>As above</td></tr>
+        <tr><td class="n"><b>G</b></td><td>IFR + VFR</td><td>None &mdash; traffic info on request</td><td>&ge;10 000 ft: 8 km, 1500 m / 300 m. Below 3000 ft: 5 km, clear of cloud, in sight of surface</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Rules of the air</h3>
+  <ul class="tight">
+    <li><b>Head-on:</b> both alter heading <b>to the right</b>. <b>Converging:</b> the aircraft with the other on its right gives way. <b>Overtaking:</b> pass on the right.</li>
+    <li><b>Squawks:</b> <b>7500</b> unlawful interference &middot; <b>7600</b> communication failure &middot; <b>7700</b> distress.</li>
+    <li><b>Speed adjustments:</b> at or above FL250 in multiples of <b>Mach 0.01</b>; below FL250 in multiples of <b>10 kt IAS</b>.</li>
+    <li><b>Changing IFR to VFR</b> is at the <b>commander's request</b> only &mdash; never instructed by ATC.</li>
+    <li><b>Special VFR</b> is not permitted with visibility below <b>1500 m</b>.</li>
+    <li>In an emergency you may deviate from an ATC clearance, but must <b>notify ATC as soon as possible</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; airspace &amp; separation</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>In which airspace class are IFR and VFR flights separated from each other?</summary><p class="a">Class B</p></details>
+    <details class="q"><summary>VMC minima in Class B?</summary><p class="a">8 km visibility at or above 10 000 ft, 1500 m horizontally and 300 m vertically from cloud</p></details>
+    <details class="q"><summary>VFR in Class G above 10 000 ft?</summary><p class="a">8 km visibility, 1500 m horizontal and 1000 ft vertical from cloud</p></details>
+    <details class="q"><summary>RVSM airspace and vertical separation?</summary><p class="a">FL290 to FL410, with 1000 ft separation</p></details>
+    <details class="q"><summary>Standard vertical separation above FL290 (outside RVSM)?</summary><p class="a">2000 ft</p></details>
+    <details class="q"><summary>Minimum IFR vertical separation below FL290?</summary><p class="a">1000 ft</p></details>
+    <details class="q"><summary>RVSM altitude deviation threshold?</summary><p class="a">&plusmn;90 m (&plusmn;300 ft)</p></details>
+    <details class="q"><summary>RVSM separation in NAT MNPS airspace?</summary><p class="a">60 NM lateral and 1000 ft vertical</p></details>
+    <details class="q"><summary>Correct IFR/VFR cruising level statement?</summary><p class="a">IFR at whole thousands, VFR at +500 ft, up to FL285</p></details>
+    <details class="q"><summary>Minimum transition layer thickness?</summary><p class="a">1000 ft</p></details>
+    <details class="q"><summary>Transition altitude in Germany?</summary><p class="a">5000 ft</p></details>
+    <details class="q"><summary>Speed adjustment at or above FL250?</summary><p class="a">In multiples of Mach 0.01</p></details>
+    <details class="q"><summary>Speed adjustment at or below FL250?</summary><p class="a">In multiples of 10 kt IAS</p></details>
+    <details class="q"><summary>Head-on collision avoidance?</summary><p class="a">Alter heading to the right</p></details>
+    <details class="q"><summary>Correct squawk for communication failure?</summary><p class="a">7600</p></details>
+    <details class="q"><summary>What does squawk 7700 indicate?</summary><p class="a">An aircraft in distress</p></details>
+    <details class="q"><summary>Special VFR flights shall not be conducted when visibility is less than:</summary><p class="a">1500 m</p></details>
+    <details class="q"><summary>Changing from IFR to VFR &mdash; on whose initiative?</summary><p class="a">At the commander's request</p></details>
+    <details class="q"><summary>Emergency deviation from an ATC clearance &mdash; what is required?</summary><p class="a">Notify ATC as soon as possible</p></details>
+    <details class="q"><summary>What is the primary duty of a radar unit?</summary><p class="a">To provide radar separation</p></details>
+    <details class="q"><summary>Passing through another aircraft's level &mdash; what separation applies?</summary><p class="a">Longitudinal separation based on time</p></details>
+    <details class="q"><summary>IFR communication failure in IMC &mdash; when should you land?</summary><p class="a">Within 30 minutes after the ETA or the last acknowledged expected approach time</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 03 AERODROMES &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="ad">
+  <div class="sec-head"><span class="eyebrow">010 03</span><h2>Aerodromes &amp; Lighting</h2></div>
+  <p class="lede">Light colours are the most reliably asked block in the whole subject, and the hardest to hold from prose. The diagram is worth more than the list.</p>
+
+  <figure>
+    <svg viewBox="0 0 800 300" role="img" aria-label="Plan view of a runway showing the colour of threshold, edge, centreline, end and taxiway lighting">
+      <!-- runway body -->
+      <rect x="90" y="96" width="620" height="76" fill="currentColor" opacity=".1" stroke="currentColor" stroke-width="1.2"/>
+      <!-- threshold green -->
+      <g fill="#1B8A4B">
+        <circle cx="96" cy="106" r="4"/><circle cx="96" cy="122" r="4"/><circle cx="96" cy="134" r="4"/>
+        <circle cx="96" cy="146" r="4"/><circle cx="96" cy="162" r="4"/>
+      </g>
+      <text x="96" y="88" font-size="11.5" text-anchor="middle" fill="#1B8A4B" font-weight="600">THRESHOLD</text>
+      <text x="96" y="200" font-size="11" text-anchor="middle" fill="#1B8A4B">green</text>
+      <!-- end red -->
+      <g fill="#B04A34">
+        <circle cx="704" cy="106" r="4"/><circle cx="704" cy="122" r="4"/><circle cx="704" cy="134" r="4"/>
+        <circle cx="704" cy="146" r="4"/><circle cx="704" cy="162" r="4"/>
+      </g>
+      <text x="704" y="88" font-size="11.5" text-anchor="middle" fill="#B04A34" font-weight="600">END</text>
+      <text x="704" y="200" font-size="11" text-anchor="middle" fill="#B04A34">red</text>
+
+      <!-- edge lights white -->
+      <g fill="none" stroke="currentColor" stroke-width="1.6">
+        <circle cx="170" cy="99" r="3.5"/><circle cx="250" cy="99" r="3.5"/><circle cx="330" cy="99" r="3.5"/>
+        <circle cx="410" cy="99" r="3.5"/><circle cx="490" cy="99" r="3.5"/><circle cx="570" cy="99" r="3.5"/><circle cx="640" cy="99" r="3.5"/>
+        <circle cx="170" cy="169" r="3.5"/><circle cx="250" cy="169" r="3.5"/><circle cx="330" cy="169" r="3.5"/>
+        <circle cx="410" cy="169" r="3.5"/><circle cx="490" cy="169" r="3.5"/><circle cx="570" cy="169" r="3.5"/><circle cx="640" cy="169" r="3.5"/>
+      </g>
+      <text x="330" y="88" font-size="11.5" fill="currentColor" font-weight="600">EDGE &mdash; white (yellow in the caution zone)</text>
+
+      <!-- centreline: white / alternating / red -->
+      <g>
+        <g fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="150" cy="134" r="3.5"/><circle cx="200" cy="134" r="3.5"/><circle cx="250" cy="134" r="3.5"/>
+          <circle cx="300" cy="134" r="3.5"/><circle cx="350" cy="134" r="3.5"/><circle cx="400" cy="134" r="3.5"/>
+        </g>
+        <!-- alternating red/white 900 to 300 m -->
+        <circle cx="450" cy="134" r="3.5" fill="#B04A34"/>
+        <circle cx="500" cy="134" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="550" cy="134" r="3.5" fill="#B04A34"/>
+        <circle cx="600" cy="134" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+        <!-- last 300 m red -->
+        <circle cx="650" cy="134" r="3.5" fill="#B04A34"/>
+        <circle cx="680" cy="134" r="3.5" fill="#B04A34"/>
+      </g>
+      <line x1="440" y1="216" x2="620" y2="216" stroke="currentColor" stroke-width="1.3"/>
+      <text x="530" y="232" font-size="11" text-anchor="middle" fill="currentColor">last 900&ndash;300 m: alternating <tspan fill="#B04A34" font-weight="600">red</tspan> / white</text>
+      <line x1="630" y1="216" x2="700" y2="216" stroke="#B04A34" stroke-width="1.3"/>
+      <text x="665" y="248" font-size="11" text-anchor="middle" fill="#B04A34">last 300 m</text>
+      <text x="665" y="262" font-size="11" text-anchor="middle" fill="#B04A34">all red</text>
+      <text x="250" y="232" font-size="11" text-anchor="middle" fill="currentColor">CENTRELINE &mdash; white to 900 m remaining</text>
+
+      <!-- taxiway -->
+      <rect x="300" y="172" width="90" height="46" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="4 3"/>
+      <g fill="#4A4E9E"><circle cx="306" cy="196" r="3.5"/><circle cx="384" cy="196" r="3.5"/></g>
+      <circle cx="345" cy="196" r="3.5" fill="#1B8A4B"/>
+      <text x="345" y="270" font-size="11" text-anchor="middle" fill="currentColor">TAXIWAY &mdash; <tspan fill="#4A4E9E" font-weight="600">blue</tspan> edge, <tspan fill="#1B8A4B" font-weight="600">green</tspan> centreline</text>
+    </svg>
+    <figcaption><b>The colour tells you how much runway is left.</b> Centreline lights run white until 900 m remain, then alternate red and white as a warning, then go solid red for the final 300 m &mdash; so a glance at the colour is a distance-remaining cue in low visibility. Threshold green and end red mark the two ends; taxiway lighting inverts the scheme with blue edges and a green centreline.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Runway strip</b> includes the runway <b>and the stopway</b>.</li>
+        <li><b>Stopway</b> is at the <b>end of the TORA</b>; it may be added to <b>ASDA</b> only.</li>
+        <li><b>Clearway</b>: minimum width <b>500 ft (150 m)</b>, maximum length <b>&frac12; TORA</b>, included in <b>TODA</b>.</li>
+        <li><b>Taxiway design</b> ensures the <b>cockpit remains over the centreline</b> while the main gear stays on the pavement.</li>
+        <li><b>Aerodrome beacon</b> is required when the airfield is used for <b>night operations</b>.</li>
+        <li><b>PAPI</b> &mdash; Precision Approach Path Indicator.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Light signals from the tower</h3>
+      <ul class="tight">
+        <li><b>Steady green</b> &mdash; cleared to land (in flight) / cleared for take-off (ground).</li>
+        <li><b>Flashing green</b> &mdash; <b>return for landing</b>, clearance will follow (in flight) / cleared to taxi (ground).</li>
+        <li><b>Steady red</b> &mdash; give way and continue circling (in flight) / <b>stop</b> (ground).</li>
+        <li><b>Flashing red</b> &mdash; aerodrome unsafe, do not land / taxi clear of the landing area.</li>
+        <li><b>Flashing white</b> &mdash; land at this aerodrome and proceed to apron / return to starting point.</li>
+      </ul>
+      <h3>Approach lighting</h3>
+      <ul class="tight">
+        <li><b>CAT I</b> full system: <b>900 m of centreline lights with a crossbar at 300 m</b>; the full system has <b>five crossbars</b>.</li>
+        <li><b>SNOWTAM</b> maximum validity: <b>8 hours</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; aerodromes</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Runway edge lights shall be:</summary><p class="a">White &mdash; fixed lights showing variable white or yellow (yellow in the caution zone)</p></details>
+    <details class="q"><summary>Runway centreline light colour sequence?</summary><p class="a">White; then alternating red and white; then red for the last 300 m</p></details>
+    <details class="q"><summary>Runway end lights?</summary><p class="a">Fixed unidirectional red</p></details>
+    <details class="q"><summary>Runway threshold identification lights?</summary><p class="a">Flashing green</p></details>
+    <details class="q"><summary>What is the name of the blue taxi lights?</summary><p class="a">Taxiway edge lights</p></details>
+    <details class="q"><summary>What does a green flashing light in the traffic circuit mean?</summary><p class="a">Return to land &mdash; clearance will follow</p></details>
+    <details class="q"><summary>Taxiing to the holding position &mdash; which signal requests a stop?</summary><p class="a">A red light</p></details>
+    <details class="q"><summary>A CAT I precision approach lighting system consists of:</summary><p class="a">900 m of centreline lights with a crossbar at 300 m</p></details>
+    <details class="q"><summary>A CAT I lighting system with additional crossbars has how many?</summary><p class="a">Five crossbars</p></details>
+    <details class="q"><summary>When is an aerodrome beacon required?</summary><p class="a">When the airfield is used for night operations</p></details>
+    <details class="q"><summary>What does PAPI stand for?</summary><p class="a">Precision Approach Path Indicator</p></details>
+    <details class="q"><summary>A runway strip includes the runway and:</summary><p class="a">The stopway</p></details>
+    <details class="q"><summary>Where is the stopway situated?</summary><p class="a">At the end of the TORA</p></details>
+    <details class="q"><summary>Minimum width of a clearway, and maximum permitted length?</summary><p class="a">500 ft wide; maximum &frac12; of the TORA</p></details>
+    <details class="q"><summary>Clearway length may be included in which distance?</summary><p class="a">TODA</p></details>
+    <details class="q"><summary>Taxiway design ensures what?</summary><p class="a">The cockpit remains over the centreline</p></details>
+    <details class="q"><summary>Maximum validity of a SNOWTAM?</summary><p class="a">8 hours</p></details>
+    <details class="q"><summary>When is a runway considered damp?</summary><p class="a">When it is moist but not shiny</p></details>
+    <details class="q"><summary>Definition of a wet runway?</summary><p class="a">25 % of the runway contaminated with water 3 mm deep or less</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 04 WAKE &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="wake">
+  <div class="sec-head"><span class="eyebrow">010 04</span><h2>Wake Turbulence</h2></div>
+  <p class="lede">Eleven questions in this bank alone. Two tables and you have all of them.</p>
+
+  <div class="numbers">
+    <div class="nh">ICAO wake categories</div>
+    <div class="nlist">
+      <div class="nrow"><span>SUPER (J)</span><span class="v">A380 / AN-225</span></div>
+      <div class="nrow"><span>HEAVY (H)</span><span class="v">&ge; 136 000 kg</span></div>
+      <div class="nrow"><span>MEDIUM (M)</span><span class="v">7000 &ndash; 136 000 kg</span></div>
+      <div class="nrow"><span>LIGHT (L)</span><span class="v">&le; 7000 kg</span></div>
+      <div class="nrow"><span>Vortices remain airborne</span><span class="v">&asymp; 3 minutes</span></div>
+      <div class="nrow"><span>Worst-case generator</span><span class="v">slow, heavy, clean</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Radar separation (NM)</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Leading</th><th>Following</th><th>Min</th></tr></thead>
+          <tbody>
+            <tr><td>SUPER</td><td>HEAVY</td><td class="n">6</td></tr>
+            <tr><td>SUPER</td><td>MEDIUM</td><td class="n">7</td></tr>
+            <tr><td>SUPER</td><td>LIGHT</td><td class="n"><b>8</b></td></tr>
+            <tr><td>HEAVY</td><td>HEAVY</td><td class="n"><b>4</b></td></tr>
+            <tr><td>HEAVY</td><td>MEDIUM</td><td class="n"><b>5</b></td></tr>
+            <tr><td>HEAVY</td><td>LIGHT</td><td class="n">6</td></tr>
+            <tr><td>MEDIUM</td><td>LIGHT</td><td class="n">5</td></tr>
+            <tr><td colspan="2">No wake category applies</td><td class="n">3</td></tr>
+            <tr><td colspan="2">Same localiser, no wake requirement</td><td class="n">2.5</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h3>Non-radar separation (minutes)</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Situation</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>MEDIUM / LIGHT departing behind HEAVY</td><td class="n"><b>2</b></td></tr>
+            <tr><td>MEDIUM landing behind HEAVY</td><td class="n"><b>2</b></td></tr>
+            <tr><td>LIGHT landing behind MEDIUM or HEAVY</td><td class="n"><b>3</b></td></tr>
+            <tr><td>Intermediate take-off position</td><td class="n">3</td></tr>
+            <tr><td>Opposite direction / displaced threshold</td><td class="n">3</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="tight">
+        <li>Vortices are the <b>wingtip vortices</b> of the generating aircraft. Seen from behind they are <b>counter-rotating &mdash; clockwise from the left wing, counter-clockwise from the right</b>.</li>
+        <li>They are strongest when the generator is <b>slow, heavy and clean</b>, and they sink and drift with the wind.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; wake turbulence</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Maximum certificated take-off mass for the M (Medium) category?</summary><p class="a">Less than 136 000 kg and more than 7000 kg</p></details>
+    <details class="q"><summary>From what mass is an aircraft classified as HEAVY?</summary><p class="a">136 tonnes</p></details>
+    <details class="q"><summary>Wake turbulence category L applies to:</summary><p class="a">7000 kg or less</p></details>
+    <details class="q"><summary>Wake separation: HEAVY leading, MEDIUM following?</summary><p class="a">5 NM</p></details>
+    <details class="q"><summary>Wake separation: SUPER leading, LIGHT following?</summary><p class="a">8 NM</p></details>
+    <details class="q"><summary>ICAO minimum radar separation, HEAVY following HEAVY to the same runway?</summary><p class="a">4 NM</p></details>
+    <details class="q"><summary>Minimum radar separation on the same localiser with no wake requirement?</summary><p class="a">2.5 NM</p></details>
+    <details class="q"><summary>Radar separation on the same localiser including wake?</summary><p class="a">5 NM</p></details>
+    <details class="q"><summary>Non-radar separation: LIGHT behind MEDIUM or HEAVY on approach?</summary><p class="a">3 minutes</p></details>
+    <details class="q"><summary>Wake separation: MEDIUM taking off behind HEAVY?</summary><p class="a">2 minutes</p></details>
+    <details class="q"><summary>What is the primary cause of wake turbulence?</summary><p class="a">Wingtip vortices</p></details>
+    <details class="q"><summary>Wake turbulence is most severe when the generating aircraft is:</summary><p class="a">Slow, heavy and in a clean configuration</p></details>
+    <details class="q"><summary>How long do wingtip vortices remain airborne?</summary><p class="a">About 3 minutes</p></details>
+    <details class="q"><summary>Wingtip vortices seen from behind rotate how?</summary><p class="a">Counter-rotating &mdash; clockwise from the left, counter-clockwise from the right</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 05 PROCEDURES &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="procs">
+  <div class="sec-head"><span class="eyebrow">010 05</span><h2>Procedures &mdash; PANS-OPS</h2></div>
+  <p class="lede">Approach segments, obstacle clearance, holding, and the minimum altitude alphabet soup.</p>
+
+  <figure>
+    <svg viewBox="0 0 820 300" role="img" aria-label="Instrument approach profile showing arrival, initial, intermediate, final and missed approach segments with their obstacle clearance values">
+      <line x1="40" y1="250" x2="790" y2="250" stroke="currentColor" stroke-width="2"/>
+      <!-- profile -->
+      <path d="M60 78 L200 78 L330 128 L470 128 L660 216 L700 216 L780 150" fill="none" stroke="#0C7580" stroke-width="2.8"/>
+      <!-- fixes -->
+      <g fill="#0C7580">
+        <circle cx="200" cy="78" r="5"/><circle cx="330" cy="128" r="5"/>
+        <circle cx="470" cy="128" r="5"/><circle cx="660" cy="216" r="5"/>
+      </g>
+      <text x="200" y="66" font-size="11.5" text-anchor="middle" fill="#0C7580" font-weight="600">IAF</text>
+      <text x="330" y="116" font-size="11.5" text-anchor="middle" fill="#0C7580" font-weight="600">IF</text>
+      <text x="470" y="116" font-size="11.5" text-anchor="middle" fill="#0C7580" font-weight="600">FAF / FAP</text>
+      <text x="660" y="204" font-size="11.5" text-anchor="middle" fill="#0C7580" font-weight="600">MAPt</text>
+      <!-- segment labels + MOC -->
+      <g font-size="11.5">
+        <text x="130" y="270" text-anchor="middle" fill="currentColor" font-weight="600">ARRIVAL</text>
+        <text x="265" y="270" text-anchor="middle" fill="currentColor" font-weight="600">INITIAL</text>
+        <text x="265" y="285" text-anchor="middle" fill="#B04A34">MOC 300 m</text>
+        <text x="400" y="270" text-anchor="middle" fill="currentColor" font-weight="600">INTERMEDIATE</text>
+        <text x="400" y="285" text-anchor="middle" fill="#B04A34">300 m &rarr; 150 m</text>
+        <text x="565" y="270" text-anchor="middle" fill="currentColor" font-weight="600">FINAL</text>
+        <text x="565" y="285" text-anchor="middle" fill="#B04A34">MOC 75 m (with FAF)</text>
+        <text x="730" y="270" text-anchor="middle" fill="currentColor" font-weight="600">MISSED APPROACH</text>
+        <text x="730" y="285" text-anchor="middle" fill="#B04A34">min gradient 2.5 %</text>
+      </g>
+      <!-- intercept angles -->
+      <text x="330" y="152" font-size="11" text-anchor="middle" fill="currentColor">max intercept to IF:</text>
+      <text x="330" y="166" font-size="11" text-anchor="middle" fill="currentColor">90&deg; precision &middot; 120&deg; non-precision</text>
+      <!-- straight in -->
+      <text x="565" y="152" font-size="11" text-anchor="middle" fill="currentColor">straight-in NPA if final track</text>
+      <text x="565" y="166" font-size="11" text-anchor="middle" fill="currentColor">is within 30&deg; of the runway</text>
+      <text x="740" y="140" font-size="11" fill="currentColor">climb</text>
+    </svg>
+    <figcaption><b>Obstacle clearance tightens as you get closer.</b> 300 m in the initial segment, reducing through the intermediate to 150 m, and only 75 m in the final segment where a FAF defines the path precisely. The missed approach restores protection by requiring a <b>2.5 % climb gradient</b> from the MAPt.</figcaption>
+  </figure>
+
+  <div class="numbers">
+    <div class="nh">Minimum altitudes &amp; obstacle clearance</div>
+    <div class="nlist">
+      <div class="nrow"><span>MSA radius</span><span class="v">25 NM</span></div>
+      <div class="nrow"><span>Initial segment MOC</span><span class="v">300 m</span></div>
+      <div class="nrow"><span>Intermediate MOC</span><span class="v">300 &rarr; 150 m</span></div>
+      <div class="nrow"><span>Final segment MOC (FAF)</span><span class="v">75 m</span></div>
+      <div class="nrow"><span>Holding MOC (terrain &le;2000 ft)</span><span class="v">300 m</span></div>
+      <div class="nrow"><span>MTCA below / above 6000 ft</span><span class="v">1000 / 2000 ft</span></div>
+      <div class="nrow"><span>Missed approach gradient</span><span class="v">2.5 %</span></div>
+      <div class="nrow"><span>Omnidirectional departure PDG</span><span class="v">3.3 %</span></div>
+    </div>
+  </div>
+
+  <p><b>MEA</b> is the lowest altitude providing obstacle clearance <em>and</em> navigation signal coverage between fixes. <b>MTCA</b> appears in red on approach charts. A <b>step-down fix</b> means you must <b>not descend below the crossing altitude</b> until past it. A <b>visual approach</b> is an instrument approach continued visually once the criteria are met.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 320" role="img" aria-label="Holding pattern entry sectors showing direct, parallel and teardrop entries relative to the inbound track">
+      <!-- pattern -->
+      <path d="M380 150 L520 150 A44 44 0 0 1 520 238 L380 238 A44 44 0 0 1 380 150 Z"
+            fill="#0C7580" opacity=".1" stroke="#0C7580" stroke-width="2"/>
+      <circle cx="380" cy="238" r="6" fill="#0C7580"/>
+      <text x="368" y="258" font-size="12" text-anchor="end" fill="#0C7580" font-weight="600">FIX</text>
+      <text x="450" y="232" font-size="11.5" text-anchor="middle" fill="#0C7580">inbound track</text>
+      <polygon points="392,238 406,232 406,244" fill="#0C7580"/>
+      <text x="450" y="166" font-size="11.5" text-anchor="middle" fill="#0C7580">outbound</text>
+
+      <!-- sector lines from fix -->
+      <line x1="380" y1="238" x2="380" y2="60" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <line x1="380" y1="238" x2="212" y2="150" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <line x1="380" y1="238" x2="228" y2="304" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+      <!-- sector labels -->
+      <text x="196" y="112" font-size="13" text-anchor="middle" fill="#4A4E9E" font-weight="600">PARALLEL</text>
+      <text x="196" y="128" font-size="11" text-anchor="middle" fill="#4A4E9E">sector 1 &middot; 110&deg;</text>
+      <text x="176" y="230" font-size="13" text-anchor="middle" fill="#B04A34" font-weight="600">TEARDROP</text>
+      <text x="176" y="246" font-size="11" text-anchor="middle" fill="#B04A34">sector 2 &middot; 70&deg;</text>
+      <text x="560" y="90" font-size="13" text-anchor="middle" fill="#0C7580" font-weight="600">DIRECT</text>
+      <text x="560" y="106" font-size="11" text-anchor="middle" fill="#0C7580">sector 3 &middot; 180&deg;</text>
+
+      <text x="380" y="298" font-size="11.5" text-anchor="middle" fill="currentColor">Right-hand pattern shown. The <tspan font-weight="600">direct</tspan> sector is the largest &mdash; when in doubt on a marginal bearing, direct entry is usually acceptable.</text>
+    </svg>
+    <figcaption><b>Three sectors around the inbound track.</b> The 180&deg; direct sector covers half the compass, which is why most arrivals from the holding side simply join. Outbound timing starts <b>over or abeam the fix, whichever is later</b>: 1 minute at or below 14 000 ft, 1.5 minutes above.</figcaption>
+  </figure>
+
+  <div class="numbers">
+    <div class="nh">Holding</div>
+    <div class="nlist">
+      <div class="nrow"><span>Max speed to 14 000 ft</span><span class="v">230 kt IAS</span></div>
+      <div class="nrow"><span>14 000 &ndash; 20 000 ft</span><span class="v">240 kt IAS</span></div>
+      <div class="nrow"><span>20 000 &ndash; 34 000 ft</span><span class="v">265 kt IAS</span></div>
+      <div class="nrow"><span>Outbound &le;14 000 ft</span><span class="v">1 minute</span></div>
+      <div class="nrow"><span>Outbound &gt;14 000 ft</span><span class="v">1.5 minutes</span></div>
+      <div class="nrow"><span>Bank angle</span><span class="v">25&deg; or 3&deg;/s, lesser bank</span></div>
+    </div>
+  </div>
+
+  <h3>Noise abatement departure procedures</h3>
+  <ul class="tight">
+    <li><b>NADP 1</b> &mdash; noise close to the aerodrome. Climb at V<sub>2</sub>+10&hellip;20, <b>reduce thrust at 800 ft</b>, keep take-off flap, climb to 3000 ft, then accelerate and clean up.</li>
+    <li><b>NADP 2</b> &mdash; noise further out. Accelerate and retract flap earlier, from <b>800 ft AGL</b>.</li>
+    <li>A hospital close to the aerodrome calls for <b>NADP 1</b>. After an engine failure the <b>pilot has the authority to disregard the NADP</b>, and noise abatement <b>shall not prohibit the use of reverse thrust</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; procedures</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Where does the final approach segment of a precision approach start?</summary><p class="a">At the FAP &mdash; final approach point</p></details>
+    <details class="q"><summary>Which segment runs from leaving the en-route structure to the intermediate segment?</summary><p class="a">The initial approach segment</p></details>
+    <details class="q"><summary>MOC in the initial approach segment?</summary><p class="a">300 m</p></details>
+    <details class="q"><summary>MOC in the intermediate approach primary area?</summary><p class="a">300 m reducing to 150 m</p></details>
+    <details class="q"><summary>MOC in the final segment with a FAF?</summary><p class="a">75 m</p></details>
+    <details class="q"><summary>Maximum intercept angle to the IF for a precision approach, and non-precision?</summary><p class="a">90&deg; precision; 120&deg; non-precision</p></details>
+    <details class="q"><summary>A straight-in non-precision approach is acceptable if the angle is at most:</summary><p class="a">30&deg;</p></details>
+    <details class="q"><summary>What is the MSA radius?</summary><p class="a">25 NM</p></details>
+    <details class="q"><summary>MTCA obstacle clearance below and above 6000 ft?</summary><p class="a">1000 ft below 6000 ft; 2000 ft above</p></details>
+    <details class="q"><summary>What does a red displayed altitude on an approach chart airway indicate?</summary><p class="a">MTCA</p></details>
+    <details class="q"><summary>Lowest altitude providing obstacle clearance between fixes?</summary><p class="a">MEA</p></details>
+    <details class="q"><summary>Step-down fix descent rule?</summary><p class="a">Do not descend below the crossing altitude until past the fix</p></details>
+    <details class="q"><summary>Minimum omnidirectional departure gradient?</summary><p class="a">3.3 %</p></details>
+    <details class="q"><summary>What is the initial missed approach segment?</summary><p class="a">From the MAPt to the establishment of climb</p></details>
+    <details class="q"><summary>Maximum holding speed at FL110 for a jet?</summary><p class="a">230 kt IAS</p></details>
+    <details class="q"><summary>Maximum holding speed at FL240?</summary><p class="a">265 kt IAS</p></details>
+    <details class="q"><summary>When does outbound timing in a holding pattern begin?</summary><p class="a">Over or abeam the fix, whichever occurs later</p></details>
+    <details class="q"><summary>Outbound time at or below 14 000 ft, and above, in still air?</summary><p class="a">1 minute at or below; 1.5 minutes above</p></details>
+    <details class="q"><summary>Bank angle in a holding pattern?</summary><p class="a">25&deg; or a rate of 3&deg; per second, whichever requires the lesser bank</p></details>
+    <details class="q"><summary>Inbound track 000&deg;, standard turns, approaching from the south-west &mdash; which entry?</summary><p class="a">Direct entry</p></details>
+    <details class="q"><summary>Describe NADP 1.</summary><p class="a">Reduce thrust at 800 ft, keep flaps, climb to 3000 ft, then clean up</p></details>
+    <details class="q"><summary>NADP 2 &mdash; climb at V2+10 to 20 kt until what height?</summary><p class="a">800 ft AGL</p></details>
+    <details class="q"><summary>Engine failure after take-off while following NADP 1?</summary><p class="a">The pilot has the authority to disregard the NADP</p></details>
+    <details class="q"><summary>ICAO noise abatement during landing &mdash; what does it say about reverse thrust?</summary><p class="a">It shall not prohibit the use of reverse thrust</p></details>
+    <details class="q"><summary>Turning departures may specify the turn at:</summary><p class="a">A fix, a facility or an altitude</p></details>
+  </div>
+</section>
+
+<div class="part-band">
+  <span class="pn">070</span>
+  <span class="pt">OPERATIONAL PROCEDURES</span>
+  <span class="pd">EU 965/2012 &middot; Part-CAT, Part-ORO, Part-SPA</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 06 OPERATIONS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="ops">
+  <div class="sec-head"><span class="eyebrow">070 01</span><h2>Operations &amp; Documents</h2></div>
+  <p class="lede">Who writes what, who signs what, and the approach ban.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Operations Manual</h3>
+      <ul class="tight">
+        <li><b>Part A</b> general &middot; <b>Part B</b> type specific (<b>contaminated runway data lives here</b>) &middot; <b>Part C</b> aerodromes and routes &middot; <b>Part D</b> training.</li>
+        <li>Provided and kept current by <b>the aircraft operator</b>.</li>
+      </ul>
+      <h3>MEL</h3>
+      <ul class="tight">
+        <li>Drawn up by <b>the operator</b> and <b>may be more restrictive than the MMEL</b>, never less.</li>
+        <li>Applied by the commander <b>at the parking area before the aircraft taxies</b>.</li>
+        <li>An amended MEL must be submitted to the authority within <b>90 days</b> of an MMEL change.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Approach ban &amp; minima</h3>
+      <ul class="tight">
+        <li>With no operating minima published and RVR below minima, the approach shall not be continued below <b>1000 ft above the aerodrome</b>.</li>
+        <li>Seeing the approach lights before MDH on a VOR/DME approach: <b>yes, you may continue</b>.</li>
+        <li><b>DH</b> is used for <b>precision approaches</b>; MDA/MDH for non-precision.</li>
+      </ul>
+      <h3>CAT I / II / III</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Cat</th><th>DH</th><th>Defined by</th></tr></thead>
+          <tbody>
+            <tr><td class="n">I</td><td class="n">&ge; 200 ft</td><td>DH and RVR</td></tr>
+            <tr><td class="n">II</td><td class="n">100 &ndash; 200 ft</td><td>DH and RVR; needs <b>radio altimeter and two pilots</b></td></tr>
+            <tr><td class="n">III</td><td class="n">&lt; 100 ft or none</td><td><b>RVR only</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; operations</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Who provides and updates the Operations Manual?</summary><p class="a">The aircraft operator</p></details>
+    <details class="q"><summary>Where is contaminated runway information found in the OPS manual?</summary><p class="a">Part B &mdash; type specific</p></details>
+    <details class="q"><summary>The Minimum Equipment List is drawn up by whom?</summary><p class="a">The operator &mdash; and it may be more restrictive than the MMEL</p></details>
+    <details class="q"><summary>When must MEL limitations be applied by the commander?</summary><p class="a">At the parking area, prior to the aircraft taxiing</p></details>
+    <details class="q"><summary>Time limit to submit an amended MEL after an MMEL change?</summary><p class="a">90 days</p></details>
+    <details class="q"><summary>A CAT II precision approach has a decision height of:</summary><p class="a">At least 100 ft</p></details>
+    <details class="q"><summary>Minimum requirement for a CAT II precision approach?</summary><p class="a">A radio altimeter and two pilots</p></details>
+    <details class="q"><summary>Minimum DH for a CAT I precision approach?</summary><p class="a">200 ft</p></details>
+    <details class="q"><summary>CAT III minima are defined by:</summary><p class="a">RVR only</p></details>
+    <details class="q"><summary>Decision height is used for which type of approach?</summary><p class="a">Precision approaches</p></details>
+    <details class="q"><summary>No operating minima and RVR below minima &mdash; the approach is not continued beyond:</summary><p class="a">1000 ft above the aerodrome</p></details>
+    <details class="q"><summary>Seeing the approach lights before MDH on a VOR/DME approach &mdash; may you continue?</summary><p class="a">Yes, you may continue the approach</p></details>
+    <details class="q"><summary>Autopilot requirement for single-pilot IFR operations?</summary><p class="a">Altitude hold and heading mode</p></details>
+    <details class="q"><summary>An ILS glide path steeper than 3&deg; is used when:</summary><p class="a">Other means of obstacle clearance are impracticable</p></details>
+    <details class="q"><summary>Why are aircraft categories based on threshold speed?</summary><p class="a">To standardise manoeuvrability for approach procedures</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 07 CABIN &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="cabin">
+  <div class="sec-head"><span class="eyebrow">070 02</span><h2>Cabin Safety &amp; Equipment</h2></div>
+  <p class="lede">Counting problems. Learn the two step tables and the oxygen numbers and this section is free.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Hand fire extinguishers</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Passenger seats</th><th>Extinguishers</th></tr></thead>
+          <tbody>
+            <tr><td class="n">7 &ndash; 30</td><td class="n">1</td></tr>
+            <tr><td class="n">31 &ndash; 60</td><td class="n">2</td></tr>
+            <tr><td class="n">61 &ndash; 200</td><td class="n"><b>3</b></td></tr>
+            <tr><td class="n">201 &ndash; 300</td><td class="n">4</td></tr>
+            <tr><td class="n">301 &ndash; 400</td><td class="n"><b>5</b></td></tr>
+            <tr><td class="n">401 &ndash; 500</td><td class="n">6</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The number depends on the <b>number of passenger seats</b>, not on the passengers carried. <b>Water extinguishers suit Class A fires</b> (solid combustibles).</p>
+    </div>
+    <div>
+      <h3>Oxygen</h3>
+      <ul class="tight">
+        <li>Flight deck occupants above <b>25 000 ft</b> in a pressurised aeroplane: <b>2 hours</b> of supplemental oxygen.</li>
+        <li>Passenger masks must <b>deploy automatically before cabin altitude exceeds 15 000 ft</b>.</li>
+        <li>At least <b>10 % more masks than passenger seats</b>.</li>
+        <li>After pressurisation failure: oxygen for the <b>entire period cabin altitude exceeds 15 000 ft</b>, minimum <b>10 minutes</b>.</li>
+        <li>The oxygen demonstration for a flight planned at FL290 must be completed <b>before take-off</b>.</li>
+      </ul>
+      <h3>Crew &amp; equipment</h3>
+      <ul class="tight">
+        <li><b>Cabin crew</b>: at least one per 50 passenger seats &mdash; <b>100 passengers requires 2</b>.</li>
+        <li>With more than one cabin crew member, the <b>operator nominates one responsible to the commander</b>.</li>
+        <li><b>ELT</b> must transmit simultaneously on <b>121.5 and 406 MHz</b>.</li>
+        <li>Aeroplanes over 5700 kg or with 9&ndash;200 seats: a <b>crash axe or crowbar on the flight deck</b>.</li>
+        <li><b>Life rafts</b> must provide survival <b>with the loss of one raft of the largest rated capacity</b>.</li>
+        <li><b>Ditching</b>, unless stated otherwise: <b>gear up, maximum flap</b>.</li>
+        <li>Seat belts secured for <b>take-off, landing, taxiing, turbulence and emergencies</b>. An <b>infant</b> is <b>0&ndash;2 years</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; cabin &amp; equipment</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Cabin crew required for 100 passengers?</summary><p class="a">2</p></details>
+    <details class="q"><summary>Fire extinguishers required for 350 seats?</summary><p class="a">5</p></details>
+    <details class="q"><summary>An aircraft with 61&ndash;200 seats requires how many extinguishers?</summary><p class="a">3</p></details>
+    <details class="q"><summary>Minimum extinguishers for a 7-seat passenger configuration?</summary><p class="a">1</p></details>
+    <details class="q"><summary>The number of cabin fire extinguishers depends on:</summary><p class="a">The number of passenger seats</p></details>
+    <details class="q"><summary>H&#8322;O fire extinguishers are suitable for:</summary><p class="a">Class A fires</p></details>
+    <details class="q"><summary>Minimum supplemental oxygen time for flight deck occupants above 25 000 ft (pressurised)?</summary><p class="a">2 hours</p></details>
+    <details class="q"><summary>Passenger oxygen masks must auto-release before cabin altitude exceeds:</summary><p class="a">15 000 ft</p></details>
+    <details class="q"><summary>Passenger oxygen mask quantity requirement?</summary><p class="a">At least 10 % more masks than passenger seats</p></details>
+    <details class="q"><summary>Passenger oxygen requirement after a pressurisation failure?</summary><p class="a">For the entire flight where cabin altitude exceeds 15 000 ft, minimum 10 minutes</p></details>
+    <details class="q"><summary>Oxygen demonstration for a flight planned at FL290 must be completed before:</summary><p class="a">Take-off</p></details>
+    <details class="q"><summary>ELT requirement according to EASA AIR OPS?</summary><p class="a">Transmitting simultaneously on 121.5 MHz and 406 MHz</p></details>
+    <details class="q"><summary>Aircraft over 5700 kg or with 9&ndash;200 seats must be equipped with:</summary><p class="a">A crash axe or crowbar on the flight deck</p></details>
+    <details class="q"><summary>Life rafts must allow survival under what condition?</summary><p class="a">With the loss of one raft of the largest rated capacity</p></details>
+    <details class="q"><summary>Ditching configuration unless stated otherwise?</summary><p class="a">Gear up, maximum flaps</p></details>
+    <details class="q"><summary>When must passenger seat belts be secured?</summary><p class="a">Take-off, landing, taxiing, turbulence and emergencies</p></details>
+    <details class="q"><summary>Correct statement about infants?</summary><p class="a">0 to 2 years of age</p></details>
+    <details class="q"><summary>With more than one cabin crew member assigned, who is responsible?</summary><p class="a">The operator nominates a cabin crew member responsible to the commander</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 08 FUEL &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="fuel">
+  <div class="sec-head"><span class="eyebrow">070 03</span><h2>Fuel Policy &amp; Alternates</h2></div>
+  <p class="lede">The planning minima table and the one rule about final reserve that they always ask.</p>
+
+  <div class="numbers">
+    <div class="nh">Fuel &amp; alternate numbers</div>
+    <div class="nlist">
+      <div class="nrow"><span>Take-off alternate, twin</span><span class="v">60 min at OEI speed</span></div>
+      <div class="nrow"><span>Final reserve, jet</span><span class="v">30 min holding, 1500 ft</span></div>
+      <div class="nrow"><span>Fuel at en-route alt. after depress.</span><span class="v">30 minutes</span></div>
+      <div class="nrow"><span>Contingency fuel</span><span class="v">5 % of trip fuel</span></div>
+      <div class="nrow"><span>Wet landing distance, no data</span><span class="v">+15 %</span></div>
+    </div>
+  </div>
+
+  <ul class="tight">
+    <li><b>Trip fuel</b> runs <b>from take-off to landing at the destination</b>.</li>
+    <li>It is <b>prohibited to plan the use of final reserve fuel</b>. If you expect to land with less, you declare <em>MINIMUM FUEL</em>, and <em>MAYDAY FUEL</em> if you will actually land below it.</li>
+    <li><b>Extra fuel may be added</b> at the commander's discretion &mdash; for example for <b>expected go-arounds</b>.</li>
+    <li><b>Destination alternate planning minima</b>: with CAT II available, plan on <b>RVR according to CAT I</b>. For a non-precision approach, <b>MDH + 200 ft and visibility 1000 m</b>.</li>
+    <li><b>Take-off alternate</b> for a twin: within <b>60 minutes at one-engine-inoperative cruise speed</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; fuel &amp; alternates</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Trip fuel definition?</summary><p class="a">From take-off to landing at the destination</p></details>
+    <details class="q"><summary>Use of final reserve fuel?</summary><p class="a">It is prohibited to plan its use</p></details>
+    <details class="q"><summary>Correct Part-CAT fuel policy statement?</summary><p class="a">Extra fuel may be added for expected go-arounds</p></details>
+    <details class="q"><summary>Take-off alternate for a 2-engine aeroplane must be within:</summary><p class="a">60 minutes at one-engine-inoperative cruise speed</p></details>
+    <details class="q"><summary>Minimum fuel on arrival at an en-route alternate after depressurisation?</summary><p class="a">30 minutes</p></details>
+    <details class="q"><summary>EU-OPS planning minima for a destination alternate with CAT II available?</summary><p class="a">RVR according to CAT I</p></details>
+    <details class="q"><summary>EU-OPS alternate minima for a non-precision approach?</summary><p class="a">MDH + 200 ft and 1000 m visibility</p></details>
+    <details class="q"><summary>Landing distance increase for a wet runway with no data available?</summary><p class="a">15 %</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 09 HAZARDS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="haz">
+  <div class="sec-head"><span class="eyebrow">070 04</span><h2>Hazards &amp; Emergencies</h2></div>
+  <p class="lede">Depressurisation, contamination, interception, unlawful interference, bird strike, wind shear.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Depressurisation</h3>
+      <ul class="tight">
+        <li><b>Mist in the cabin with a pressure and temperature drop</b> indicates a <b>rapid depressurisation</b>.</li>
+        <li>The cabin rate-of-change indicator shows a <b>rate of climb</b> when cabin pressure is decreasing.</li>
+        <li>In an <b>explosive decompression at FL410</b>, unsecured objects may be sucked out.</li>
+      </ul>
+      <h3>Contamination &amp; de-icing</h3>
+      <ul class="tight">
+        <li>In <b>two-stage de-icing / anti-icing</b>, holdover time starts at the <b>beginning of the second stage</b>.</li>
+        <li>Braking efficiency is reported as <b>poor, medium, good</b>. A friction coefficient of 0.20 means <b>poor</b>.</li>
+        <li><b>Dynamic hydroplaning</b> depends primarily on the <b>depth of standing water</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Interception &amp; unlawful interference</h3>
+      <ul class="tight">
+        <li><b>Rocking wings and flashing navigation lights</b> from the interceptor means <b>"you have been intercepted &mdash; follow me"</b>.</li>
+        <li>Interception frequencies in order: <b>121.5 MHz, then 243.0 MHz</b>.</li>
+        <li>Unlawful interference with no ATS contact: <b>proceed at a level differing by 300 m (1000 ft)</b> where 2000 ft separation applies, and <b>broadcast warnings on the VHF in use or 121.5</b>.</li>
+        <li>Training for unlawful interference is the responsibility of <b>the operator</b>; security procedures are confirmed to <b>any state from which the operator provides service</b>.</li>
+      </ul>
+      <h3>Wind shear &amp; birds</h3>
+      <ul class="tight">
+        <li>Wind shear <b>reported before take-off &rarr; delay the take-off</b>. Wind shear <b>encountered during take-off &rarr; select TOGA / maximum thrust</b>.</li>
+        <li>Highest bird strike risk is <b>below 500 m</b>. Observing a hazard: <b>inform the local ATS unit as workload allows</b>.</li>
+        <li><b>Fuel jettison</b> is best done <b>in a straight line at a relatively high flight level</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="caution">
+    <span class="ch">Instrument failures they slip into this bank</span>
+    <p>A <b>blocked static source in the descent</b> leaves the altimeter <b>frozen at the reading where the blockage occurred</b>. <b>Iced EPR probes</b> make the EPR read <b>higher than actual</b>, so you set less thrust than you think. <b>Ice blocking a pressure sensor in cruise</b> can make the <b>autothrottle demand less thrust</b>. Flying into a CB, expect <b>erroneous airspeed and altitude indications</b>.</p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; hazards &amp; emergencies</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Mist in the cabin with a pressure and temperature drop indicates:</summary><p class="a">Rapid depressurisation</p></details>
+    <details class="q"><summary>Cabin pressure decreasing &mdash; what does the rate indicator show?</summary><p class="a">A rate of climb</p></details>
+    <details class="q"><summary>Explosive decompression at FL410 &mdash; which statement is true?</summary><p class="a">Unsecured objects may be sucked out</p></details>
+    <details class="q"><summary>Two-stage de-icing / anti-icing &mdash; when does holdover time start?</summary><p class="a">At the beginning of the second stage</p></details>
+    <details class="q"><summary>Braking efficiency information is given as:</summary><p class="a">Poor, medium, good</p></details>
+    <details class="q"><summary>Dynamic hydroplaning depends primarily on:</summary><p class="a">The depth of standing water on the runway</p></details>
+    <details class="q"><summary>Rocking wings and flashing navigation lights means:</summary><p class="a">You have been intercepted &mdash; follow me</p></details>
+    <details class="q"><summary>Interception communication frequency sequence?</summary><p class="a">121.5 MHz, then 243 MHz</p></details>
+    <details class="q"><summary>Unlawful interference with no ATS contact &mdash; correct action?</summary><p class="a">Proceed at a level differing by 300 m (1000 ft) where 2000 ft separation applies</p></details>
+    <details class="q"><summary>Unlawful interference &mdash; immediate pilot action?</summary><p class="a">Broadcast warnings on the VHF in use or on 121.5 MHz</p></details>
+    <details class="q"><summary>Who is responsible for unlawful interference training?</summary><p class="a">The operator</p></details>
+    <details class="q"><summary>Suspected unlawful interference &mdash; search procedure?</summary><p class="a">Search the aircraft for sabotage and illicit items</p></details>
+    <details class="q"><summary>Wind shear reported before take-off &mdash; best action?</summary><p class="a">Delay the take-off</p></details>
+    <details class="q"><summary>Encountering wind shear during take-off?</summary><p class="a">Select TOGA / maximum thrust</p></details>
+    <details class="q"><summary>Where does the highest risk of bird strikes occur?</summary><p class="a">Below 500 m</p></details>
+    <details class="q"><summary>Action when a potential bird hazard is observed?</summary><p class="a">Inform the local ATS unit as soon as workload allows</p></details>
+    <details class="q"><summary>Best condition to jettison fuel in flight?</summary><p class="a">In a straight line at a relatively high flight level</p></details>
+    <details class="q"><summary>Cargo compartment fire &mdash; which system is normally switched off?</summary><p class="a">Ventilation of the cargo compartment</p></details>
+    <details class="q"><summary>Blocked static source during descent &mdash; the altimeter will:</summary><p class="a">Continue to display the reading at which the blockage occurred</p></details>
+    <details class="q"><summary>Iced EPR probes &mdash; the EPR indication will be:</summary><p class="a">Greater than the actual value</p></details>
+    <details class="q"><summary>Flying unavoidably into a CB &mdash; what must the pilot flying consider?</summary><p class="a">Possible erroneous airspeed and altitude indications</p></details>
+    <details class="q"><summary>NAT contingency &mdash; unable to maintain assigned FL with no ATC clearance?</summary><p class="a">Offset 15 NM while initiating a climb or descent</p></details>
+    <details class="q"><summary>NAT MNPS &mdash; both LRNS fail with no ATC contact, what do you broadcast?</summary><p class="a">Your intention of climbing or descending 500 ft</p></details>
+    <details class="q"><summary>Who is the key person for Flight Data Monitoring?</summary><p class="a">The safety manager</p></details>
+  </div>
+</section>
+
+<div class="part-band">
+  <span class="pn">090</span>
+  <span class="pt">COMMUNICATIONS</span>
+  <span class="pd">Radiotelephony &mdash; the third subject hiding in this bank</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 10 RT &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="rt">
+  <div class="sec-head"><span class="eyebrow">090 01</span><h2>Radiotelephony</h2></div>
+  <p class="lede">Around twenty questions of pure Comms sit inside the Air Law bank. Small subject, quick marks.</p>
+
+  <div class="numbers">
+    <div class="nh">Numbers &amp; codes</div>
+    <div class="nlist">
+      <div class="nrow"><span>VHF channel spacing</span><span class="v">8.33 kHz</span></div>
+      <div class="nrow"><span>Emergency frequencies</span><span class="v">121.5 / 243.0 MHz</span></div>
+      <div class="nrow"><span>Readability scale</span><span class="v">1 to 5</span></div>
+      <div class="nrow"><span>READABILITY 3</span><span class="v">readable with difficulty</span></div>
+      <div class="nrow"><span>QTE</span><span class="v">true bearing from station</span></div>
+      <div class="nrow"><span>QDM</span><span class="v">magnetic heading to station</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Message priority</h3>
+      <ol class="tight">
+        <li><b>Distress</b> (MAYDAY)</li>
+        <li><b>Urgency</b> (PAN PAN)</li>
+        <li><b>Direction finding</b></li>
+        <li><b>Flight safety</b> &mdash; including ATC clearances and instructions</li>
+        <li><b>Meteorological</b></li>
+        <li><b>Flight regularity</b></li>
+      </ol>
+      <p>A <b>MAYDAY</b> call contains: <em>MAYDAY</em> three times, the station addressed, the callsign, the nature of the emergency, and the assistance required.</p>
+    </div>
+    <div>
+      <h3>Phraseology</h3>
+      <ul class="tight">
+        <li><b>UNABLE</b> &mdash; the instruction cannot be complied with. <b>I SAY AGAIN</b> &mdash; repetition for emphasis. <b>CHECK</b> &mdash; examine a system or procedure.</li>
+        <li><b>RECYCLE SQUAWK 1240</b> &mdash; reselect the assigned mode and code.</li>
+        <li><b>Conditional clearance</b>: <em>"BEHIND the landing A320, LINE UP AND WAIT runway 09"</em> &mdash; the condition comes first and last.</li>
+        <li><b>Must be read back</b>: route clearances, <b>runway in use and QNH</b>, SSR codes, level, heading and speed instructions, transition level.</li>
+        <li><b>QNH 1000</b> is read <b>digit by digit</b>.</li>
+        <li><b>Callsign types</b>: registration; operator + registration; <b>operator + flight identification</b>. A callsign like <em>SPEEDBIRD 165</em> may <b>not</b> be abbreviated.</li>
+        <li><b>TRANSMITTING BLIND DUE RECEIVER FAILURE</b> is sent <b>on the frequency in use</b>.</li>
+        <li><b>MSAW</b> &mdash; Minimum Safe Altitude Warning. <b>RVR</b> &mdash; Runway Visual Range. <b>MLS</b> &mdash; Microwave Landing System.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; radiotelephony</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What shall a MAYDAY call contain?</summary><p class="a">"MAYDAY MAYDAY MAYDAY", the station addressed, callsign, nature of emergency, assistance required</p></details>
+    <details class="q"><summary>Correct priority order of aeronautical mobile messages?</summary><p class="a">Distress, urgency, direction finding, flight safety, meteorological, flight regularity</p></details>
+    <details class="q"><summary>ATC clearances and instructions are which class of message?</summary><p class="a">Flight safety messages</p></details>
+    <details class="q"><summary>What does READABILITY 3 mean?</summary><p class="a">Readable, but with difficulty</p></details>
+    <details class="q"><summary>Which phraseology is used when an instruction cannot be complied with?</summary><p class="a">UNABLE</p></details>
+    <details class="q"><summary>Which phrase is used for repetition or emphasis?</summary><p class="a">I SAY AGAIN</p></details>
+    <details class="q"><summary>What does CHECK mean?</summary><p class="a">Examine a system or procedure</p></details>
+    <details class="q"><summary>What does "RECYCLE SQUAWK 1240" mean?</summary><p class="a">Reselect the assigned mode and code 1240</p></details>
+    <details class="q"><summary>Give an example of a conditional clearance.</summary><p class="a">"BEHIND the landing A320, LINE UP AND WAIT runway 09"</p></details>
+    <details class="q"><summary>Which ATC information must be read back?</summary><p class="a">QNH and the runway in use (among the other mandatory items)</p></details>
+    <details class="q"><summary>Which must be read digit by digit?</summary><p class="a">QNH 1000</p></details>
+    <details class="q"><summary>What is the third type of call sign?</summary><p class="a">Operator plus registration number</p></details>
+    <details class="q"><summary>Which call sign may NOT be abbreviated?</summary><p class="a">SPEEDBIRD 165</p></details>
+    <details class="q"><summary>Call sign for approach control radar departures?</summary><p class="a">DEPARTURE</p></details>
+    <details class="q"><summary>Minimum VHF frequency separation?</summary><p class="a">8.33 kHz</p></details>
+    <details class="q"><summary>"TRANSMITTING BLIND DUE RECEIVER FAILURE" is transmitted:</summary><p class="a">On the frequency presently in use</p></details>
+    <details class="q"><summary>How do you request a true bearing from a VDF station?</summary><p class="a">QTE</p></details>
+    <details class="q"><summary>What does MSAW mean?</summary><p class="a">Minimum Safe Altitude Warning</p></details>
+    <details class="q"><summary>What does RVR stand for?</summary><p class="a">Runway Visual Range</p></details>
+    <details class="q"><summary>What does MLS stand for?</summary><p class="a">Microwave Landing System</p></details>
+    <details class="q"><summary>What does an ATC call of "VISIBILITY 1200" mean?</summary><p class="a">1200 metres</p></details>
+    <details class="q"><summary>Meaning of the ground-air visual signal "++"?</summary><p class="a">We have found some personnel</p></details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>Air Law &amp; Operations</b> &mdash; revision sheet for airline selection screening</div>
+    <div>Built from the Selection question bank (233 items), ICAO Annexes and EU 965/2012</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.qbank').forEach(function(bank){
+  var btn = bank.querySelector('.reveal');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var items = bank.querySelectorAll('details.q');
+    var opening = btn.textContent.trim() === 'Reveal all';
+    items.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'Hide all' : 'Reveal all';
+  });
+});
+</script>
