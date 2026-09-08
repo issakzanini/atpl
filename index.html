@@ -1,0 +1,251 @@
+<meta charset="utf-8">
+<title>ATPL Revision Sheets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F5F5F3;
+  --surface:#FFFFFF;
+  --surface-2:#EDEDEA;
+  --ink:#1A1A18;
+  --muted:#6B6B66;
+  --line:#D5D4CF;
+  --line-soft:#E4E3DE;
+  --shadow:0 1px 2px rgba(26,26,24,.07);
+  --shadow-lift:0 3px 10px rgba(26,26,24,.11);
+  /* subject accents - light */
+  --s-met:#1D4E89;
+  --s-pof:#C2470E;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121211; --surface:#1B1B19; --surface-2:#252522; --ink:#EAE9E5;
+    --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
+    --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
+    --s-met:#6FA8DC; --s-pof:#F79155;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121211; --surface:#1B1B19; --surface-2:#252522; --ink:#EAE9E5;
+  --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
+  --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
+  --s-met:#6FA8DC; --s-pof:#F79155;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast-in{max-width:1020px;margin:0 auto;padding:34px 24px 24px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px 32px;justify-content:space-between}
+h1{margin:0;font-size:50px;line-height:.96;font-weight:700;letter-spacing:.005em}
+.mast-kicker{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;
+  letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin:0 0 8px}
+.mast-sub{margin:10px 0 0;color:var(--muted);font-size:15px;max-width:52ch}
+.mast-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:2;letter-spacing:.04em;white-space:nowrap}
+.mast-meta b{color:var(--ink);font-weight:600;font-size:13px}
+
+main{max-width:1020px;margin:0 auto;padding:0 24px 80px}
+
+/* ---------- section heads ---------- */
+.shead{display:flex;align-items:baseline;gap:12px;margin:42px 0 4px;
+  padding-bottom:7px;border-bottom:1px solid var(--line)}
+.shead h2{margin:0;font-size:21px;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+.shead .count{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);margin-left:auto}
+.snote{margin:10px 0 20px;color:var(--muted);font-size:14.5px;max-width:66ch}
+
+/* ---------- card grid ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;align-items:stretch}
+.card{display:flex;flex-direction:column;gap:0;
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--sc,var(--line));
+  border-radius:2px;padding:15px 17px 14px;text-decoration:none;color:inherit;
+  box-shadow:var(--shadow);transition:box-shadow .14s ease,border-color .14s ease,transform .14s ease}
+a.card:hover{box-shadow:var(--shadow-lift);border-color:var(--sc);transform:translateY(-2px)}
+a.card:focus-visible{outline:2px solid var(--sc);outline-offset:3px}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.code{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.1em;
+  color:var(--sc);border:1.5px solid var(--sc);border-radius:2px;padding:2px 7px}
+.state{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:12px;
+  text-transform:uppercase;letter-spacing:.12em;color:var(--sc)}
+.card h3{margin:0 0 4px;font-size:22px;font-weight:700;line-height:1.12}
+.card p{margin:0 0 12px;font-size:14.5px;color:var(--muted);line-height:1.5;flex:1 1 auto}
+.stats{display:flex;flex-wrap:wrap;gap:4px 16px;padding-top:10px;border-top:1px solid var(--line-soft);
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.stats b{color:var(--ink);font-weight:600}
+.go{margin-top:11px;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15.5px;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--sc)}
+
+/* planned state */
+.card.soon{border-style:dashed;border-left-style:dashed;border-color:var(--line);box-shadow:none;background:transparent}
+.card.soon .code{color:var(--muted);border-color:var(--line)}
+.card.soon .state{color:var(--muted)}
+.card.soon h3{color:var(--muted)}
+
+/* ---------- sheet colours ---------- */
+.s-met{--sc:var(--s-met)}
+.s-pof{--sc:var(--s-pof)}
+
+/* ---------- how it works ---------- */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:0 30px;
+  background:var(--surface-2);border-radius:3px;padding:18px 22px;margin:16px 0 6px}
+.notes h4{font-family:"Barlow Condensed",sans-serif;margin:0 0 5px;font-size:14px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.notes p{margin:0 0 14px;font-size:14.5px;line-height:1.55}
+.notes p:last-child{margin-bottom:0}
+.notes code{font-size:12.5px;background:var(--surface);padding:1px 5px;border-radius:2px;border:1px solid var(--line)}
+
+footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24px;margin-top:44px}
+.foot-in{max-width:1020px;margin:0 auto;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:38px}
+  .mast-meta{text-align:left}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}a.card:hover{transform:none}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div>
+      <p class="mast-kicker">EASA ATPL(A) &middot; Airline Selection Preparation</p>
+      <h1>ATPL Revision Sheets</h1>
+      <p class="mast-sub">Single-page revision sheets built from the CAE Oxford syllabus and a working selection question bank. Theory, diagrams and the real questions, organised by syllabus topic.</p>
+    </div>
+    <div class="mast-meta">
+      <div><b>2</b> sheets ready</div>
+      <div><b>1516</b> questions in the bank</div>
+      <div><b>11</b> subject areas</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="shead">
+    <h2>Ready</h2>
+    <span class="count">2 sheets</span>
+  </div>
+  <p class="snote">Each sheet is a self-contained page: click any question to reveal its answer, or use <em>Reveal all</em> to work through a topic.</p>
+
+  <div class="grid">
+
+    <a class="card s-met" href="050_Meteorology.html">
+      <div class="card-top"><span class="code">050</span><span class="state">Ready</span></div>
+      <h3>Meteorology</h3>
+      <p>Atmosphere and altimetry, wind, stability, clouds and fog, fronts and occlusions, pressure systems, flight hazards, met information.</p>
+      <div class="stats"><span><b>206</b> questions</span><span><b>10</b> topics</span><span><b>6</b> diagrams</span></div>
+      <span class="go">Open sheet &rarr;</span>
+    </a>
+
+    <a class="card s-pof" href="081_POF_Performance.html">
+      <div class="card-top"><span class="code">081 &middot; 032</span><span class="state">Ready</span></div>
+      <h3>POF &amp; Performance</h3>
+      <p>The drag curve, stall speeds, high-speed flight and buffet, declared distances, V-speeds and V<sub>1</sub>, climb segments, cruise and landing.</p>
+      <div class="stats"><span><b>270</b> questions</span><span><b>11</b> topics</span><span><b>5</b> diagrams</span></div>
+      <span class="go">Open sheet &rarr;</span>
+    </a>
+
+  </div>
+
+  <div class="shead">
+    <h2>Planned</h2>
+    <span class="count">8 subject areas</span>
+  </div>
+  <p class="snote">Question banks are in hand for each of these; the sheets are not built yet.</p>
+
+  <div class="grid">
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">070</span><span class="state">Planned</span></div>
+      <h3>Operational Procedures</h3>
+      <p>EU 965/2012 Part-CAT, Part-ORO and Part-SPA: aircraft and equipment, crew and FTL, oxygen, fuel policy, ETOPS, operating minima and LVO.</p>
+      <div class="stats"><span>Part-CAT / ORO / SPA</span><span>ICAO Annexes</span></div>
+    </div>
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">010</span><span class="state">Planned</span></div>
+      <h3>Air Law</h3>
+      <p>Rules of the air, airspace, licensing, aerodromes and lighting, wake turbulence categories, transponder codes.</p>
+      <div class="stats"><span><b>225</b> questions</span><span>densest on numbers</span></div>
+    </div>
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">022</span><span class="state">Planned</span></div>
+      <h3>Instrumentation</h3>
+      <p>Compasses and turning errors, air data instruments, gyros, autoflight, EFIS and warning systems.</p>
+      <div class="stats"><span><b>221</b> questions</span></div>
+    </div>
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">060</span><span class="state">Planned</span></div>
+      <h3>Navigation</h3>
+      <p>General navigation and charts, radio navigation aids, ILS and markers, DME, plus the mass and balance items in the same bank.</p>
+      <div class="stats"><span><b>209</b> questions</span><span>GNAV + RNAV + M&amp;B</span></div>
+    </div>
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">021</span><span class="state">Planned</span></div>
+      <h3>Airframe &amp; Systems</h3>
+      <p>Engines and bypass, electrics, pneumatics and air conditioning, fire protection, hydraulics, fuel and ice protection.</p>
+      <div class="stats"><span><b>201</b> questions</span></div>
+    </div>
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">040</span><span class="state">Planned</span></div>
+      <h3>Human Performance</h3>
+      <p>Physiology and the effects of altitude, vision and hearing, fatigue and sleep, decision making, CRM and human error.</p>
+      <div class="stats"><span><b>178</b> questions</span></div>
+    </div>
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">090</span><span class="state">Planned</span></div>
+      <h3>Communications</h3>
+      <p>VFR and IFR radiotelephony, standard phraseology, distress and urgency, communication failure procedures.</p>
+      <div class="stats"><span>from the summary notes</span></div>
+    </div>
+
+    <div class="card soon">
+      <div class="card-top"><span class="code">100</span><span class="state">Notes only</span></div>
+      <h3>KSA &mdash; Competencies</h3>
+      <p>The eight ICAO core competencies, TEM learning objectives and mental maths. Currently a Markdown review file in this repository.</p>
+      <div class="stats"><span>KSA_100_Review.md</span></div>
+    </div>
+
+  </div>
+
+  <div class="shead">
+    <h2>About these sheets</h2>
+  </div>
+  <div class="notes">
+    <div>
+      <h4>What they are for</h4>
+      <p>Revision, not first learning. Each page assumes the theory is already known and is arranged for the recall speed an airline screening test demands.</p>
+      <h4>How they are built</h4>
+      <p>Every sheet is one self-contained HTML file &mdash; no build step, no framework, no dependency beyond a web font. Open it from disk or from the web and it works the same.</p>
+    </div>
+    <div>
+      <h4>Structure</h4>
+      <p>Sections follow the real EASA syllabus numbering, so a topic here maps directly to the corresponding chapter in the CAE Oxford volumes.</p>
+      <h4>Diagrams</h4>
+      <p>Drawn as inline SVG to show a mechanism, not to decorate: the drag curve is plotted to scale, the frontal cross-sections carry their real slopes.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>ATPL Revision Sheets</b> &mdash; personal study material for airline selection preparation</div>
+    <div>Source textbooks and regulations are not redistributed here</div>
+  </div>
+</footer>
