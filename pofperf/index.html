@@ -1,1 +1,1101 @@
+<meta charset="utf-8">
+<title>POF &amp; Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F7F5F2;
+  --surface:#FFFFFF;
+  --surface-2:#F0ECE7;
+  --ink:#241A14;
+  --muted:#6E6259;
+  --line:#D9D0C7;
+  --line-soft:#E8E2DB;
+  --cold:#C2470E;
+  --warm:#0F6E67;
+  --occl:#6F4BA8;
+  --caution:#A32E23;
+  --accent:#C2470E;
+  --accent-wash:#FBEBE2;
+  --caution-wash:#FBEAE7;
+  --shadow:0 1px 2px rgba(36,26,20,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#16110E; --surface:#1F1815; --surface-2:#2A211C; --ink:#EFE7E0;
+    --muted:#A9998D; --line:#3B302A; --line-soft:#2E2520;
+    --cold:#F79155; --warm:#4CC3B8; --occl:#B79AE8; --caution:#F08A80;
+    --accent:#F79155; --accent-wash:#2A1A12; --caution-wash:#2A1614;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#16110E; --surface:#1F1815; --surface-2:#2A211C; --ink:#EFE7E0;
+  --muted:#A9998D; --line:#3B302A; --line-soft:#2E2520;
+  --cold:#F79155; --warm:#4CC3B8; --occl:#B79AE8; --caution:#F08A80;
+  --accent:#F79155; --accent-wash:#2A1A12; --caution-wash:#2A1614;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
 
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono,.num,td.n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+.masthead{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast-in{max-width:1080px;margin:0 auto;padding:26px 24px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;justify-content:space-between}
+.mast-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.subj-code{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  letter-spacing:.1em;color:var(--surface);background:var(--cold);padding:5px 9px;border-radius:2px}
+h1{margin:0;font-size:44px;line-height:.98;font-weight:700;letter-spacing:.005em}
+.mast-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;max-width:46ch}
+.mast-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:1.9;letter-spacing:.04em}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+.rail{position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.rail-in{max-width:1080px;margin:0 auto;padding:9px 24px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.rail a{flex:0 0 auto;text-decoration:none;color:var(--muted);
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;padding:5px 10px;border-radius:3px;white-space:nowrap}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .rc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);margin-right:5px}
+.rail .sep{flex:0 0 auto;width:1px;background:var(--line);margin:2px 6px}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.part-band{display:flex;align-items:baseline;gap:14px;margin:46px 0 -14px;
+  padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.part-band .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--surface);background:var(--ink);padding:3px 8px;border-radius:2px;letter-spacing:.09em}
+.part-band .pt{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;letter-spacing:.02em}
+.part-band .pd{font-size:13.5px;color:var(--muted);margin-left:auto;text-align:right}
+
+section{padding:46px 0 8px;border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.1em}
+h2{margin:0;font-size:31px;font-weight:700;line-height:1.08}
+.lede{margin:2px 0 26px;color:var(--muted);font-size:15px;max-width:64ch}
+h3{margin:30px 0 8px;font-size:16px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--ink);padding-bottom:5px;border-bottom:1px solid var(--line)}
+p{margin:0 0 12px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 26px;align-items:start}
+ul.tight{margin:0 0 12px;padding-left:19px;max-width:68ch}
+ul.tight li{margin-bottom:5px}
+b,strong{font-weight:600}
+.k{color:var(--accent);font-weight:600}
+
+.numbers{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--cold);
+  border-radius:2px;padding:15px 18px;margin:18px 0;box-shadow:var(--shadow)}
+.numbers .nh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:9px}
+.nlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 26px;margin:0}
+.nrow{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:4px 0;border-bottom:1px dotted var(--line-soft);font-size:14.5px}
+.nrow:last-child{border-bottom:0}
+.nrow span:first-child{color:var(--muted)}
+.nrow .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13.5px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.tw{overflow-x:auto;margin:14px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:440px}
+th{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.07em;text-align:left;
+  border-bottom:1.5px solid var(--ink);padding:6px 10px 5px;color:var(--ink)}
+td{padding:6px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+tbody tr:hover{background:var(--surface-2)}
+
+.caution{background:var(--caution-wash);border:1px solid var(--caution);border-radius:2px;
+  padding:12px 15px;margin:16px 0;font-size:15px}
+.caution .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--caution);display:block;margin-bottom:3px}
+.caution p{margin:0;max-width:none}
+
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:16px 16px 10px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink)}
+figcaption{margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);
+  font-size:13.5px;color:var(--muted);line-height:1.5}
+figcaption b{color:var(--ink)}
+
+.qbank{margin:30px 0 10px;background:var(--surface-2);border-radius:3px;padding:16px 18px 18px}
+.qb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.qb-title{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.qb-title em{font-style:normal;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.reveal{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);background:transparent;
+  border:1px solid var(--accent);border-radius:2px;padding:4px 11px;cursor:pointer}
+.reveal:hover{background:var(--accent);color:var(--surface)}
+.reveal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q{border-bottom:1px solid var(--line);padding:0}
+details.q:last-of-type{border-bottom:0}
+details.q summary{cursor:pointer;list-style:none;padding:9px 30px 9px 0;position:relative;
+  font-size:15.5px;line-height:1.45}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";position:absolute;right:4px;top:8px;
+  font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:17px;line-height:1.4}
+details.q[open] summary::after{content:"\2212";color:var(--accent)}
+details.q summary:hover{color:var(--accent)}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q .a{margin:0 0 12px;padding:9px 13px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:0 2px 2px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.6;max-width:none}
+details.q .a .why{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--muted);line-height:1.5}
+details.q .a .flag{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--caution);line-height:1.5}
+
+.work{background:var(--surface);border:1px dashed var(--line);border-radius:2px;
+  padding:13px 16px;margin:16px 0;font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75}
+.work .wh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.work .res{color:var(--accent);font-weight:600}
+
+footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24px;margin-top:40px}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:34px} h2{font-size:26px}
+  .mast-meta{text-align:left} body{font-size:16px}
+  .part-band{flex-wrap:wrap} .part-band .pd{margin-left:0;text-align:left;width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div class="mast-title">
+      <span class="subj-code">081 &middot; 032</span>
+      <div>
+        <h1>POF &amp; Performance</h1>
+        <p class="mast-sub">Revision sheet for airline selection screening &mdash; theory, diagrams and the real question bank, by syllabus topic.</p>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div><b>270</b> questions &middot; <b>11</b> topics</div>
+      <div>EASA ATPL(A) &middot; CAE Oxford 080 / 032</div>
+      <div>Click a question to reveal</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Topics">
+  <div class="rail-in">
+    <a href="#drag"><span class="rc">01</span>Lift &amp; Drag</a>
+    <a href="#stall"><span class="rc">02</span>Stall</a>
+    <a href="#hisp"><span class="rc">03</span>High Speed</a>
+    <a href="#mech"><span class="rc">04</span>Climb, Glide &amp; Turn</a>
+    <a href="#cg"><span class="rc">05</span>CG &amp; Stability</a>
+    <span class="sep"></span>
+    <a href="#dist"><span class="rc">06</span>Runway Distances</a>
+    <a href="#to"><span class="rc">07</span>Take-off Speeds</a>
+    <a href="#seg"><span class="rc">08</span>Climb Segments</a>
+    <a href="#cruise"><span class="rc">09</span>Cruise</a>
+    <a href="#ldg"><span class="rc">10</span>Landing</a>
+    <a href="#clsb"><span class="rc">11</span>Class B</a>
+  </div>
+</nav>
+
+<main>
+
+<div class="part-band">
+  <span class="pn">081</span>
+  <span class="pt">PRINCIPLES OF FLIGHT</span>
+  <span class="pd">Why the aeroplane does what it does</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 01 LIFT & DRAG &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="drag">
+  <div class="sec-head"><span class="eyebrow">081 01</span><h2>Lift, Drag &amp; the Drag Curve</h2></div>
+  <p class="lede">One graph answers about forty questions in this bank. Learn it properly and the climb, cruise, glide and endurance answers all fall out of it.</p>
+
+  <h3>The lift equation</h3>
+  <p>L = C<sub>L</sub> &middot; &frac12;&rho;V<sup>2</sup> &middot; S. Lift varies with the <b>square of the speed</b>, so at the same angle of attack, flying <b>twice as fast gives four times the lift</b>. The <b>critical angle of attack is fixed</b> &mdash; it does not change with mass, altitude, or configuration. That is why <b>angle of attack is the parameter the stall warning system uses</b>.</p>
+
+  <h3>The two drags</h3>
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Induced drag</b> &mdash; the price of making lift. Caused by <b>spanwise flow</b>: high pressure beneath the wing spills round the <b>wing tip</b> to the low-pressure upper surface, creating the tip vortex and a downwash that tilts the lift vector rearwards.</li>
+        <li>D<sub>i</sub> &prop; C<sub>L</sub><sup>2</sup>, and since C<sub>L</sub> &prop; W/V<sup>2</sup>, induced drag &prop; <b>W<sup>2</sup>/V<sup>2</sup></b>. So it <b>decreases with speed</b> and <b>increases with mass</b>, and it is <b>greatest at V<sub>S0</sub></b> &mdash; the lowest speed you can fly.</li>
+        <li>Reduce it by <b>increasing aspect ratio</b>, using an <b>elliptical lift distribution</b>, winglets, or washout.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Parasite drag</b> (form + skin friction + interference) &prop; <b>V<sup>2</sup></b>. It <b>increases with speed</b> and is independent of mass.</li>
+        <li><b>Boundary layer</b>: friction drag is <b>lower in the laminar layer</b>, but the laminar layer separates more easily. The change-over point is the <b>transition point</b>; the point where the flow leaves the surface is the <b>separation point</b>. <b>Separation is characterised by airflow reversal on the surface</b>.</li>
+        <li>A <b>laminar-flow profile</b>'s biggest benefit is <b>low profile drag</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 400" role="img" aria-label="Drag against airspeed showing induced drag falling, parasite drag rising, total drag with a minimum at VMD, and the tangent from the origin giving maximum range speed">
+      <defs>
+        <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- axes -->
+      <line x1="80" y1="340" x2="680" y2="340" stroke="currentColor" stroke-width="1.6" marker-end="url(#pa)"/>
+      <line x1="80" y1="340" x2="80" y2="34" stroke="currentColor" stroke-width="1.6" marker-end="url(#pa)"/>
+      <text x="672" y="364" font-size="12" text-anchor="end" fill="currentColor">AIRSPEED (IAS)</text>
+      <text x="74" y="30" font-size="12" text-anchor="start" fill="currentColor">DRAG / THRUST REQUIRED</text>
+
+      <!-- induced drag -->
+      <polyline points="129,110 144,155 173,213 202,248 231,271 290,298 348,312 406,321 465,326 523,330 581,333 640,335"
+        fill="none" stroke="#0F6E67" stroke-width="2" stroke-dasharray="7 4"/>
+      <text x="196" y="140" font-size="12" fill="#0F6E67" font-weight="600">INDUCED</text>
+      <text x="196" y="155" font-size="10.5" fill="#0F6E67">&#8733; W&#178;/V&#178;</text>
+
+      <!-- parasite drag -->
+      <polyline points="129,335 173,328 231,315 290,298 348,277 406,252 465,223 523,191 581,155 640,115"
+        fill="none" stroke="#6F4BA8" stroke-width="2" stroke-dasharray="7 4"/>
+      <text x="590" y="196" font-size="12" fill="#6F4BA8" font-weight="600" text-anchor="end">PARASITE</text>
+      <text x="590" y="211" font-size="10.5" fill="#6F4BA8" text-anchor="end">&#8733; V&#178;</text>
+
+      <!-- total drag -->
+      <polyline points="129,101 144,143 173,196 202,225 231,240 260,248 290,250 319,248 348,244 406,228 465,205 523,176 581,143 640,105"
+        fill="none" stroke="#C2470E" stroke-width="3"/>
+      <text x="112" y="88" font-size="12.5" fill="#C2470E" font-weight="600">TOTAL DRAG</text>
+
+      <!-- tangent from origin to max range point -->
+      <line x1="80" y1="340" x2="392" y2="232" stroke="currentColor" stroke-width="1.3" stroke-dasharray="3 3"/>
+      <circle cx="383" cy="235" r="4.5" fill="#C2470E"/>
+      <text x="396" y="228" font-size="11.5" fill="currentColor" font-weight="600">MAX RANGE (jet)</text>
+      <text x="396" y="243" font-size="10.5" fill="currentColor">&#8776; 1.32 V&#8202;MD &middot; tangent from origin</text>
+
+      <!-- VMD marker -->
+      <circle cx="290" cy="250" r="4.5" fill="#C2470E"/>
+      <line x1="290" y1="252" x2="290" y2="340" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <text x="290" y="358" font-size="12" text-anchor="middle" fill="#C2470E" font-weight="600">V&#8202;MD</text>
+      <line x1="82" y1="250" x2="288" y2="250" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>
+      <text x="88" y="244" font-size="10.5" fill="currentColor" opacity=".8">minimum drag</text>
+
+      <!-- annotations for jet speeds -->
+      <text x="290" y="378" font-size="11" text-anchor="middle" fill="currentColor">V&#8202;X &middot; max endurance (jet) &middot; best glide &middot; max L/D</text>
+      <text x="180" y="300" font-size="11" text-anchor="middle" fill="currentColor" opacity=".85">back side of the</text>
+      <text x="180" y="314" font-size="11" text-anchor="middle" fill="currentColor" opacity=".85">drag curve</text>
+      <text x="180" y="328" font-size="10.5" text-anchor="middle" fill="currentColor" opacity=".7">slower = more thrust</text>
+    </svg>
+    <figcaption><b>At V<sub>MD</sub> induced drag exactly equals parasite drag</b> &mdash; that is what puts the minimum there. Everything hangs off this one point: for a jet, V<sub>MD</sub> is simultaneously <b>best angle of climb, maximum endurance, best glide and maximum L/D</b>. Maximum range is <em>faster</em> than V<sub>MD</sub>, at the tangent from the origin (&asymp;1.32 V<sub>MD</sub>). And left of V<sub>MD</sub> you are on the <b>back side</b>: flying slower needs <em>more</em> thrust, not less.</figcaption>
+  </figure>
+
+  <div class="numbers">
+    <div class="nh">Speeds that are the same thing (jet)</div>
+    <div class="nlist">
+      <div class="nrow"><span>Best angle of climb</span><span class="v">V&#8202;X = V&#8202;MD</span></div>
+      <div class="nrow"><span>Maximum endurance</span><span class="v">V&#8202;MD</span></div>
+      <div class="nrow"><span>Best glide / max L/D</span><span class="v">V&#8202;MD</span></div>
+      <div class="nrow"><span>Maximum range (jet)</span><span class="v">&#8776; 1.32 V&#8202;MD</span></div>
+      <div class="nrow"><span>Maximum range (prop)</span><span class="v">V&#8202;MD (max L/D)</span></div>
+      <div class="nrow"><span>Maximum endurance (prop)</span><span class="v">V&#8202;MP (min power)</span></div>
+    </div>
+  </div>
+
+  <h3>Ground effect</h3>
+  <p>Within <b>half a wingspan</b> of the surface the ground blocks the downwash. Less downwash means the <b>induced angle of attack and induced drag both decrease</b>, and at constant angle of attack the <b>effective angle of attack increases</b>, so lift rises. Practical consequences: floating in the flare, so <b>ground effect increases the landing distance</b>; and on leaving ground effect (climbing out), the <b>effective angle of attack decreases</b>, drag rises and the aeroplane may sink.</p>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; lift &amp; drag</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What happens to lift when flying two times faster at the same AoA?</summary><p class="a">Four times more lift<span class="why">Lift varies with V&#178;.</span></p></details>
+    <details class="q"><summary>How does aircraft mass influence the critical AoA?</summary><p class="a">No change &mdash; the critical AoA is fixed</p></details>
+    <details class="q"><summary>What is the most important parameter for the stall warning?</summary><p class="a">Angle of attack</p></details>
+    <details class="q"><summary>"Induced drag increases with airspeed increase." This statement is:</summary><p class="a">Wrong &mdash; induced drag decreases with increasing airspeed</p></details>
+    <details class="q"><summary>Induced drag at constant speed is proportional to:</summary><p class="a">The square of the lift coefficient</p></details>
+    <details class="q"><summary>Effect on induced drag of mass and speed changes?</summary><p class="a">Decreases with increasing speed and with decreasing mass</p></details>
+    <details class="q"><summary>Induced drag at constant mass in level flight is greatest at:</summary><p class="a">V&#8202;S0 &mdash; the lowest achievable speed in the landing configuration</p></details>
+    <details class="q"><summary>Induced drag may be reduced by:</summary><p class="a">Increasing the aspect ratio</p></details>
+    <details class="q"><summary>Which aircraft part has the largest effect on induced drag?</summary><p class="a">The wing tip</p></details>
+    <details class="q"><summary>Spanwise flow is caused by the pressure difference and flows:</summary><p class="a">From beneath the wing to the top of the wing via the wing tip</p></details>
+    <details class="q"><summary>With increasing speed in level flight:</summary><p class="a">Induced drag decreases and parasite drag increases</p></details>
+    <details class="q"><summary>How does total drag change in level flight as speed increases from V&#8202;S to V&#8202;MO?</summary><p class="a">Initially decreases, then increases &mdash; minimum at V&#8202;MD</p></details>
+    <details class="q"><summary>What happens in straight, level flight at speeds below that for minimum drag?</summary><p class="a">Lower speed requires higher thrust &mdash; the back side of the drag curve</p></details>
+    <details class="q"><summary>If aircraft mass decreases in horizontal unaccelerated flight:</summary><p class="a">Minimum drag decreases and the IAS for minimum drag decreases</p></details>
+    <details class="q"><summary>At constant AoA, mass and configuration, increasing altitude causes drag to:</summary><p class="a">Remain unchanged, but TAS increases<span class="why">Same IAS means the same dynamic pressure, therefore the same drag force &mdash; only TAS changes.</span></p></details>
+    <details class="q"><summary>Laminar vs turbulent boundary layer &mdash; which has less friction drag?</summary><p class="a">Friction drag is lower in the laminar layer</p></details>
+    <details class="q"><summary>What is the laminar-to-turbulent change-over point called?</summary><p class="a">The transition point</p></details>
+    <details class="q"><summary>Airflow separation is characterised by:</summary><p class="a">Airflow reversal on the surface of the body</p></details>
+    <details class="q"><summary>The biggest benefit of a laminar wing profile is:</summary><p class="a">Low profile drag</p></details>
+    <details class="q"><summary>The lift/drag ratio in level flight &mdash; where is it highest?</summary><p class="a">The highest L/D occurs when total drag is lowest &mdash; i.e. at V&#8202;MD</p></details>
+    <details class="q"><summary>The L/D ratio reaches its maximum value:</summary><p class="a">At the intersection of the tangent from the origin to the lift/drag curve</p></details>
+    <details class="q"><summary>Assuming constant IAS, when an aircraft enters ground effect:</summary><p class="a">Induced drag reduces &mdash; the induced angle of attack and induced drag both decrease</p></details>
+    <details class="q"><summary>Assuming constant IAS, when an aeroplane leaves ground effect:</summary><p class="a">The effective angle of attack decreases</p></details>
+    <details class="q"><summary>Ground effect has what influence on the landing distance?</summary><p class="a">Increases it &mdash; the aeroplane floats</p></details>
+    <details class="q"><summary>Floating due to ground effect during an approach will occur:</summary><p class="a">When the height is less than half the wingspan above the surface</p></details>
+    <details class="q"><summary>Which statement is correct about spoilers?</summary><p class="a">Spoilers increase stall speed and increase the descent rate</p></details>
+    <details class="q"><summary>A windmilling propeller:</summary><p class="a">Produces drag instead of thrust</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 02 STALL &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="stall">
+  <div class="sec-head"><span class="eyebrow">081 02</span><h2>Stall &amp; Stall Speeds</h2></div>
+  <p class="lede">The stall always happens at the same angle of attack. Everything that "increases the stall speed" does so by requiring more lift, not by changing the critical AoA.</p>
+
+  <div class="numbers">
+    <div class="nh">Load factor and stall speed in a level turn</div>
+    <div class="nlist">
+      <div class="nrow"><span>Bank 15&deg;</span><span class="v">n 1.04 &middot; V&#8202;S &times;1.02</span></div>
+      <div class="nrow"><span>Bank 25&deg;</span><span class="v">n 1.10 &middot; V&#8202;S &times;1.05</span></div>
+      <div class="nrow"><span>Bank 30&deg;</span><span class="v">n 1.15 &middot; V&#8202;S &times;1.07</span></div>
+      <div class="nrow"><span>Bank 45&deg;</span><span class="v">n 1.41 &middot; V&#8202;S &times;1.19</span></div>
+      <div class="nrow"><span>Bank 60&deg;</span><span class="v">n 2.00 &middot; V&#8202;S &times;1.41</span></div>
+      <div class="nrow"><span>Formulae</span><span class="v">n = 1/cos&#966; &middot; V&#8202;S&#8202;t = V&#8202;S&#8730;n</span></div>
+    </div>
+  </div>
+
+  <p><b>Load factor n = L/W</b>, and in a level coordinated turn it depends on <b>bank angle only</b> &mdash; not on speed, not on mass. Stall speed rises with the <b>square root of the load factor</b>.</p>
+
+  <h3>What raises the stall speed</h3>
+  <ul class="tight">
+    <li><b>Increased mass</b>, <b>increased load factor</b> (turning, pulling out of a dive, gusts), <b>forward CG</b> (the tail has to push down, so the wing carries more than the weight), <b>ice</b>, and reduced thrust (less vertical thrust component).</li>
+    <li><b>Not</b> altitude: stall speed in <b>IAS is essentially constant with altitude</b>, only rising at very high altitude because of compressibility.</li>
+    <li>Lowest stall speed: <b>light and aft CG</b>.</li>
+    <li>Highest stall speed for a given configuration: <b>maximum mass with the most forward CG</b>.</li>
+  </ul>
+
+  <div class="numbers">
+    <div class="nh">Certification stall margins (CS-25)</div>
+    <div class="nlist">
+      <div class="nrow"><span>V&#8202;REF (old / 1g basis)</span><span class="v">1.30 V&#8202;S0 / 1.23 V&#8202;SR0</span></div>
+      <div class="nrow"><span>V&#8202;REF margin</span><span class="v">23 % above V&#8202;SR0</span></div>
+      <div class="nrow"><span>V&#8202;2 minimum</span><span class="v">1.13 V&#8202;SR and 1.10 V&#8202;MCA</span></div>
+      <div class="nrow"><span>Stall warning must begin</span><span class="v">&#8805;5 kt or 5 % CAS above V&#8202;S</span></div>
+      <div class="nrow"><span>V&#8202;S0</span><span class="v">stall, landing configuration</span></div>
+      <div class="nrow"><span>V&#8202;S1</span><span class="v">stall, given configuration</span></div>
+    </div>
+  </div>
+
+  <div class="work">
+    <div class="wh">Gust load factor &mdash; bank question 16</div>
+    An aircraft in level flight meets a gust that increases the AoA by 5&deg;. Load factor = 2.25 G.<br><br>
+    n = C&#8202;L&#8202;new / C&#8202;L&#8202;old = (&alpha; + 5) / &alpha;<br>
+    2.25 = (&alpha; + 5)/&alpha; &nbsp;&rarr;&nbsp; 1.25&alpha; = 5 &nbsp;&rarr;&nbsp; <span class="res">&alpha; = 4&deg; initially</span><br>
+    <span style="color:var(--muted)">The trick: C&#8202;L is linear with AoA below the stall, so the load factor is just the ratio of the two angles.</span>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; stall</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Load factor (n) is:</summary><p class="a">n = Lift / Weight</p></details>
+    <details class="q"><summary>How does airspeed influence G-load in a coordinated turn at the same bank angle?</summary><p class="a">The G-load remains the same &mdash; it depends on bank angle only</p></details>
+    <details class="q"><summary>The load factor for a 45&deg; level turn is:</summary><p class="a">1.41 G (often quoted as 1.4)</p></details>
+    <details class="q"><summary>Stall speed increase at 45&deg; bank?</summary><p class="a">19 %<span class="why">&#8730;1.41 = 1.19.</span></p></details>
+    <details class="q"><summary>How is V&#8202;S influenced when flying at 25&deg; bank in level flight?</summary><p class="a">Increases by a factor of 1.05</p></details>
+    <details class="q"><summary>Stall speed in a turn increases with:</summary><p class="a">The square root of the load factor</p></details>
+    <details class="q"><summary>In a level coordinated turn:</summary><p class="a">Load factor is greater than 1 and the stall speed increases</p></details>
+    <details class="q"><summary>Which situation decreases stall speed (IAS)?</summary><p class="a">Decreasing weight</p></details>
+    <details class="q"><summary>Stall speed (IAS) with altitude:</summary><p class="a">Initially constant, then increases at high altitude<span class="why">Compressibility reduces the maximum C&#8202;L at high Mach.</span></p></details>
+    <details class="q"><summary>Factors increasing stall speed?</summary><p class="a">Increased load factor, forward CG shift, decreased thrust, high altitude, icing</p></details>
+    <details class="q"><summary>When does an aircraft have the lowest stall speed?</summary><p class="a">Most aft CG and light weight</p></details>
+    <details class="q"><summary>For a given configuration, the stall speed is highest when the aeroplane is loaded to:</summary><p class="a">Maximum allowable mass with the most forward CG</p></details>
+    <details class="q"><summary>A wing will not stall if:</summary><p class="a">The angle of attack is below the stall AoA</p></details>
+    <details class="q"><summary>Effect of sweepback on stall speed?</summary><p class="a">Decreasing sweepback decreases the stall speed</p></details>
+    <details class="q"><summary>How is V&#8202;REF defined?</summary><p class="a">1.30 &times; V&#8202;S0, or 1.23 &times; V&#8202;SR0 on the 1g basis</p></details>
+    <details class="q"><summary>Per CS-25, what minimum margin does V&#8202;REF have above V&#8202;SR0?</summary><p class="a">23 %</p></details>
+    <details class="q"><summary>On a large aeroplane per CS-25, when speed is reduced the stall warning must begin:</summary><p class="a">At a speed exceeding the stall speed by not less than 5 kt or 5 % CAS</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 03 HIGH SPEED &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="hisp">
+  <div class="sec-head"><span class="eyebrow">081 03</span><h2>High Speed Flight</h2></div>
+  <p class="lede">Mach number, the swept wing, and the buffet boundary that decides how high you can actually go.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Local speed of sound depends on temperature only</b>: a = 39 &times; &radic;T(K) kt, or a = 661.5 &times; &radic;(T/288.15).</li>
+        <li><b>M = TAS / LSS.</b></li>
+        <li><b>M<sub>CRIT</sub></b> is the free-stream Mach at which the flow somewhere on the wing first reaches M 1.0. Beyond it: shock waves, shock-induced separation, <b>Mach buffet</b>, drag rise, Mach tuck.</li>
+        <li><b>Swept wing</b>: the chordwise component of the airflow is reduced, so <b>M<sub>CRIT</sub> is higher</b>. The costs are a lower C<sub>Lmax</sub>, tip stall tendency and Dutch roll.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Constant CAS climb</b> &rarr; <b>TAS increases and Mach increases</b>. <b>Constant Mach climb</b> to the tropopause &rarr; <b>TAS decreases</b> (falling temperature).</li>
+        <li><b>Constant Mach descent</b> below the tropopause &rarr; <b>CAS and TAS increase</b>, angle of attack <b>decreases</b>, and the margin to low-speed buffet <b>increases</b>.</li>
+        <li><b>Crossover altitude</b> &mdash; where the climb CAS schedule meets the Mach schedule. A <b>higher CAS gives a lower crossover altitude</b>; a lower CAS gives a higher one.</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 700 380" role="img" aria-label="Buffet onset boundary showing low speed and high speed buffet converging with altitude at the coffin corner">
+      <defs>
+        <marker id="pb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <line x1="90" y1="330" x2="650" y2="330" stroke="currentColor" stroke-width="1.6" marker-end="url(#pb)"/>
+      <line x1="90" y1="330" x2="90" y2="34" stroke="currentColor" stroke-width="1.6" marker-end="url(#pb)"/>
+      <text x="640" y="356" font-size="12" text-anchor="end" fill="currentColor">MACH NUMBER</text>
+      <text x="84" y="28" font-size="12" fill="currentColor">ALTITUDE</text>
+      <text x="80" y="330" font-size="11" text-anchor="end" fill="currentColor">FL250</text>
+      <text x="80" y="230" font-size="11" text-anchor="end" fill="currentColor">FL330</text>
+      <text x="80" y="130" font-size="11" text-anchor="end" fill="currentColor">FL390</text>
+      <line x1="86" y1="230" x2="94" y2="230" stroke="currentColor"/>
+      <line x1="86" y1="130" x2="94" y2="130" stroke="currentColor"/>
+      <text x="230" y="352" font-size="11" text-anchor="middle" fill="currentColor">M 0.60</text>
+      <text x="400" y="352" font-size="11" text-anchor="middle" fill="currentColor">M 0.75</text>
+      <text x="545" y="352" font-size="11" text-anchor="middle" fill="currentColor">M 0.86</text>
+
+      <!-- low speed buffet boundary (rises to the right with altitude) -->
+      <path d="M196 330 Q250 250 330 165 T436 74" fill="none" stroke="#0F6E67" stroke-width="2.5"/>
+      <text x="212" y="200" font-size="12" fill="#0F6E67" font-weight="600">LOW SPEED</text>
+      <text x="212" y="215" font-size="12" fill="#0F6E67" font-weight="600">BUFFET</text>
+      <text x="212" y="231" font-size="10.5" fill="#0F6E67">stall / high C&#8202;L</text>
+
+      <!-- high speed buffet boundary -->
+      <path d="M596 330 Q560 240 500 150 T436 74" fill="none" stroke="#6F4BA8" stroke-width="2.5"/>
+      <text x="612" y="200" font-size="12" text-anchor="end" fill="#6F4BA8" font-weight="600">HIGH SPEED</text>
+      <text x="612" y="215" font-size="12" text-anchor="end" fill="#6F4BA8" font-weight="600">BUFFET</text>
+      <text x="612" y="231" font-size="10.5" text-anchor="end" fill="#6F4BA8">shock-induced separation</text>
+
+      <!-- coffin corner -->
+      <circle cx="436" cy="74" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+      <text x="436" y="58" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">COFFIN CORNER</text>
+      <text x="436" y="44" font-size="10.5" text-anchor="middle" fill="currentColor">aerodynamic ceiling &middot; 1.0 g only</text>
+
+      <!-- 1.3g band -->
+      <line x1="300" y1="196" x2="530" y2="196" stroke="#C2470E" stroke-width="2" stroke-dasharray="6 4"/>
+      <circle cx="300" cy="196" r="4" fill="#C2470E"/><circle cx="530" cy="196" r="4" fill="#C2470E"/>
+      <text x="415" y="188" font-size="11.5" text-anchor="middle" fill="#C2470E" font-weight="600">available speed range at this level</text>
+      <text x="415" y="290" font-size="11.5" text-anchor="middle" fill="currentColor">The band narrows with <tspan font-weight="600">increasing altitude</tspan> and <tspan font-weight="600">increasing mass</tspan>.</text>
+      <text x="415" y="306" font-size="11.5" text-anchor="middle" fill="currentColor">Certified max altitude is set by the <tspan font-weight="600">1.3 g</tspan> buffet margin, not by the corner itself.</text>
+    </svg>
+    <figcaption><b>Two limits closing in on each other.</b> Climb and the air thins, so you need a higher angle of attack &mdash; the low-speed buffet boundary moves right. At the same time the higher TAS pushes you towards M<sub>CRIT</sub> &mdash; the high-speed boundary moves left. Where they meet there is exactly one flyable speed and <b>no manoeuvre margin at all</b>: this is why a step climb can be refused by buffet onset above 1 g, and why buffet <b>limits the manoeuvring load factor at high altitude</b>.</figcaption>
+  </figure>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; high speed</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Speed of sound depends on:</summary><p class="a">Temperature</p></details>
+    <details class="q"><summary>How can you calculate Mach number?</summary><p class="a">TAS / local speed of sound</p></details>
+    <details class="q"><summary>You are flying at FL240 (ISA) with Mach 0.80. What is your TAS?</summary><p class="a">The bank answer is 468 kt<span class="flag">Check this one. ISA at FL240 is &minus;33&nbsp;&deg;C = 240&nbsp;K, so LSS = 39&nbsp;&times;&nbsp;&radic;240 &asymp; 604&nbsp;kt and TAS = 0.80 &times; 604 &asymp; <b>483 kt</b>. 468 kt would correspond to about &minus;48&nbsp;&deg;C. Use the method, not the printed number.</span></p></details>
+    <details class="q"><summary>What is an advantage of a swept wing?</summary><p class="a">Higher M&#8202;CRIT</p></details>
+    <details class="q"><summary>What happens in a constant CAS climb?</summary><p class="a">TAS increases and Mach increases</p></details>
+    <details class="q"><summary>Constant Mach climb to the tropopause (ISA) &mdash; what happens to TAS?</summary><p class="a">Decreases<span class="why">The speed of sound falls as temperature falls, so a constant Mach means a falling TAS.</span></p></details>
+    <details class="q"><summary>During a descent at constant Mach below the tropopause (ISA):</summary><p class="a">CAS and TAS increase</p></details>
+    <details class="q"><summary>During a descent at constant Mach (zero thrust, ISA), the angle of attack:</summary><p class="a">Decreases</p></details>
+    <details class="q"><summary>During a descent at constant Mach, the margin to low-speed buffet:</summary><p class="a">Increases, because the lift coefficient decreases</p></details>
+    <details class="q"><summary>If the climb speed schedule changes from 280/0.74 to 290/0.74, the crossover altitude will be:</summary><p class="a">Lower</p></details>
+    <details class="q"><summary>If the climb speed schedule changes from 290/0.74 to 280/0.74, the crossover altitude will be:</summary><p class="a">Higher</p></details>
+    <details class="q"><summary>Which buffet occurs if a jet slowly accelerates in level flight at high altitude?</summary><p class="a">Mach buffet (high-speed buffet)</p></details>
+    <details class="q"><summary>The speed range between low- and high-speed buffet:</summary><p class="a">Narrows with increasing mass and increasing altitude</p></details>
+    <details class="q"><summary>The speed range between high and low speed buffet during a descent at constant IAS:</summary><p class="a">Increases</p></details>
+    <details class="q"><summary>The danger associated with low- and/or high-speed buffet:</summary><p class="a">It limits the manoeuvring load factor at high altitude</p></details>
+    <details class="q"><summary>Flying close to the altitude where low- and high-speed buffet coincide results in:</summary><p class="a">Less manoeuvrability</p></details>
+    <details class="q"><summary>Maximum flight altitude in the buffet onset boundary graph is determined by:</summary><p class="a">Aerodynamics</p></details>
+    <details class="q"><summary>Which statement about the step climb is correct?</summary><p class="a">Executing a desired step climb at high altitude can be limited by buffet onset at g-loads larger than 1</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 04 FLIGHT MECHANICS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="mech">
+  <div class="sec-head"><span class="eyebrow">081 04</span><h2>Climb, Glide &amp; Turn</h2></div>
+  <p class="lede">Climb performance is excess thrust; rate of climb is excess power; glide range is L/D. Three ideas, a dozen questions.</p>
+
+  <div class="numbers">
+    <div class="nh">Climb formulae</div>
+    <div class="nlist">
+      <div class="nrow"><span>Climb gradient</span><span class="v">(Thrust &minus; Drag)/Weight &times;100</span></div>
+      <div class="nrow"><span>Rate of climb</span><span class="v">excess power / weight</span></div>
+      <div class="nrow"><span>Gradient definition</span><span class="v">height gained / horiz. distance</span></div>
+      <div class="nrow"><span>ROC from gradient</span><span class="v">grad % &times; GS(kt) &times; 1.013</span></div>
+      <div class="nrow"><span>Glide distance</span><span class="v">L/D &times; height</span></div>
+      <div class="nrow"><span>Absolute ceiling</span><span class="v">rate of climb = 0</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>V&#8202;X and V&#8202;Y</h3>
+      <ul class="tight">
+        <li><b>V&#8202;X</b> &mdash; best <b>angle</b> of climb: most height per unit of <b>ground distance</b>. Maximum <b>excess thrust</b>. For a jet this is V&#8202;MD (maximum C<sub>L</sub>/C<sub>D</sub>). Use it for <b>obstacle clearance</b>.</li>
+        <li><b>V&#8202;Y</b> &mdash; best <b>rate</b> of climb: most height per unit of <b>time</b>. Maximum <b>excess power</b>. Always <b>faster than V&#8202;X</b>.</li>
+        <li>With altitude the two converge; they meet at the <b>absolute ceiling</b>, where excess thrust and power are both zero.</li>
+        <li><b>Above the OEI ceiling</b>, descend at the <b>best angle of climb speed</b> &mdash; the drift-down speed.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Wind and the flight path</h3>
+      <ul class="tight">
+        <li>Wind does <b>not</b> change the time to climb, or V&#8202;X and V&#8202;Y as airspeeds &mdash; those are air-mass quantities.</li>
+        <li>Wind <b>does</b> change the flight-path angle over the ground: a <b>headwind steepens</b> both the climb and the descent path and <b>reduces the ground distance</b> covered in the climb.</li>
+        <li><b>Climb/descent angle is air-mass related; flight-path angle is ground related.</b></li>
+        <li>For <b>maximum range over the ground into a headwind</b>, fly <b>faster</b> than the still-air maximum range speed. V&#8202;X is unchanged.</li>
+        <li>Gliding: a <b>tailwind increases the ground distance</b>; a <b>higher mass gives a higher best-glide speed but the same glide angle</b> &mdash; and therefore <b>maximum glide time comes from low mass</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="caution">
+    <span class="ch">Two definitions they love to swap</span>
+    <p><b>Climb angle</b> is measured in degrees, <b>climb gradient</b> as a percentage &mdash; and because gradient is the tangent, for small angles <b>the gradient number is always larger than the angle number</b> (3&deg; &asymp; 5.2 %). Also note the bank's answer to "V&#8202;Y is defined as&hellip;" reads <em>"speed for best angle of descent"</em>: that is an error in the source. <b>V&#8202;Y is the speed for the best rate of climb.</b></p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; climb, glide &amp; turn</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is V&#8202;X?</summary><p class="a">Best angle of climb speed</p></details>
+    <details class="q"><summary>Which speed should be flown to gain height in minimum time?</summary><p class="a">V&#8202;Y</p></details>
+    <details class="q"><summary>How can you calculate the climb gradient?</summary><p class="a">(Thrust &minus; Drag) / Weight &times; 100</p></details>
+    <details class="q"><summary>Which forces determine an aeroplane's angle of climb?</summary><p class="a">Weight, drag and thrust</p></details>
+    <details class="q"><summary>What is the absolute ceiling?</summary><p class="a">The altitude at which the rate of climb is zero</p></details>
+    <details class="q"><summary>For a jet aeroplane, the maximum climb angle is achieved at the speed corresponding to:</summary><p class="a">The maximum C&#8202;L/C&#8202;D ratio</p></details>
+    <details class="q"><summary>Which three speeds are effectively the same for a jet aircraft?</summary><p class="a">Best angle of climb, minimum drag, and maximum endurance</p></details>
+    <details class="q"><summary>The speed for maximum rate of climb:</summary><p class="a">Will be higher than the speed for best angle of climb</p></details>
+    <details class="q"><summary>Effect of increased mass on the speed for maximum rate of climb?</summary><p class="a">The speed for maximum rate of climb increases with increasing mass</p></details>
+    <details class="q"><summary>The best rate of climb at constant gross mass:</summary><p class="a">Decreases with increasing altitude, since the thrust available decreases</p></details>
+    <details class="q"><summary>How does a higher outside temperature influence climb performance?</summary><p class="a">Reduces the climb gradient and decreases the rate of climb</p></details>
+    <details class="q"><summary>Effect of a high pressure altitude on rate of climb and climb angle?</summary><p class="a">Both decrease</p></details>
+    <details class="q"><summary>The angle of climb with flaps extended compared with flaps retracted will normally be:</summary><p class="a">Smaller</p></details>
+    <details class="q"><summary>A jet climbs at constant pitch attitude and maximum climb thrust. How do gamma, AoA and IAS change?</summary><p class="a">Gamma decreases, angle of attack increases, IAS decreases</p></details>
+    <details class="q"><summary>A jet climbing at constant IAS and max climb thrust &mdash; how do climb angle and pitch angle change?</summary><p class="a">Both reduce</p></details>
+    <details class="q"><summary>What is the difference between climb angle and climb gradient?</summary><p class="a">The value of the gradient is always higher than the value of the angle</p></details>
+    <details class="q"><summary>Difference between climb/descent angle and flight-path angle?</summary><p class="a">Climb/descent angle is air-mass related; flight-path angle is ground related</p></details>
+    <details class="q"><summary>Effect of a tailwind on the time to climb to a given altitude?</summary><p class="a">The time to climb does not change</p></details>
+    <details class="q"><summary>A constant headwind during climb:</summary><p class="a">Increases the angle of the flight path over the ground</p></details>
+    <details class="q"><summary>During climb, a headwind component:</summary><p class="a">Decreases the ground distance flown during the climb</p></details>
+    <details class="q"><summary>How does a headwind affect maximum range speed and the speed for maximum angle of climb?</summary><p class="a">Maximum range speed increases; the speed for maximum angle of climb remains the same</p></details>
+    <details class="q"><summary>A twin jet suffers an engine failure above the OEI ceiling. What is the best speed to descend?</summary><p class="a">The best angle of climb speed</p></details>
+    <details class="q"><summary>Unable to maintain altitude above the OEI ceiling &mdash; what is the procedure?</summary><p class="a">Drift-down</p></details>
+    <details class="q"><summary>Maximum glide range depends on:</summary><p class="a">The lift-to-drag ratio</p></details>
+    <details class="q"><summary>The L/D ratio determines:</summary><p class="a">The horizontal glide distance from a given altitude at zero wind and zero thrust</p></details>
+    <details class="q"><summary>Maximum glide time is achieved with:</summary><p class="a">Low mass</p></details>
+    <details class="q"><summary>Gliding at max L/D speed &mdash; effect of a tailwind component?</summary><p class="a">Increases the ground distance</p></details>
+    <details class="q"><summary>Gliding at max L/D speed &mdash; effect of higher gross mass?</summary><p class="a">The higher the gross mass, the greater the speed for descent (same glide angle)</p></details>
+    <details class="q"><summary>To increase the descent gradient at idle thrust from best glide speed:</summary><p class="a">Increase airspeed</p></details>
+    <details class="q"><summary>Rolling is rotation about which axis?</summary><p class="a">The longitudinal axis</p></details>
+    <details class="q"><summary>Which parameter changes first when penetrating a horizontal wind shear?</summary><p class="a">Indicated airspeed</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 05 CG &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="cg">
+  <div class="sec-head"><span class="eyebrow">081 05</span><h2>Centre of Gravity, Stability &amp; Control</h2></div>
+  <p class="lede">Every CG question in the bank resolves the same way: an aft CG needs less download from the tail, so the wing carries less &mdash; and everything gets better except stability.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Moving the CG aft</th><th>Moving the CG forward</th></tr></thead>
+      <tbody>
+        <tr><td>Less tail download &rarr; less lift required &rarr; <b>less induced drag</b></td><td>More tail download &rarr; <b>more induced drag</b>, more fuel burn</td></tr>
+        <tr><td><b>Lower stall speed</b></td><td><b>Higher stall speed</b></td></tr>
+        <tr><td><b>Better range</b> and specific range</td><td><b>Reduced range</b>; SR decreases</td></tr>
+        <tr><td><b>Shorter ground roll, higher climb gradient</b></td><td>Longer ground roll, <b>lower rate of climb</b></td></tr>
+        <tr><td><b>Less longitudinal static stability</b>, more controllability</td><td><b>More stable</b>, heavier in pitch</td></tr>
+        <tr><td>Reduces the elevator authority available for recovery</td><td><b>Reduces V&#8202;MCG / V&#8202;MCA</b> (better rudder arm)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>An aeroplane whose <b>CG is behind the centre of pressure</b> needs the horizontal tail load to act <b>upwards</b> to balance. The CG is certified to <b>move between defined limits</b>; behind the aft limit, <b>stability decreases and controllability increases</b> &mdash; the aeroplane becomes divergent in pitch.</p>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; CG &amp; stability</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Moving the CG from the forward to the aft limit (mass, altitude and airspeed unchanged) will:</summary><p class="a">Decrease induced drag and reduce the power required</p></details>
+    <details class="q"><summary>A CG near, but still within, the aft limit:</summary><p class="a">Improves the maximum range</p></details>
+    <details class="q"><summary>An aircraft with the CG towards the aft limit will experience:</summary><p class="a">Increased range and decreased stalling speed</p></details>
+    <details class="q"><summary>CG aft &mdash; effect on take-off performance and climb gradient?</summary><p class="a">Take-off ground roll reduced and climb gradient higher</p></details>
+    <details class="q"><summary>In cruise flight, an aft CG location will:</summary><p class="a">Decrease longitudinal static stability</p></details>
+    <details class="q"><summary>CG behind the aft limit &mdash; effect on longitudinal stability?</summary><p class="a">Stability decreases and controllability increases</p></details>
+    <details class="q"><summary>CG moved forward &mdash; effect on fuel consumption?</summary><p class="a">Increased, as induced drag is increased</p></details>
+    <details class="q"><summary>A CG close to the forward limit gives:</summary><p class="a">A decrease of rate of climb capability</p></details>
+    <details class="q"><summary>Specific range will:</summary><p class="a">Decrease if the CG is moved forward of the centre of pressure</p></details>
+    <details class="q"><summary>An aeroplane with the CG behind the centre of pressure maintains level flight when the horizontal tail load is:</summary><p class="a">Upwards</p></details>
+    <details class="q"><summary>The centre of gravity of an aircraft:</summary><p class="a">Can be allowed to move between defined limits</p></details>
+    <details class="q"><summary>CG influence on V&#8202;MCG?</summary><p class="a">A forward CG reduces V&#8202;MCG</p></details>
+  </div>
+</section>
+
+<div class="part-band">
+  <span class="pn">032</span>
+  <span class="pt">AEROPLANE PERFORMANCE</span>
+  <span class="pd">Class A unless stated otherwise</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 06 RUNWAY DISTANCES &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="dist">
+  <div class="sec-head"><span class="eyebrow">032 01</span><h2>Declared Distances &amp; Runway State</h2></div>
+  <p class="lede">Clearway extends only TODA. Stopway extends only ASDA. Get that straight and a whole block of questions collapses.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 300" role="img" aria-label="Declared distances showing TORA, clearway and stopway and which distance each one extends">
+      <!-- runway -->
+      <rect x="60" y="60" width="360" height="34" fill="currentColor" opacity=".18" stroke="currentColor" stroke-width="1.2"/>
+      <text x="240" y="82" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">RUNWAY (paved, load-bearing)</text>
+      <!-- stopway -->
+      <rect x="420" y="60" width="120" height="34" fill="#C2470E" opacity=".22" stroke="#C2470E" stroke-width="1.2"/>
+      <text x="480" y="82" font-size="12" text-anchor="middle" fill="#C2470E" font-weight="600">STOPWAY</text>
+      <!-- clearway -->
+      <rect x="420" y="60" width="230" height="34" fill="none" stroke="#0F6E67" stroke-width="1.4" stroke-dasharray="6 4"/>
+      <text x="600" y="52" font-size="12" text-anchor="middle" fill="#0F6E67" font-weight="600">CLEARWAY (airspace)</text>
+
+      <!-- bars -->
+      <g font-size="12">
+        <line x1="60" y1="134" x2="420" y2="134" stroke="currentColor" stroke-width="3"/>
+        <line x1="60" y1="128" x2="60" y2="140" stroke="currentColor" stroke-width="2"/>
+        <line x1="420" y1="128" x2="420" y2="140" stroke="currentColor" stroke-width="2"/>
+        <text x="430" y="138" fill="currentColor"><tspan font-weight="600">TORA</tspan> &#8212; take-off run available</text>
+
+        <line x1="60" y1="170" x2="540" y2="170" stroke="#C2470E" stroke-width="3"/>
+        <line x1="60" y1="164" x2="60" y2="176" stroke="#C2470E" stroke-width="2"/>
+        <line x1="540" y1="164" x2="540" y2="176" stroke="#C2470E" stroke-width="2"/>
+        <text x="550" y="174" fill="#C2470E"><tspan font-weight="600">ASDA</tspan> = TORA + stopway</text>
+
+        <line x1="60" y1="206" x2="650" y2="206" stroke="#0F6E67" stroke-width="3"/>
+        <line x1="60" y1="200" x2="60" y2="212" stroke="#0F6E67" stroke-width="2"/>
+        <line x1="650" y1="200" x2="650" y2="212" stroke="#0F6E67" stroke-width="2"/>
+        <text x="60" y="228" fill="#0F6E67"><tspan font-weight="600">TODA</tspan> = TORA + clearway &#8212; clearway may not exceed half the TORA</text>
+      </g>
+
+      <text x="60" y="264" font-size="12" fill="currentColor">Landing distance available (<tspan font-weight="600">LDA</tspan>) runs from the threshold and includes <tspan font-weight="600">neither</tspan> clearway nor stopway.</text>
+      <text x="60" y="284" font-size="12" fill="currentColor">Clearway upward slope limit <tspan font-weight="600">1.25 %</tspan> &middot; a stopway must bear the aeroplane's weight without structural damage.</text>
+    </svg>
+    <figcaption><b>Why the asymmetry matters.</b> A stopway is ground you can brake on but not roll for take-off, so it buys ASDA only &mdash; which lets you raise V<sub>1</sub> and shorten the go distance. A clearway is airspace you can climb through but not touch, so it buys TODA only &mdash; which lets you lower V<sub>1</sub>. Whenever the field is <em>unbalanced</em>, one of these two is the reason.</figcaption>
+  </figure>
+
+  <div class="numbers">
+    <div class="nh">Runway state &amp; corrections</div>
+    <div class="nlist">
+      <div class="nrow"><span>Headwind credit</span><span class="v">50 %</span></div>
+      <div class="nrow"><span>Tailwind penalty</span><span class="v">150 %</span></div>
+      <div class="nrow"><span>Damp</span><span class="v">surface not shiny</span></div>
+      <div class="nrow"><span>Wet</span><span class="v">reflective, &#8804;3 mm</span></div>
+      <div class="nrow"><span>Contaminated</span><span class="v">&gt;25 % covered, &gt;3 mm</span></div>
+      <div class="nrow"><span>Max clearway</span><span class="v">&#189; of TORA</span></div>
+      <div class="nrow"><span>Clearway slope limit</span><span class="v">1.25 % up</span></div>
+      <div class="nrow"><span>ACN vs PCN</span><span class="v">may exceed by 10 %</span></div>
+    </div>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Condition</th><th>Take-off distance</th><th>ASDR</th><th>Landing distance</th></tr></thead>
+      <tbody>
+        <tr><td><b>Uphill slope</b></td><td>Increases</td><td><b>Increases</b></td><td>Decreases</td></tr>
+        <tr><td><b>Downhill slope</b></td><td><b>Decreases</b> (V&#8202;1 decreases)</td><td>Increases</td><td><b>Increases</b></td></tr>
+        <tr><td><b>Wet / slush</b></td><td>Increases</td><td>Increases</td><td>Increases</td></tr>
+        <tr><td><b>Higher OAT</b></td><td>Increases</td><td>Increases</td><td>Increases</td></tr>
+        <tr><td><b>Higher pressure altitude</b></td><td>Increases</td><td>Increases</td><td>Increases</td></tr>
+        <tr><td><b>Increased air density</b></td><td><b>Decreases</b></td><td>Decreases</td><td><b>Decreases</b></td></tr>
+        <tr><td><b>Short dry grass</b></td><td>Increases</td><td>Increases</td><td>Increases</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; declared distances</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>The take-off distance available is the sum of:</summary><p class="a">Runway (TORA) + clearway</p></details>
+    <details class="q"><summary>Can the length of a stopway be added to the runway length to determine the TODA?</summary><p class="a">No &mdash; a stopway can only be added to the ASDA</p></details>
+    <details class="q"><summary>In which distance can the stopway length be included?</summary><p class="a">Accelerate-stop distance available (ASDA)</p></details>
+    <details class="q"><summary>What is the maximum allowable clearway used for take-off calculations?</summary><p class="a">Half of the TORA</p></details>
+    <details class="q"><summary>The clearway upward slope is not allowed to exceed:</summary><p class="a">1.25 %</p></details>
+    <details class="q"><summary>What is a balanced field?</summary><p class="a">TODA = ASDA (and therefore TODR = ASDR at V&#8202;1)</p></details>
+    <details class="q"><summary>Use of a clearway in take-off calculations will:</summary><p class="a">Increase the field-length-limited take-off mass</p></details>
+    <details class="q"><summary>Effect of stopway/clearway on an unbalanced field take-off?</summary><p class="a">With a stopway and no clearway, the take-off mass can exceed the balanced-field mass and V&#8202;1 must be higher than the balanced V&#8202;1</p></details>
+    <details class="q"><summary>What is the maximum headwind/tailwind allowance for take-off calculations?</summary><p class="a">50 % of the headwind, 150 % of the tailwind</p></details>
+    <details class="q"><summary>A runway covered 15 % with 6 mm of water is:</summary><p class="a">Wet<span class="why">Contaminated needs more than 25 % of the surface covered.</span></p></details>
+    <details class="q"><summary>Difference between a damp and a wet runway?</summary><p class="a">Damp: the surface is not shiny. Wet: the surface is reflective</p></details>
+    <details class="q"><summary>Effect of a wet runway on TOD and ASDR?</summary><p class="a">Both increase</p></details>
+    <details class="q"><summary>On a dry runway, the accelerate-stop distance is increased by:</summary><p class="a">Uphill slope</p></details>
+    <details class="q"><summary>Effect of a downslope runway on performance?</summary><p class="a">Decreases the take-off distance, increases the landing distance</p></details>
+    <details class="q"><summary>Take-off distance required is increased by:</summary><p class="a">Slush on the runway</p></details>
+    <details class="q"><summary>A dry short-grass runway compared with pavement will:</summary><p class="a">Increase both take-off and landing distance</p></details>
+    <details class="q"><summary>Decreasing pressure altitude will:</summary><p class="a">Decrease the take-off distance required</p></details>
+    <details class="q"><summary>Increasing air density will:</summary><p class="a">Decrease both take-off and landing distance</p></details>
+    <details class="q"><summary>What happens to (1) take-off distance and (2) ground roll if OAT decreases?</summary><p class="a">Both decrease</p></details>
+    <details class="q"><summary>ACN in relation to PCN:</summary><p class="a">May exceed the PCN by up to 10 %</p></details>
+    <details class="q"><summary>Declared Safe Area (short landing operations) maximum length?</summary><p class="a">90 m</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 07 TAKE-OFF SPEEDS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="to">
+  <div class="sec-head"><span class="eyebrow">032 02</span><h2>Take-off Speeds &amp; V<sub>1</sub></h2></div>
+  <p class="lede">V<sub>1</sub> is squeezed from below by controllability and from above by stopping ability. Every V<sub>1</sub> question is that sandwich.</p>
+
+  <div class="numbers">
+    <div class="nh">V-speed limits</div>
+    <div class="nlist">
+      <div class="nrow"><span>V&#8202;1 lower limit</span><span class="v">&#8805; V&#8202;MCG</span></div>
+      <div class="nrow"><span>V&#8202;1 upper limits</span><span class="v">&#8804; V&#8202;R, &#8804; V&#8202;MBE</span></div>
+      <div class="nrow"><span>V&#8202;R minimum</span><span class="v">&#8805; V&#8202;1 and &#8805; 1.05 V&#8202;MCA</span></div>
+      <div class="nrow"><span>V&#8202;2 minimum</span><span class="v">&#8805; 1.13 V&#8202;SR, &#8805; 1.10 V&#8202;MCA</span></div>
+      <div class="nrow"><span>V&#8202;LOF</span><span class="v">&#8805; 1.10 V&#8202;MU (AEO)</span></div>
+      <div class="nrow"><span>Screen height dry / wet</span><span class="v">35 ft / 15 ft</span></div>
+      <div class="nrow"><span>Reduced thrust floor</span><span class="v">&#8805; 75 % of TO thrust</span></div>
+      <div class="nrow"><span>Braking assumed from</span><span class="v">V&#8202;1</span></div>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 340" role="img" aria-label="Accelerate stop distance and take-off distance required plotted against V1, crossing at the balanced V1">
+      <defs>
+        <marker id="pc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <line x1="90" y1="290" x2="670" y2="290" stroke="currentColor" stroke-width="1.6" marker-end="url(#pc)"/>
+      <line x1="90" y1="290" x2="90" y2="30" stroke="currentColor" stroke-width="1.6" marker-end="url(#pc)"/>
+      <text x="660" y="316" font-size="12" text-anchor="end" fill="currentColor">V&#8202;1</text>
+      <text x="84" y="24" font-size="12" fill="currentColor">DISTANCE REQUIRED</text>
+
+      <!-- ASDR rising -->
+      <line x1="140" y1="252" x2="620" y2="72" stroke="#C2470E" stroke-width="2.6"/>
+      <text x="628" y="70" font-size="12.5" fill="#C2470E" font-weight="600" text-anchor="end">ASDR</text>
+      <text x="628" y="86" font-size="10.5" fill="#C2470E" text-anchor="end">go faster before stopping</text>
+
+      <!-- TODR falling -->
+      <line x1="140" y1="88" x2="620" y2="246" stroke="#0F6E67" stroke-width="2.6"/>
+      <text x="150" y="80" font-size="12.5" fill="#0F6E67" font-weight="600">TODR (OEI)</text>
+      <text x="150" y="96" font-size="10.5" fill="#0F6E67">continue from a lower speed</text>
+
+      <!-- crossing -->
+      <circle cx="384" cy="163" r="5.5" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <line x1="384" y1="167" x2="384" y2="290" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <text x="384" y="308" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">V&#8202;1 balanced</text>
+      <line x1="92" y1="163" x2="380" y2="163" stroke="currentColor" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <text x="98" y="157" font-size="11" fill="currentColor">balanced field length</text>
+
+      <!-- limits -->
+      <line x1="140" y1="40" x2="140" y2="290" stroke="#6F4BA8" stroke-width="1.8"/>
+      <text x="148" y="272" font-size="11.5" fill="#6F4BA8" font-weight="600">V&#8202;MCG floor</text>
+      <line x1="620" y1="40" x2="620" y2="290" stroke="#6F4BA8" stroke-width="1.8"/>
+      <text x="612" y="272" font-size="11.5" text-anchor="end" fill="#6F4BA8" font-weight="600">V&#8202;R / V&#8202;MBE ceiling</text>
+    </svg>
+    <figcaption><b>Raising V<sub>1</sub> trades one distance for the other.</b> A higher V<sub>1</sub> means you carry on from a faster speed, so <b>TODR falls</b>; but you begin braking from that faster speed, so <b>ASDR rises</b>. The balanced V<sub>1</sub> is where the two curves cross. If V<sub>1</sub> is set erroneously too high and the engine fails just above the correct value, <b>ASDR may exceed ASDA</b> &mdash; you cannot stop on what is left.</figcaption>
+  </figure>
+
+  <h3>The speeds themselves</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Speed</th><th>Meaning</th><th>What limits it</th></tr></thead>
+      <tbody>
+        <tr><td class="n"><b>V&#8202;MCG</b></td><td>Minimum control speed on the ground</td><td>Rudder authority; <b>forward CG reduces it</b>; a cold day <b>raises</b> it (more thrust from the live engine)</td></tr>
+        <tr><td class="n"><b>V&#8202;1</b></td><td>Max speed for the first stop action; min speed to continue</td><td>V&#8202;MCG below; V&#8202;R and <b>V&#8202;MBE</b> above</td></tr>
+        <tr><td class="n"><b>V&#8202;MBE</b></td><td>Maximum brake energy speed</td><td>High mass, high elevation, tailwind, high temperature</td></tr>
+        <tr><td class="n"><b>V&#8202;R</b></td><td>Speed at which the pilot initiates rotation</td><td>&#8805; V&#8202;1 and &#8805; 1.05 V&#8202;MCA</td></tr>
+        <tr><td class="n"><b>V&#8202;MU</b></td><td>Minimum unstick</td><td>Tail-strike geometry</td></tr>
+        <tr><td class="n"><b>V&#8202;LOF</b></td><td>Lift-off speed</td><td><b>Tyre speed limit &mdash; in ground speed</b></td></tr>
+        <tr><td class="n"><b>V&#8202;2</b></td><td>Take-off safety speed, reached by screen height with the critical engine failed</td><td>V&#8202;SR at high mass/low density; V&#8202;MCA at low altitude</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Flap setting &mdash; the trade-off</h3>
+  <p>Going from <b>more flap to less flap</b> (e.g. 15&deg; &rarr; 5&deg;) gives a <b>longer take-off distance but a better climb gradient</b>: less drag once airborne, more runway to accelerate to a higher speed. So a low flap setting is what you want with a <b>long runway, distant obstacles, high field elevation and high temperature</b>, and it <b>increases the obstacle limit while decreasing the runway limit</b>.</p>
+
+  <div class="caution">
+    <span class="ch">Reduced (flex / assumed temperature) thrust</span>
+    <p>Must be <b>at least 75 %</b> of full take-off thrust. Its purpose is to <b>reduce engine wear and maintenance cost</b> and improve engine life. It <b>may not be used</b> when the runway is <b>contaminated</b>, when anti-skid is unserviceable, or when windshear is reported.</p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; take-off</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Which of the following speeds are limiting for V&#8202;1?</summary><p class="a">V&#8202;MCG, V&#8202;R and V&#8202;MBE</p></details>
+    <details class="q"><summary>For a Performance Class A aeroplane, which speed must not be exceeded by V&#8202;1?</summary><p class="a">V&#8202;MBE</p></details>
+    <details class="q"><summary>Which statement regarding V&#8202;1 is correct?</summary><p class="a">V&#8202;R may not be lower than V&#8202;1</p></details>
+    <details class="q"><summary>V&#8202;R cannot be lower than:</summary><p class="a">V&#8202;1 and 105 % of V&#8202;MCA</p></details>
+    <details class="q"><summary>What is V&#8202;2?</summary><p class="a">The take-off safety speed with the critical engine failed, to be reached at screen height</p></details>
+    <details class="q"><summary>Which speed describes when the pilot initiates the lift-off control input?</summary><p class="a">V&#8202;R</p></details>
+    <details class="q"><summary>V&#8202;2min is limited by both V&#8202;SR and V&#8202;MC. Which statement is correct?</summary><p class="a">At low density and high weight, V&#8202;2min is often limited by the stall reference speed (V&#8202;SR)</p></details>
+    <details class="q"><summary>V&#8202;2min for a dual-engine turbojet:</summary><p class="a">Is often limited by the minimum control speed at low altitude</p></details>
+    <details class="q"><summary>Effect of decreasing V&#8202;1 on ASDR and TODR?</summary><p class="a">TODR increases, ASDR decreases</p></details>
+    <details class="q"><summary>At the same mass, if a higher V&#8202;1 is used then:</summary><p class="a">TODR will decrease and ASDR will increase</p></details>
+    <details class="q"><summary>If V&#8202;1 is erroneously too high and the engine fails just above the correct V&#8202;1:</summary><p class="a">ASDR may exceed ASDA</p></details>
+    <details class="q"><summary>When calculating ASDR, braking is assumed to start:</summary><p class="a">At V&#8202;1</p></details>
+    <details class="q"><summary>Engine failure below V&#8202;1 &mdash; what must happen?</summary><p class="a">The take-off must be rejected</p></details>
+    <details class="q"><summary>Effect of a downhill slope on take-off speeds?</summary><p class="a">V&#8202;1 decreases, V&#8202;R remains constant</p></details>
+    <details class="q"><summary>What is true if the take-off mass is increased?</summary><p class="a">V&#8202;1 increases</p></details>
+    <details class="q"><summary>What is the screen height on a dry runway, and on a wet runway?</summary><p class="a">35 ft dry; a reduction to 15 ft is allowed when wet</p></details>
+    <details class="q"><summary>How does increasing V&#8202;2 affect where the 35 ft screen height occurs?</summary><p class="a">The screen height occurs further down the runway</p></details>
+    <details class="q"><summary>"Reversers are always included in the accelerate-stop distance required on a dry or wet runway." This is:</summary><p class="a">Wrong<span class="why">On a dry runway reverse thrust is not credited at all; credit on wet/contaminated runways depends on the AFM.</span></p></details>
+    <details class="q"><summary>Changing take-off flap from 15&deg; to 5&deg; results in:</summary><p class="a">Longer take-off distance and better climb</p></details>
+    <details class="q"><summary>Changing flap setting from 10&deg; to 5&deg; will:</summary><p class="a">Increase the obstacle limit but decrease the runway limit</p></details>
+    <details class="q"><summary>Which combination most requires a low flap setting for take-off?</summary><p class="a">High field elevation, distant obstacles, long runway, high ambient temperature</p></details>
+    <details class="q"><summary>The reduced take-off thrust setting is at least what fraction of take-off thrust?</summary><p class="a">75 %</p></details>
+    <details class="q"><summary>Reduced take-off thrust shall not be used when:</summary><p class="a">The runway is contaminated</p></details>
+    <details class="q"><summary>Advantage of a reduced-thrust take-off?</summary><p class="a">Decreases engine wear and maintenance costs &mdash; improves engine life</p></details>
+    <details class="q"><summary>Which condition most likely leads to a tyre speed limited take-off?</summary><p class="a">High runway elevation and tailwind<span class="why">Both raise the ground speed at lift-off for a given IAS.</span></p></details>
+    <details class="q"><summary>Maximum tyre speed limits which speed, and measured how?</summary><p class="a">It limits V&#8202;LOF, in terms of ground speed</p></details>
+    <details class="q"><summary>Concerning landing gear, which factors limit take-off performance?</summary><p class="a">Wheel rate of rotation (tyre speed) and brake energy</p></details>
+    <details class="q"><summary>Picking up a new aircraft on a cold day may cause take-off issues due to:</summary><p class="a">A high V&#8202;MCG leading to controllability issues in an aborted take-off</p></details>
+    <details class="q"><summary>V&#8202;MCG is:</summary><p class="a">The minimum control speed on the ground</p></details>
+    <details class="q"><summary>Heavy aircraft at high pressure altitude and constant IAS will experience:</summary><p class="a">Long take-off, low climb angle, and a reduced V&#8202;MC in IAS</p></details>
+    <details class="q"><summary>Increased air density causes V&#8202;2 to:</summary><p class="a">Increase<span class="why">In the bank's terms: denser air raises the true value of the take-off speeds referenced to the certified schedule &mdash; treat this as the printed answer and be ready to reason from IAS/TAS if the wording differs.</span></p></details>
+    <details class="q"><summary>Engine failure with a strong crosswind from the left &mdash; which is the worst case?</summary><p class="a">The left outboard engine</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 08 SEGMENTS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="seg">
+  <div class="sec-head"><span class="eyebrow">032 03</span><h2>Climb Segments &amp; Obstacle Clearance</h2></div>
+  <p class="lede">Four segments, each with its own configuration, thrust and minimum gross gradient. The numbers are pure recall &mdash; and they are asked every time.</p>
+
+  <figure>
+    <svg viewBox="0 0 800 320" role="img" aria-label="Take-off flight path showing the four climb segments with configuration, thrust and minimum gradient for each">
+      <line x1="40" y1="260" x2="770" y2="260" stroke="currentColor" stroke-width="2"/>
+      <!-- runway -->
+      <rect x="40" y="252" width="150" height="8" fill="currentColor" opacity=".3"/>
+      <!-- flight path -->
+      <path d="M190 260 L250 232 L340 176 L520 130 L640 130 L760 96" fill="none" stroke="#C2470E" stroke-width="2.8"/>
+      <!-- screen height -->
+      <line x1="250" y1="232" x2="250" y2="260" stroke="#0F6E67" stroke-width="1.6"/>
+      <text x="250" y="278" font-size="11" text-anchor="middle" fill="#0F6E67" font-weight="600">35 ft</text>
+      <circle cx="190" cy="260" r="4" fill="#0F6E67"/>
+      <text x="176" y="248" font-size="11" text-anchor="end" fill="#0F6E67">V&#8202;LOF</text>
+      <!-- gear up point -->
+      <circle cx="340" cy="176" r="4.5" fill="#C2470E"/>
+      <text x="340" y="164" font-size="11" text-anchor="middle" fill="#C2470E">gear up</text>
+      <!-- 400 ft -->
+      <line x1="520" y1="130" x2="520" y2="260" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="520" y="118" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">400 ft min</text>
+      <line x1="640" y1="130" x2="640" y2="260" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+      <text x="700" y="86" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">1500 ft</text>
+
+      <!-- segment labels -->
+      <g font-size="11.5">
+        <text x="295" y="212" text-anchor="middle" fill="currentColor" font-weight="600">1st</text>
+        <text x="295" y="226" text-anchor="middle" fill="currentColor">gear down &#8594; up</text>
+        <text x="295" y="240" text-anchor="middle" fill="#C2470E">&#8805; 0.0 %</text>
+
+        <text x="430" y="196" text-anchor="middle" fill="currentColor" font-weight="600">2nd</text>
+        <text x="430" y="210" text-anchor="middle" fill="currentColor">gear up, T/O flap, V&#8202;2</text>
+        <text x="430" y="224" text-anchor="middle" fill="#C2470E" font-weight="600">&#8805; 2.4 %</text>
+        <text x="430" y="238" text-anchor="middle" fill="currentColor">take-off thrust</text>
+
+        <text x="580" y="160" text-anchor="middle" fill="currentColor" font-weight="600">3rd</text>
+        <text x="580" y="174" text-anchor="middle" fill="currentColor">level acceleration</text>
+        <text x="580" y="188" text-anchor="middle" fill="currentColor">flap retraction</text>
+
+        <text x="710" y="150" text-anchor="middle" fill="currentColor" font-weight="600">4th / final</text>
+        <text x="710" y="164" text-anchor="middle" fill="currentColor">clean, MCT</text>
+        <text x="710" y="178" text-anchor="middle" fill="#C2470E" font-weight="600">&#8805; 1.2 %</text>
+      </g>
+      <text x="400" y="306" font-size="11.5" text-anchor="middle" fill="currentColor">Gradients shown are <tspan font-weight="600">gross, OEI, twin-engine</tspan>. Turns limited to <tspan font-weight="600">15&deg; bank up to 400 ft</tspan>.</text>
+    </svg>
+    <figcaption><b>The segments are defined by configuration changes, not by height.</b> The second segment begins the moment the <b>landing gear is fully retracted</b> and ends at the acceleration height (<b>minimum 400 ft</b>) &mdash; it is the critical one, flown at V<sub>2</sub> on take-off thrust with the critical engine out, and it is what usually sets the climb-limited take-off mass.</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Segment / requirement</th><th>Configuration</th><th>2 eng</th><th>3 eng</th><th>4 eng</th></tr></thead>
+      <tbody>
+        <tr><td><b>1st segment</b></td><td>Gear extended, T/O flap, V&#8202;2, T/O thrust</td><td class="n">0.0 %</td><td class="n">0.3 %</td><td class="n">0.5 %</td></tr>
+        <tr><td><b>2nd segment</b></td><td>Gear up, T/O flap, V&#8202;2, T/O thrust</td><td class="n"><b>2.4 %</b></td><td class="n">2.7 %</td><td class="n">3.0 %</td></tr>
+        <tr><td><b>Final / 4th segment</b></td><td>Clean, V&#8202;FTO, max continuous thrust</td><td class="n">1.2 %</td><td class="n">1.5 %</td><td class="n">1.7 %</td></tr>
+        <tr><td><b>Approach climb</b> (OEI)</td><td>Approach flap, <b>gear UP</b>, go-around thrust</td><td class="n">2.1 %</td><td class="n">2.4 %</td><td class="n">2.7 %</td></tr>
+        <tr><td><b>Landing climb</b> (all engines)</td><td>Landing flap, gear down</td><td class="n">3.2 %</td><td class="n">3.2 %</td><td class="n">3.2 %</td></tr>
+        <tr><td><b>Net gradient reduction</b></td><td>Applied to gross for obstacle clearance</td><td class="n">0.8 %</td><td class="n">0.9 %</td><td class="n">1.0 %</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="numbers">
+    <div class="nh">Obstacle &amp; procedure gradients</div>
+    <div class="nlist">
+      <div class="nrow"><span>Standard PDG</span><span class="v">3.3 %</span></div>
+      <div class="nrow"><span>Missed approach (PANS-OPS)</span><span class="v">2.5 %</span></div>
+      <div class="nrow"><span>Max bank below 400 ft</span><span class="v">15&deg;</span></div>
+      <div class="nrow"><span>Acceleration height minimum</span><span class="v">400 ft</span></div>
+      <div class="nrow"><span>Final segment ends</span><span class="v">1500 ft</span></div>
+      <div class="nrow"><span>Final segment thrust</span><span class="v">max continuous</span></div>
+    </div>
+  </div>
+
+  <div class="caution">
+    <span class="ch">Climb-limited take-off mass</span>
+    <p>It is set by the <b>second-segment gradient</b>, so it depends on <b>temperature, pressure altitude and flap setting</b> &mdash; and it is <b>completely independent of the wind component</b>. A headwind improves the field-length limit and the obstacle path over the ground, but it does <b>not</b> change the climb limit. This distinction appears three times in the bank.</p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; climb segments</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the climb gradient for the second take-off segment for a twin-engine jet?</summary><p class="a">2.4 %</p></details>
+    <details class="q"><summary>The second segment for a turbojet begins when:</summary><p class="a">The landing gear is fully retracted</p></details>
+    <details class="q"><summary>Minimum acceleration height at the start of the 3rd segment?</summary><p class="a">400 ft</p></details>
+    <details class="q"><summary>Thrust setting used in the final climb segment?</summary><p class="a">Maximum continuous thrust</p></details>
+    <details class="q"><summary>What is the minimum missed approach climb gradient (PANS-OPS)?</summary><p class="a">2.5 %</p></details>
+    <details class="q"><summary>The standard Procedure Design Gradient (PDG) is:</summary><p class="a">3.3 %</p></details>
+    <details class="q"><summary>Climb gradient means:</summary><p class="a">Height gained divided by horizontal distance, as a percentage</p></details>
+    <details class="q"><summary>Climb-limited take-off mass decreases with:</summary><p class="a">Increasing OAT</p></details>
+    <details class="q"><summary>Effect of increased headwind on climb-limited take-off mass?</summary><p class="a">None &mdash; the climb limit weight is not affected by wind</p></details>
+    <details class="q"><summary>Which condition degrades take-off and climb performance most?</summary><p class="a">High temperature and high humidity</p></details>
+    <details class="q"><summary>If the take-off mass is obstacle-limited and includes a turn, bank angle shall not exceed:</summary><p class="a">15&deg; up to 400 ft</p></details>
+    <details class="q"><summary>For take-off obstacle clearance, obstacles in the first segment may be avoided:</summary><p class="a">By banking not more than 15&deg; between 50 ft and 400 ft above runway elevation</p></details>
+    <details class="q"><summary>Which speed provides maximum obstacle clearance during climb?</summary><p class="a">V&#8202;X &mdash; the speed at which excess thrust over thrust required is greatest</p></details>
+    <details class="q"><summary>During a critical engine failure, which is correct?</summary><p class="a">V&#8202;Y decreases</p></details>
+    <details class="q"><summary>The approach climb requirement has been established so that the aeroplane will achieve:</summary><p class="a">A minimum climb gradient in the event of a go-around with one engine inoperative</p></details>
+    <details class="q"><summary>The approach climb requirement is based on which configuration?</summary><p class="a">One engine inoperative, flaps in the APPROACH position, gear UP</p></details>
+    <details class="q"><summary>Maximum landing mass may be limited by:</summary><p class="a">The OEI climb requirement in the approach configuration</p></details>
+    <details class="q"><summary>The flight path angle is the angle between:</summary><p class="a">The aircraft path and the ground</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 09 CRUISE &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="cruise">
+  <div class="sec-head"><span class="eyebrow">032 04</span><h2>Cruise &amp; Range</h2></div>
+  <p class="lede">Specific range, optimum altitude, cost index, step climb. All four are the same idea seen from different angles: miles per kilo of fuel.</p>
+
+  <div class="numbers">
+    <div class="nh">Cruise definitions</div>
+    <div class="nlist">
+      <div class="nrow"><span>Specific range</span><span class="v">SR = TAS / fuel flow</span></div>
+      <div class="nrow"><span>SFC (jet)</span><span class="v">fuel flow per unit thrust</span></div>
+      <div class="nrow"><span>Optimum altitude</span><span class="v">altitude of maximum SR</span></div>
+      <div class="nrow"><span>Long Range Cruise</span><span class="v">99 % of max SR, faster</span></div>
+      <div class="nrow"><span>Cost index</span><span class="v">time costs / fuel costs</span></div>
+      <div class="nrow"><span>Max range speed (jet)</span><span class="v">min SFC, &#8776;1.32 V&#8202;MD</span></div>
+    </div>
+  </div>
+
+  <ul class="tight">
+    <li><b>Optimum altitude increases as mass decreases</b> &mdash; which is exactly why the <b>step climb</b> exists. It also <b>increases with decreasing Mach number</b>.</li>
+    <li>As fuel burns off during a long flight, <b>specific range and optimum altitude both increase</b>.</li>
+    <li>At maximum range cruise, as mass reduces, <b>IAS decreases and drag decreases</b>.</li>
+    <li><b>Long Range Cruise</b> deliberately gives up 1 % of specific range to buy a useful increase in speed &mdash; the classic definition is <b>"the speed which offers 99 % of the maximum possible fuel mileage"</b>, on the high-speed side.</li>
+    <li><b>Cost index</b> = time-related costs &divide; fuel cost. CI 0 = maximum range (minimum fuel); a high CI pushes the speed up towards V<sub>MO</sub>/M<sub>MO</sub>.</li>
+    <li>A <b>step climb</b> at high altitude can be prevented by <b>buffet onset at load factors above 1 g</b> &mdash; see the buffet boundary above.</li>
+    <li><b>Fuel flow vs TAS</b>: fuel flow decreases up to the maximum endurance speed, then increases.</li>
+    <li>The <b>flight plan cruise speed entry is a true airspeed</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; cruise</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Which equation defines specific range?</summary><p class="a">SR = TAS / total fuel flow</p></details>
+    <details class="q"><summary>Specific range for a jet is:</summary><p class="a">The number of miles flown per unit mass of fuel</p></details>
+    <details class="q"><summary>Specific fuel consumption for a jet is:</summary><p class="a">Fuel flow per unit of thrust</p></details>
+    <details class="q"><summary>For a jet transport, why is "maximum range speed" used?</summary><p class="a">It gives the minimum specific fuel consumption per mile</p></details>
+    <details class="q"><summary>For a piston-engined aeroplane, the speed for maximum range is:</summary><p class="a">That which gives the maximum lift-to-drag ratio &mdash; i.e. minimum drag</p></details>
+    <details class="q"><summary>What is Long Range Cruise?</summary><p class="a">The speed which offers 99 % of the maximum possible fuel mileage</p></details>
+    <details class="q"><summary>In long-range cruise, what happens to specific range and fuel flow?</summary><p class="a">Specific range increases and fuel flow decreases (as mass reduces)</p></details>
+    <details class="q"><summary>During a cruise at constant FL at maximum range speed, IAS and drag will:</summary><p class="a">Both decrease</p></details>
+    <details class="q"><summary>During a long-range flight, as mass decreases:</summary><p class="a">Specific range and optimum altitude both increase</p></details>
+    <details class="q"><summary>"Optimum altitude increases with decreasing weight." True or false?</summary><p class="a">True</p></details>
+    <details class="q"><summary>The optimum altitude of a jet increases with:</summary><p class="a">Decreasing Mach number</p></details>
+    <details class="q"><summary>The optimum altitude is:</summary><p class="a">The altitude where specific range is maximum &mdash; it increases as mass decreases</p></details>
+    <details class="q"><summary>What is a cost index?</summary><p class="a">The ratio of time-related costs to fuel costs</p></details>
+    <details class="q"><summary>Relationship between true airspeed and fuel flow?</summary><p class="a">Fuel flow decreases up to the maximum endurance speed, then increases</p></details>
+    <details class="q"><summary>Increasing thrust at maximum endurance speed results in:</summary><p class="a">Endurance decreases; range increases and then decreases</p></details>
+    <details class="q"><summary>To achieve maximum range over the ground with a headwind, the airspeed should be:</summary><p class="a">Higher than the still-air maximum range speed</p></details>
+    <details class="q"><summary>Maximum endurance speed for a jet equals:</summary><p class="a">Best angle of climb speed (V&#8202;X = V&#8202;MD)</p></details>
+    <details class="q"><summary>The flight plan cruise speed entry refers to:</summary><p class="a">True airspeed</p></details>
+    <details class="q"><summary>The speed for maximum lift/drag ratio will result in:</summary><p class="a">Maximum range for a propeller-driven aeroplane</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 10 LANDING &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="ldg">
+  <div class="sec-head"><span class="eyebrow">032 05</span><h2>Landing</h2></div>
+  <p class="lede">One factor for dry, one more for wet, and a technique question about hydroplaning. Short topic, easy marks.</p>
+
+  <div class="numbers">
+    <div class="nh">Landing distance factors (Class A)</div>
+    <div class="nlist">
+      <div class="nrow"><span>Dry &mdash; ALD must fit in</span><span class="v">60 % of LDA (&times;1.67)</span></div>
+      <div class="nrow"><span>Wet &mdash; additional factor</span><span class="v">+15 % (&times;1.92 total)</span></div>
+      <div class="nrow"><span>Turboprop dry</span><span class="v">70 % of LDA (&times;1.43)</span></div>
+      <div class="nrow"><span>V&#8202;REF</span><span class="v">1.23 V&#8202;SR0 / 1.30 V&#8202;S0</span></div>
+      <div class="nrow"><span>Class B screen height</span><span class="v">50 ft</span></div>
+      <div class="nrow"><span>Class A screen height (wet T/O)</span><span class="v">15 ft</span></div>
+    </div>
+  </div>
+
+  <div class="work">
+    <div class="wh">Worked example &mdash; bank question 249</div>
+    Landing distance available 3000 m, runway wet, commercial jet.<br><br>
+    Dry requirement: ALD &#8804; 0.60 &times; LDA<br>
+    Wet requirement: divide that by a further 1.15<br>
+    ALD &#8804; (3000 &times; 0.60) / 1.15 = 1800 / 1.15 = <span class="res">1565 m</span><br>
+    <span style="color:var(--muted)">Equivalently: 3000 &divide; 1.92 = 1562 m. Same answer, easier arithmetic.</span>
+  </div>
+
+  <div class="work">
+    <div class="wh">Worked example &mdash; wind limits, bank question 179</div>
+    Required: at least 10 kt headwind; maximum 35 kt crosswind; wind 60&deg; off the runway.<br><br>
+    Headwind = V &times; cos 60&deg; = 0.5 V &nbsp;&rarr;&nbsp; 0.5 V &#8805; 10 &nbsp;&rarr;&nbsp; V &#8805; <b>20 kt</b><br>
+    Crosswind = V &times; sin 60&deg; = 0.87 V &nbsp;&rarr;&nbsp; 0.87 V &#8804; 35 &nbsp;&rarr;&nbsp; V &#8804; <b>40 kt</b><br>
+    Answer: <span class="res">20 kt minimum, 40 kt maximum</span>
+  </div>
+
+  <ul class="tight">
+    <li><b>Hydroplaning technique</b>: a <b>positive, firm touchdown</b>, then <b>full reverse and brakes as early as possible</b>. Do not float &mdash; ground effect already lengthens the landing.</li>
+    <li>Dynamic hydroplaning speed &asymp; <b>9 &times; &radic;(tyre pressure in psi)</b> kt.</li>
+    <li>Raising the screen height from 50 ft to 67 ft <b>increases the landing distance</b> &mdash; you spend the extra height in the air.</li>
+    <li>If no AFM data exists for a wet runway, the required landing distance on a dry runway must be <b>increased by 15 %</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; landing</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>The landing distance available for dispatch on a dry runway must be:</summary><p class="a">Actual landing distance &times; 1.67</p></details>
+    <details class="q"><summary>Required landing distance on a dry runway must be increased by how much for a wet runway with no AFM data?</summary><p class="a">15 %</p></details>
+    <details class="q"><summary>LDA 3000 m, runway wet &mdash; maximum allowable landing distance for a commercial jet?</summary><p class="a">1565 m</p></details>
+    <details class="q"><summary>What margin above stall speed does V&#8202;REF provide?</summary><p class="a">1.30 V&#8202;S0 &mdash; and it may not be below 1.23 V&#8202;SR0</p></details>
+    <details class="q"><summary>Screen height increased from 50 ft to 67 ft &mdash; effect?</summary><p class="a">The landing distance increases</p></details>
+    <details class="q"><summary>Effect of ground effect on landing distance?</summary><p class="a">Increases it</p></details>
+    <details class="q"><summary>Approaching a wet runway with hydroplaning risk &mdash; what technique?</summary><p class="a">Positive touchdown, full reverse and brakes as soon as possible</p></details>
+    <details class="q"><summary>When V&#8202;1 is reduced because of a wet runway, what happens to OEI obstacle clearance and climb performance?</summary><p class="a">Obstacle clearance decreases; climb performance remains constant</p></details>
+    <details class="q"><summary>What happens to ASD if the dry V&#8202;1 is used on a wet runway?</summary><p class="a">ASD increases and the runway becomes unbalanced</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 11 CLASS B &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="clsb">
+  <div class="sec-head"><span class="eyebrow">032 06</span><h2>Class B &mdash; the differences</h2></div>
+  <p class="lede">Only a handful of questions, but they are pure recall and easy to lose. Class B is single-engine and light twins, MCTOM &le; 5700 kg and &le; 9 passengers.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Item</th><th>Class A</th><th>Class B</th></tr></thead>
+      <tbody>
+        <tr><td>Screen height, take-off</td><td class="n">35 ft (15 ft wet)</td><td class="n"><b>50 ft</b></td></tr>
+        <tr><td>Screen height, landing</td><td class="n">50 ft</td><td class="n">50 ft</td></tr>
+        <tr><td>Take-off distance factor</td><td class="n">&mdash; (AFM)</td><td class="n">&times;1.25</td></tr>
+        <tr><td>Landing distance factor</td><td class="n">&times;1.67 dry</td><td class="n">&times;1.43 dry (70 %)</td></tr>
+        <tr><td>Grass surface (dry, &le;20 cm)</td><td class="n">AFM</td><td class="n">+20 % T/O, +20 % LDG</td></tr>
+        <tr><td>Slope correction</td><td class="n">AFM</td><td class="n"><b>5 % per 1 % of slope</b></td></tr>
+        <tr><td>Wind allowance</td><td class="n">50 % HW / 150 % TW</td><td class="n">50 % HW / <b>at least 150 % TW</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; Class B</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Performance Class B aeroplane on a 2 % upslope requires what factor?</summary><p class="a">10 %<span class="why">5 % for each 1 % of slope.</span></p></details>
+    <details class="q"><summary>Performance Class B take-off calculations must consider what tailwind?</summary><p class="a">At least 150 % of the reported tailwind component</p></details>
+    <details class="q"><summary>Screen height for a Class B landing on a wet runway?</summary><p class="a">50 ft</p></details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>POF &amp; Performance</b> &mdash; revision sheet for airline selection screening</div>
+    <div>Built from the Selection question bank (270 items), the ATPL summaries and CAE Oxford 080 / 032</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.qbank').forEach(function(bank){
+  var btn = bank.querySelector('.reveal');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var items = bank.querySelectorAll('details.q');
+    var opening = btn.textContent.trim() === 'Reveal all';
+    items.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'Hide all' : 'Reveal all';
+  });
+});
+</script>
