@@ -1,1 +1,1230 @@
+<meta charset="utf-8">
+<title>050 Meteorology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F4F6F4;
+  --surface:#FFFFFF;
+  --surface-2:#EDF0EF;
+  --ink:#14202A;
+  --muted:#5C6C79;
+  --line:#CBD4D9;
+  --line-soft:#DFE5E7;
+  --cold:#1D4E89;
+  --warm:#B03A2C;
+  --occl:#6B3FA0;
+  --caution:#B4780A;
+  --accent:#1D4E89;
+  --accent-wash:#E7EDF4;
+  --caution-wash:#F7EFDD;
+  --shadow:0 1px 2px rgba(20,32,42,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E151B;
+    --surface:#151E26;
+    --surface-2:#1C2831;
+    --ink:#E3EAEF;
+    --muted:#94A5B2;
+    --line:#2B3A46;
+    --line-soft:#22303A;
+    --cold:#6FA8DC;
+    --warm:#E58174;
+    --occl:#B392E0;
+    --caution:#E0A63F;
+    --accent:#6FA8DC;
+    --accent-wash:#17242F;
+    --caution-wash:#241F14;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E151B;
+  --surface:#151E26;
+  --surface-2:#1C2831;
+  --ink:#E3EAEF;
+  --muted:#94A5B2;
+  --line:#2B3A46;
+  --line-soft:#22303A;
+  --cold:#6FA8DC;
+  --warm:#E58174;
+  --occl:#B392E0;
+  --caution:#E0A63F;
+  --accent:#6FA8DC;
+  --accent-wash:#17242F;
+  --caution-wash:#241F14;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
 
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono,.num,td.n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+/* ---------- masthead ---------- */
+.masthead{
+  border-bottom:2px solid var(--ink);
+  background:var(--surface);
+}
+.mast-in{
+  max-width:1080px;margin:0 auto;padding:26px 24px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;justify-content:space-between;
+}
+.mast-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.subj-code{
+  font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  letter-spacing:.14em;color:var(--surface);background:var(--cold);
+  padding:5px 9px;border-radius:2px;
+}
+h1{margin:0;font-size:44px;line-height:.98;font-weight:700;letter-spacing:.005em}
+.mast-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;max-width:46ch}
+.mast-meta{
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:1.9;letter-spacing:.04em;
+}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+/* ---------- topic rail ---------- */
+.rail{
+  position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.rail-in{
+  max-width:1080px;margin:0 auto;padding:9px 24px;
+  display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;
+}
+.rail a{
+  flex:0 0 auto;text-decoration:none;color:var(--muted);
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;
+  padding:5px 10px;border-radius:3px;white-space:nowrap;
+}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .rc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);margin-right:5px}
+
+/* ---------- layout ---------- */
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+section{padding:52px 0 8px;border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--accent);letter-spacing:.1em;
+}
+h2{margin:0;font-size:31px;font-weight:700;line-height:1.08}
+.lede{margin:2px 0 26px;color:var(--muted);font-size:15px;max-width:64ch}
+h3{
+  margin:30px 0 8px;font-size:16px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--ink);
+  padding-bottom:5px;border-bottom:1px solid var(--line);
+}
+p{margin:0 0 12px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 26px;align-items:start}
+ul.tight{margin:0 0 12px;padding-left:19px;max-width:68ch}
+ul.tight li{margin-bottom:5px}
+b,strong{font-weight:600}
+.k{color:var(--accent);font-weight:600}
+.hot{color:var(--warm);font-weight:600}
+
+/* ---------- numbers panel ---------- */
+.numbers{
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--cold);
+  border-radius:2px;padding:15px 18px;margin:18px 0;box-shadow:var(--shadow);
+}
+.numbers .nh{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:9px;
+}
+.nlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 26px;margin:0}
+.nrow{
+  display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:4px 0;border-bottom:1px dotted var(--line-soft);font-size:14.5px;
+}
+.nrow:last-child{border-bottom:0}
+.nrow span:first-child{color:var(--muted)}
+.nrow .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13.5px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:14px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:420px}
+th{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.07em;text-align:left;
+  border-bottom:1.5px solid var(--ink);padding:6px 10px 5px;color:var(--ink);
+}
+td{padding:6px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+tbody tr:hover{background:var(--surface-2)}
+
+/* ---------- caution ---------- */
+.caution{
+  background:var(--caution-wash);border:1px solid var(--caution);border-radius:2px;
+  padding:12px 15px;margin:16px 0;font-size:15px;
+}
+.caution .ch{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--caution);display:block;margin-bottom:3px;
+}
+.caution p{margin:0;max-width:none}
+
+/* ---------- figures ---------- */
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:16px 16px 10px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink)}
+figcaption{
+  margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);
+  font-size:13.5px;color:var(--muted);line-height:1.5;
+}
+figcaption b{color:var(--ink)}
+
+/* ---------- question bank ---------- */
+.qbank{margin:30px 0 10px;background:var(--surface-2);border-radius:3px;padding:16px 18px 18px}
+.qb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.qb-title{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);
+}
+.qb-title em{font-style:normal;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.reveal{
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);background:transparent;
+  border:1px solid var(--accent);border-radius:2px;padding:4px 11px;cursor:pointer;
+}
+.reveal:hover{background:var(--accent);color:var(--surface)}
+.reveal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q{border-bottom:1px solid var(--line);padding:0}
+details.q:last-of-type{border-bottom:0}
+details.q summary{
+  cursor:pointer;list-style:none;padding:9px 30px 9px 0;position:relative;
+  font-size:15.5px;line-height:1.45;
+}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{
+  content:"+";position:absolute;right:4px;top:8px;
+  font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:17px;line-height:1.4;
+}
+details.q[open] summary::after{content:"&#8722;";color:var(--accent)}
+details.q summary:hover{color:var(--accent)}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q .a{
+  margin:0 0 12px;padding:9px 13px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:0 2px 2px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.6;max-width:none;
+}
+details.q .a .why{
+  display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--muted);line-height:1.5;
+}
+
+/* ---------- worked example ---------- */
+.work{
+  background:var(--surface);border:1px dashed var(--line);border-radius:2px;
+  padding:13px 16px;margin:16px 0;font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75;
+}
+.work .wh{
+  font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px;
+}
+.work .res{color:var(--accent);font-weight:600}
+
+footer{
+  border-top:2px solid var(--ink);background:var(--surface);
+  padding:22px 24px;margin-top:40px;
+}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:34px}
+  h2{font-size:26px}
+  .mast-meta{text-align:left}
+  body{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div class="mast-title">
+      <span class="subj-code">050</span>
+      <div>
+        <h1>Meteorology</h1>
+        <p class="mast-sub">Revision sheet for airline selection screening &#8212; theory, diagrams and the real question bank, by syllabus topic.</p>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div><b>206</b> questions &#183; <b>10</b> topics</div>
+      <div>EASA ATPL(A) &#183; CAE Oxford 050</div>
+      <div>Click a question to reveal</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Topics">
+  <div class="rail-in">
+    <a href="#atm"><span class="rc">01</span>Atmosphere</a>
+    <a href="#wind"><span class="rc">02</span>Wind</a>
+    <a href="#thermo"><span class="rc">03</span>Thermodynamics</a>
+    <a href="#cloud"><span class="rc">04</span>Clouds &amp; Fog</a>
+    <a href="#precip"><span class="rc">05</span>Precipitation</a>
+    <a href="#fronts"><span class="rc">06</span>Air Masses &amp; Fronts</a>
+    <a href="#press"><span class="rc">07</span>Pressure Systems</a>
+    <a href="#clim"><span class="rc">08</span>Climatology</a>
+    <a href="#haz"><span class="rc">09</span>Flight Hazards</a>
+    <a href="#info"><span class="rc">10</span>Met Information</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 01 ATMOSPHERE &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="atm">
+  <div class="sec-head"><span class="eyebrow">050 01</span><h2>The Atmosphere</h2></div>
+  <p class="lede">Composition, layers, ISA, and everything altimetry. This topic and Flight Hazards together carry the most marks in a selection paper.</p>
+
+  <div class="numbers">
+    <div class="nh">International Standard Atmosphere</div>
+    <div class="nlist">
+      <div class="nrow"><span>MSL temperature</span><span class="v">+15 &#176;C</span></div>
+      <div class="nrow"><span>MSL pressure</span><span class="v">1013.25 hPa</span></div>
+      <div class="nrow"><span>MSL density</span><span class="v">1.225 kg/m&#179;</span></div>
+      <div class="nrow"><span>Relative humidity</span><span class="v">0 %</span></div>
+      <div class="nrow"><span>Lapse rate to FL360</span><span class="v">&#8722;2 &#176;C / 1000 ft</span></div>
+      <div class="nrow"><span>Temp at FL360 &amp; above</span><span class="v">&#8722;56.5 &#176;C</span></div>
+      <div class="nrow"><span>Isothermal layer</span><span class="v">FL360 &#8594; 20 km</span></div>
+      <div class="nrow"><span>ISA temp shortcut</span><span class="v">15 &#8722; 2 &#215; (alt/1000)</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Composition</h3>
+      <ul class="tight">
+        <li>Nitrogen <span class="k">78 %</span>, Oxygen <span class="k">21 %</span>, Argon ~0.9 %, CO&#8322; ~0.03 %. Constant to ~80 km.</li>
+        <li><b>Water vapour</b> is the variable constituent and the single most important one for weather &#8212; it carries latent heat and is <em>lighter</em> than dry air, so moist air is <em>less</em> dense.</li>
+        <li><b>Ozone</b> peaks 20&#8211;50 km. At high cruise levels it can cause eye and skin irritation &#8212; the classic "scratching eyes in cruise" question.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Layers</h3>
+      <ul class="tight">
+        <li><b>Troposphere</b> &#8212; all weather, temp falls with height. Depth varies with latitude.</li>
+        <li><b>Stratosphere</b> &#8212; to ~50 km. Stable, few clouds, temperature <em>rises</em> (ozone absorption).</li>
+        <li><b>Mesosphere</b> to ~80 km, <b>Thermosphere</b> to ~500 km, then exosphere.</li>
+        <li>The <b>tropopause</b> is the lid: higher = colder, because the air keeps cooling all the way up to it.</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 760 300" role="img" aria-label="Cross-section from pole to equator showing the tropopause rising and cooling towards the equator">
+      <defs>
+        <marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- ground -->
+      <line x1="60" y1="252" x2="720" y2="252" stroke="currentColor" stroke-width="2"/>
+      <!-- altitude axis -->
+      <line x1="60" y1="252" x2="60" y2="34" stroke="currentColor" stroke-width="1" marker-end="url(#ar1)"/>
+      <text x="52" y="252" font-size="11" text-anchor="end" fill="currentColor">0</text>
+      <text x="52" y="196" font-size="11" text-anchor="end" fill="currentColor">8 km</text>
+      <text x="52" y="140" font-size="11" text-anchor="end" fill="currentColor">12 km</text>
+      <text x="52" y="84" font-size="11" text-anchor="end" fill="currentColor">17 km</text>
+      <line x1="56" y1="196" x2="64" y2="196" stroke="currentColor"/>
+      <line x1="56" y1="140" x2="64" y2="140" stroke="currentColor"/>
+      <line x1="56" y1="84" x2="64" y2="84" stroke="currentColor"/>
+      <!-- tropopause line: steps up towards equator -->
+      <path d="M70 200 L215 200 L235 146 L455 142 L480 88 L716 86" fill="none" stroke="#1D4E89" stroke-width="2.5"/>
+      <!-- breaks (jet stream cores) -->
+      <circle cx="225" cy="173" r="7" fill="none" stroke="#B03A2C" stroke-width="2"/>
+      <circle cx="468" cy="115" r="7" fill="none" stroke="#B03A2C" stroke-width="2"/>
+      <text x="225" y="158" font-size="10.5" text-anchor="middle" fill="#B03A2C">POLAR JET</text>
+      <text x="468" y="100" font-size="10.5" text-anchor="middle" fill="#B03A2C">SUBTROPICAL JET</text>
+      <!-- labels -->
+      <text x="140" y="192" font-size="12" text-anchor="middle" fill="#1D4E89" font-weight="600">7.6 km &#183; &#8722;45 &#176;C</text>
+      <text x="345" y="134" font-size="12" text-anchor="middle" fill="#1D4E89" font-weight="600">11 km &#183; &#8722;56.5 &#176;C</text>
+      <text x="600" y="78" font-size="12" text-anchor="middle" fill="#1D4E89" font-weight="600">16.8 km &#183; &#8722;75 &#176;C</text>
+      <text x="140" y="236" font-size="12" text-anchor="middle" fill="currentColor">POLE 90&#176;</text>
+      <text x="345" y="236" font-size="12" text-anchor="middle" fill="currentColor">MID-LAT 45&#176;</text>
+      <text x="600" y="236" font-size="12" text-anchor="middle" fill="currentColor">EQUATOR 0&#176;</text>
+      <text x="393" y="272" font-size="11.5" text-anchor="middle" fill="currentColor">TROPOSPHERE &#8212; deepest and coldest-topped over the equator</text>
+      <text x="393" y="52" font-size="11.5" text-anchor="middle" fill="currentColor">STRATOSPHERE &#8212; stable, few clouds</text>
+    </svg>
+    <figcaption><b>Highest tropopause = coldest tropopause.</b> Surface heating is strongest at the equator, so convection pushes the lid to ~16.8 km, and 16.8 km of lapse rate leaves &#8722;75 &#176;C at the top. Over the poles the lid sits at 7.6 km and is only &#8722;45 &#176;C &#8212; <b>the warmest tropopause is over the poles</b>. The two jet streams sit in the breaks where the lid steps down.</figcaption>
+  </figure>
+
+  <h3>Altimetry &#8212; the whole toolkit</h3>
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>QFE</b> &#8212; reads <span class="k">0 ft</span> on the airfield.</li>
+        <li><b>QNH</b> &#8212; reads airfield <em>elevation</em> on the ground; QFE reduced to MSL using ISA.</li>
+        <li><b>QFF</b> &#8212; reduced to MSL using <em>actual</em> conditions. Used for <b>surface synoptic charts</b>. Warmer than ISA &#8594; QFF &lt; QNH; colder than ISA &#8594; QFF &gt; QNH.</li>
+        <li><b>QNE</b> &#8212; the altimeter reading at touchdown with 1013.25 set.</li>
+        <li>Airfield <em>below</em> sea level &#8594; QFE is <b>greater</b> than QNH.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>1 hPa = 30 ft</b> near MSL (27 ft is the strict surface value); the interval grows with height &#8212; ~50 ft at 500 hPa, <b>~60 ft at 375 hPa / FL250</b>.</li>
+        <li>Pressure halves every ~<b>18 000 ft / 5 500 m</b>.</li>
+        <li><b>Isobar</b> = equal pressure at a given level. <b>Isohypse / contour</b> = true altitude of a pressure level. <b>Isotach</b> = equal wind speed. <b>Isotherm</b> = equal temperature.</li>
+        <li>Flying from high to low pressure or high to low temperature &#8594; <b>true altitude is lower than indicated</b>. <em>High to low, look out below.</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Pressure level</th><th>Approx. flight level</th><th>Typical use</th></tr></thead>
+      <tbody>
+        <tr><td class="n">850 hPa</td><td class="n">FL050</td><td>Low-level wind / temp</td></tr>
+        <tr><td class="n">700 hPa</td><td class="n">FL100</td><td>Turboprop cruise, icing</td></tr>
+        <tr><td class="n">500 hPa</td><td class="n">FL180</td><td>Steering flow, cold air drops</td></tr>
+        <tr><td class="n">400 hPa</td><td class="n">FL240</td><td>Upper wind charts</td></tr>
+        <tr><td class="n">300 hPa</td><td class="n">FL300</td><td>Polar jet core</td></tr>
+        <tr><td class="n">250 hPa</td><td class="n">FL340</td><td>Jet core / CAT</td></tr>
+        <tr><td class="n">200 hPa</td><td class="n">FL390</td><td>Subtropical jet, tropopause</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="work">
+    <div class="wh">Temperature error correction &#8212; the 4 % rule</div>
+    Correction (ft) = 4 &#215; (height in 1000s of ft) &#215; |&#916;T from ISA|<br>
+    True altitude = Indicated altitude &#8722; correction &nbsp;<span style="color:var(--muted)">(when colder than ISA)</span><br><br>
+    <b>Example:</b> 16 000 ft indicated, OAT &#8722;32 &#176;C.<br>
+    ISA at 16 000 ft = 15 &#8722; 32 = &#8722;17 &#176;C &nbsp;&#8594;&nbsp; &#916;T = &#8722;32 &#8722; (&#8722;17) = <b>&#8722;15 &#176;C</b><br>
+    Correction = 4 &#215; 16 &#215; 15 = 960 ft &nbsp;&#8594;&nbsp; True altitude = <span class="res">15 040 ft</span>
+  </div>
+
+  <div class="caution">
+    <span class="ch">Selection trap</span>
+    <p>Pressure error and temperature error are two separate corrections. A QNH question (1013 vs local) uses <b>30 ft per hPa</b>. A cold-weather question uses the <b>4 % rule</b>. Read which one they are asking for before you start.</p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; atmosphere &amp; altimetry</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the ISA temperature at 19 000 ft?</summary><p class="a">&#8722;23 &#176;C<span class="why">15 &#8722; (2 &#215; 19) = &#8722;23 &#176;C.</span></p></details>
+    <details class="q"><summary>Lowest temperature in the ISA between MSL and 20 km?</summary><p class="a">&#8722;56.5 &#176;C<span class="why">Reached at FL360 (11 km) and then held constant &#8212; the isothermal layer.</span></p></details>
+    <details class="q"><summary>A temperature decrease of 1.2 &#176;C per 100 m is called:</summary><p class="a">The environmental lapse rate<span class="why">The ELR is whatever the atmosphere is actually doing &#8212; it is measured, not defined.</span></p></details>
+    <details class="q"><summary>Where is the tropopause height lowest, and where is its temperature highest?</summary><p class="a">Both over the poles<span class="why">7.6 km and &#8722;45 &#176;C. Lowest lid, warmest lid.</span></p></details>
+    <details class="q"><summary>Most likely temperature at the tropical tropopause?</summary><p class="a">&#8722;75 &#176;C</p></details>
+    <details class="q"><summary>Which statement about the troposphere is true?</summary><p class="a">It has a larger vertical extension in equatorial regions than in polar regions</p></details>
+    <details class="q"><summary>The region of the atmosphere which is normally stable and has few clouds is:</summary><p class="a">The stratosphere</p></details>
+    <details class="q"><summary>The most important atmospheric constituent from a weather standpoint?</summary><p class="a">Water vapour</p></details>
+    <details class="q"><summary>Reason for scratching eyes and irritated skin in cruise?</summary><p class="a">Ozone</p></details>
+    <details class="q"><summary>Given QNH 1010 hPa and airfield elevation 120 ft, what is the QFE?</summary><p class="a">1006 hPa<span class="why">120 ft &#247; 30 ft/hPa = 4 hPa. QFE is lower than QNH by that amount.</span></p></details>
+    <details class="q"><summary>If your altimeter is set to QFE, what will it indicate on the ground?</summary><p class="a">0 ft</p></details>
+    <details class="q"><summary>Relationship between QFE and QNH at an airport 50 ft below sea level?</summary><p class="a">QFE is greater than QNH</p></details>
+    <details class="q"><summary>Given FL50 and QNH 1000 hPa &#8212; what is the true altitude?</summary><p class="a">4610 ft<span class="why">1013 &#8722; 1000 = 13 hPa &#215; 30 ft = 390 ft. 5000 &#8722; 390 = 4610 ft.</span></p></details>
+    <details class="q"><summary>QNH 1030 hPa, climbing through a transition altitude of 5000 ft &#8212; what does the altimeter now indicate?</summary><p class="a">4490 ft<span class="why">Resetting to 1013 from 1030 loses 17 &#215; 30 = 510 ft.</span></p></details>
+    <details class="q"><summary>Resetting the altimeter to standard at a transition altitude will (QNH above 1013):</summary><p class="a">Increase the reading<span class="why">Careful: the exam wording matters. Setting a <em>lower</em> subscale value always makes the needle read <em>lower</em>; setting a higher value reads higher.</span></p></details>
+    <details class="q"><summary>Increasing the altimeter setting by 20 hPa will:</summary><p class="a">Increase the altimeter reading by 600 ft</p></details>
+    <details class="q"><summary>At FL60, remaining on QNH 1025 instead of setting 1013 &#8212; what is the vertical error?</summary><p class="a">You are 360 ft lower than indicated<span class="why">12 hPa &#215; 30 ft = 360 ft.</span></p></details>
+    <details class="q"><summary>Altimeter reads 16 000 ft on 1013 hPa, QNH is 993 hPa &#8212; what is the pressure altitude?</summary><p class="a">16 000 ft<span class="why">Pressure altitude is by definition what you read on 1013. The QNH is a distractor.</span></p></details>
+    <details class="q"><summary>Aircraft at 16 000 ft, OAT &#8722;32 &#176;C &#8212; what is the true altitude?</summary><p class="a">15 040 ft<span class="why">&#916;T = &#8722;15 &#176;C &#8594; 4 &#215; 16 &#215; 15 = 960 ft correction.</span></p></details>
+    <details class="q"><summary>True altitude at 4000 ft indicated, QNH 1026, ISA &#8722;15 &#176;C?</summary><p class="a">3760 ft<span class="why">4 &#215; 4 &#215; 15 = 240 ft.</span></p></details>
+    <details class="q"><summary>Emergency sea landing: QNH 1025 set, elevation 4000 ft, OAT &#8722;20 &#176;C &#8212; what does the altimeter read at sea level?</summary><p class="a">Less than 0 ft</p></details>
+    <details class="q"><summary>The pressure at 5500 m is approximately:</summary><p class="a">&#189; of sea-level pressure<span class="why">Same for 18 000 ft.</span></p></details>
+    <details class="q"><summary>At 25 000 ft, &#8722;40 &#176;C, 375 hPa &#8212; the height interval for 1 hPa is approximately:</summary><p class="a">60 ft</p></details>
+    <details class="q"><summary>Which flight level corresponds with 700 hPa?</summary><p class="a">FL100</p></details>
+    <details class="q"><summary>Where is QFF used in aviation meteorology?</summary><p class="a">For the production of surface weather charts</p></details>
+    <details class="q"><summary>QNH 998 hPa with a +15 &#176;C ISA deviation &#8212; the QFF is:</summary><p class="a">Lower than 998 hPa<span class="why">Warm air is less dense, so the "column" added down to MSL weighs less than the ISA column QNH assumes.</span></p></details>
+    <details class="q"><summary>An isohypse (contour line) indicates:</summary><p class="a">The true altitude of a pressure level</p></details>
+    <details class="q"><summary>Isobars connect points of equal:</summary><p class="a">Air pressure at a given level</p></details>
+    <details class="q"><summary>Altimeter setting required prior to take-off?</summary><p class="a">The current local altimeter setting, or airport elevation if unavailable</p></details>
+    <details class="q"><summary>Altimeter indication with a uniform pressure pattern along the route?</summary><p class="a">No visible change</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 02 WIND &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="wind">
+  <div class="sec-head"><span class="eyebrow">050 02</span><h2>Wind</h2></div>
+  <p class="lede">Three forces make every wind question: pressure gradient, Coriolis, friction. Get the balance right and the local winds and shear answers fall out.</p>
+
+  <h3>The force balance</h3>
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Pressure Gradient Force (PGF)</b> &#8212; always from high to low, perpendicular to the isobars. Closer isobars = stronger wind.</li>
+        <li><b>Coriolis</b> &#8212; deflects <span class="k">right in the NH</span>, left in the SH. <code>C = 2 &#183; V &#183; &#937; &#183; sin &#966;</code>: proportional to <b>speed</b> and to <b>sine of latitude</b>. <b>Zero at the equator, maximum at the poles.</b></li>
+        <li><b>Geostrophic wind</b> &#8212; PGF balanced by Coriolis, blowing <b>parallel to straight isobars</b> and therefore <em>perpendicular to the PGF</em>. Valid above ~2000 ft and away from the equator.</li>
+        <li>For the same pressure gradient, geostrophic wind is <b>stronger at low latitude</b> (weaker Coriolis needs more speed to balance) &#8212; so <b>30&#176;N &gt; 60&#176;N</b>.</li>
+        <li><b>Gradient wind</b> &#8212; add centrifugal force for curved isobars: sub-geostrophic around a low, super-geostrophic around a high.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Friction layer</b> &#8212; surface to ~2000 ft. Friction slows the wind, which weakens Coriolis, so the wind <b>backs across the isobars towards the low</b> (NH).</li>
+        <li>Land: backs ~<b>30&#176;</b>, speed ~<b>50 %</b> of the 2000 ft wind. Sea: ~<b>10&#176;</b>, ~<b>70 %</b>.</li>
+        <li>Therefore in the <b>NH</b>: <b>descending</b> through the friction layer the wind <b>backs and decreases</b>; <b>climbing</b> out it <b>veers and increases</b>.</li>
+        <li>Surface wind is measured at <b>10 m</b> and reported in <b>&#176;True</b> in METAR/TAF, but passed in <b>&#176;Magnetic</b> by ATC.</li>
+        <li><b>Buys Ballot (NH):</b> back to the wind &#8594; low pressure on your <b>left</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 720 300" role="img" aria-label="Geostrophic wind above the friction layer compared with the surface wind backed across the isobars">
+      <defs>
+        <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+        <marker id="ar2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#B03A2C"/>
+        </marker>
+        <marker id="ar2c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#1D4E89"/>
+        </marker>
+      </defs>
+      <!-- isobars -->
+      <line x1="40" y1="60" x2="680" y2="60" stroke="currentColor" stroke-width="1" stroke-dasharray="1 0" opacity=".45"/>
+      <line x1="40" y1="140" x2="680" y2="140" stroke="currentColor" stroke-width="1" opacity=".45"/>
+      <line x1="40" y1="220" x2="680" y2="220" stroke="currentColor" stroke-width="1" opacity=".45"/>
+      <text x="48" y="52" font-size="11.5" fill="currentColor" opacity=".8">996 hPa &nbsp;&#8212; LOW</text>
+      <text x="48" y="132" font-size="11.5" fill="currentColor" opacity=".8">1000 hPa</text>
+      <text x="48" y="240" font-size="11.5" fill="currentColor" opacity=".8">1004 hPa &nbsp;&#8212; HIGH</text>
+      <!-- PGF -->
+      <line x1="250" y1="215" x2="250" y2="70" stroke="#B03A2C" stroke-width="2" marker-end="url(#ar2b)"/>
+      <text x="258" y="150" font-size="12" fill="#B03A2C" font-weight="600">PGF</text>
+      <text x="258" y="166" font-size="10.5" fill="#B03A2C">high &#8594; low</text>
+      <!-- geostrophic wind: parallel to isobars -->
+      <line x1="330" y1="140" x2="640" y2="140" stroke="#1D4E89" stroke-width="3" marker-end="url(#ar2c)"/>
+      <text x="470" y="128" font-size="12.5" fill="#1D4E89" font-weight="600">GEOSTROPHIC WIND &#183; above 2000 ft</text>
+      <text x="470" y="160" font-size="11" fill="#1D4E89">parallel to isobars, low pressure on the left (NH)</text>
+      <!-- surface wind backed 30 deg -->
+      <line x1="330" y1="140" x2="605" y2="82" stroke="currentColor" stroke-width="2.5" stroke-dasharray="7 4" marker-end="url(#ar2)"/>
+      <text x="500" y="72" font-size="12" fill="currentColor" font-weight="600">SURFACE WIND</text>
+      <text x="500" y="88" font-size="11" fill="currentColor">backed &#8776;30&#176; toward the low, &#8776;50 % speed (land)</text>
+      <!-- angle arc -->
+      <path d="M395 140 A65 65 0 0 0 386 126" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      <text x="398" y="122" font-size="11" fill="currentColor">30&#176;</text>
+      <text x="360" y="285" font-size="11.5" fill="currentColor">Northern hemisphere. In the SH everything mirrors: surface wind veers across the isobars.</text>
+    </svg>
+    <figcaption><b>Friction is what makes the surface wind cross the isobars.</b> Slower air feels less Coriolis, so PGF wins slightly and the flow turns <em>towards</em> the low. This single mechanism answers why the wind backs on descent, why air converges into a low, and why the greatest low-level shear sits at the top of the friction layer.</figcaption>
+  </figure>
+
+  <h3>Local winds</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Wind</th><th>Mechanism</th><th>Detail to remember</th></tr></thead>
+      <tbody>
+        <tr><td><b>Anabatic</b></td><td>Daytime slope heating</td><td>Upslope, weak, light winds needed</td></tr>
+        <tr><td><b>Katabatic</b></td><td>Night radiative cooling of slope</td><td>Downslope, can be strong (Bora, Mistral)</td></tr>
+        <tr><td><b>Sea breeze</b></td><td>Land warmer than sea, daytime</td><td>Sea &#8594; land, perpendicular to coast; turns along the coast if &gt;15 kt or after ~1500 LMT</td></tr>
+        <tr><td><b>Land breeze</b></td><td>Land cooler, night</td><td>Land &#8594; sea, weaker than the sea breeze</td></tr>
+        <tr><td><b>F&#246;hn</b></td><td>Descent on the lee side</td><td>Warm, very dry, gusty; cloud on windward side</td></tr>
+        <tr><td><b>Harmattan</b></td><td>NE trade over the Sahara</td><td>Dry, dusty, NW Africa &#8212; reduces visibility</td></tr>
+        <tr><td><b>Sirocco / Khamsin</b></td><td>Southerly off North Africa</td><td>Hot and dusty, moistens over the Mediterranean</td></tr>
+        <tr><td><b>Bora</b></td><td>Katabatic, Adriatic</td><td>Cold and violent</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="work">
+    <div class="wh">Crosswind by the clock &#8212; 5 questions in the bank use this</div>
+    Angle 15&#176; &#8594; <b>&#188;</b> &nbsp;&#183;&nbsp; 30&#176; &#8594; <b>&#189;</b> &nbsp;&#183;&nbsp; 45&#176; &#8594; <b>0.7</b> &nbsp;&#183;&nbsp; 60&#176; &#8594; <b>0.87</b> &nbsp;&#183;&nbsp; 90&#176; &#8594; <b>full</b><br>
+    Headwind uses the same factors, taken from the <em>other</em> end (60&#176; &#8594; &#189; headwind).<br><br>
+    <b>RWY 32, wind 260/18:</b> angle = 320 &#8722; 260 = 60&#176; &#8594; 18 &#215; 0.87 = <span class="res">16 kt crosswind</span><br>
+    <b>RWY 24, wind 180/24:</b> angle = 60&#176; &#8594; headwind = 24 &#215; 0.5 = <span class="res">12 kt</span>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; wind</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Where is the Coriolis force strongest?</summary><p class="a">Over the poles<span class="why">It varies with sin &#966; &#8212; zero at the equator.</span></p></details>
+    <details class="q"><summary>Geostrophic wind speed is proportional to:</summary><p class="a">The horizontal pressure gradient</p></details>
+    <details class="q"><summary>The geostrophic wind is:</summary><p class="a">Perpendicular to the horizontal pressure gradient force</p></details>
+    <details class="q"><summary>Geostrophic wind depends on:</summary><p class="a">Density, the Earth's rotation, and geographic latitude</p></details>
+    <details class="q"><summary>For the same pressure gradient, the geostrophic wind is greater at:</summary><p class="a">30&#176;N than 60&#176;N</p></details>
+    <details class="q"><summary>How does the surface wind compare with the 3000 ft wind (NH)?</summary><p class="a">Cross-isobaric and weaker</p></details>
+    <details class="q"><summary>Why do surface winds cross the isobars?</summary><p class="a">Surface friction</p></details>
+    <details class="q"><summary>Wind change during descent through the friction layer over land (NH)?</summary><p class="a">Backs about 30&#176; and loses about 50 % of its speed</p></details>
+    <details class="q"><summary>Surface winds with closely spaced isobars are:</summary><p class="a">Strong and only slightly cross-isobaric<span class="why">Stronger wind &#8594; stronger Coriolis &#8594; smaller crossing angle.</span></p></details>
+    <details class="q"><summary>Isotachs connect points of equal:</summary><p class="a">Wind speed</p></details>
+    <details class="q"><summary>Wind behaviour for an observer ahead of an approaching depression (NH)?</summary><p class="a">Veering</p></details>
+    <details class="q"><summary>What is the crosswind component for RWY 14 with wind 185/24?</summary><p class="a">17 kt<span class="why">45&#176; off &#8594; 24 &#215; 0.7 &#8776; 17.</span></p></details>
+    <details class="q"><summary>What is the headwind component for RWY 27 with wind 240/10?</summary><p class="a">9 kt<span class="why">30&#176; off &#8594; cos 30&#176; &#8776; 0.87 &#8594; 8.7 kt.</span></p></details>
+    <details class="q"><summary>A dry, dusty NE wind in NW Africa is called:</summary><p class="a">The Harmattan</p></details>
+    <details class="q"><summary>What is advection?</summary><p class="a">Horizontal movement of air masses<span class="why">Convection is the vertical equivalent.</span></p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 03 THERMODYNAMICS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="thermo">
+  <div class="sec-head"><span class="eyebrow">050 03</span><h2>Thermodynamics &amp; Stability</h2></div>
+  <p class="lede">Humidity, adiabatic lapse rates, and the single comparison that decides everything: ELR against the adiabatic rate.</p>
+
+  <div class="numbers">
+    <div class="nh">Lapse rates &amp; humidity</div>
+    <div class="nlist">
+      <div class="nrow"><span>DALR (dry adiabatic)</span><span class="v">3 &#176;C / 1000 ft</span></div>
+      <div class="nrow"><span>SALR (saturated)</span><span class="v">&#8776;1.8 &#176;C / 1000 ft</span></div>
+      <div class="nrow"><span>ISA / mean ELR</span><span class="v">2 &#176;C / 1000 ft</span></div>
+      <div class="nrow"><span>Cloud base (Cu) estimate</span><span class="v">(T &#8722; Td) &#215; 400 ft</span></div>
+      <div class="nrow"><span>Dew point lapse (unsat.)</span><span class="v">0.5 &#176;C / 1000 ft</span></div>
+      <div class="nrow"><span>Fog reported below</span><span class="v">1000 m</span></div>
+    </div>
+  </div>
+
+  <h3>Humidity &#8212; the three questions they ask</h3>
+  <ul class="tight">
+    <li><b>Relative humidity</b> = actual water vapour &#247; maximum the air could hold at that temperature. Warm air holds more.</li>
+    <li>Heat the air without adding moisture &#8594; <b>RH decreases, dew point unchanged</b>. Cool it &#8594; RH increases. This is the whole of three separate bank questions.</li>
+    <li><b>Descending air</b> warms adiabatically &#8594; RH decreases &#8594; cloud dissolves. This is why anticyclones are cloud-free.</li>
+    <li>Unsaturated air is brought to saturation by <b>expanding it adiabatically</b> (i.e. lifting it) or by cooling it to its dew point.</li>
+  </ul>
+
+  <h3>Stability &#8212; read it off the lapse rates</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Condition</th><th>Test</th><th>Weather you get</th></tr></thead>
+      <tbody>
+        <tr><td><b>Absolutely stable</b></td><td class="n">ELR &lt; SALR</td><td>Layer cloud, poor visibility, steady precipitation, smooth</td></tr>
+        <tr><td><b>Conditionally unstable</b></td><td class="n">SALR &lt; ELR &lt; DALR</td><td>Unstable only once saturated &#8212; the usual mid-latitude case</td></tr>
+        <tr><td><b>Absolutely unstable</b></td><td class="n">ELR &gt; DALR</td><td>Cumuliform, showers, turbulence, good visibility</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><b>Heating from below destabilises</b> (cold air over a warm surface: cumulus, turbulence, good visibility, clear ice). <b>Cooling from below stabilises</b> (warm air over a cold surface: ground inversion, fog, layer cloud, poor visibility). Warm air advected aloft over cold air below also increases stability.</p>
+
+  <h3>Inversions</h3>
+  <ul class="tight">
+    <li>An <b>inversion</b> is temperature <em>increasing</em> with height. It is the definition of stability and it caps convection &#8212; mid-latitude cumulus tops are usually limited by one.</li>
+    <li><b>Surface / radiation inversion</b>: terrestrial radiation on a clear, calm night, best over dry ground in winter.</li>
+    <li><b>Subsidence inversion</b>: sinking air in an anticyclone warms adiabatically aloft.</li>
+    <li>The <b>greatest low-level wind shear is at the top of a surface-based inversion</b> &#8212; calm below, gradient wind above.</li>
+    <li>Descending through one in winter with no pilot input: warmer, less dense air &#8594; thrust <em>increases</em>, and you enter the trapped pollution &#8594; <b>visibility deteriorates</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; thermodynamics &amp; stability</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Unsaturated air becomes saturated by:</summary><p class="a">Expanding it adiabatically</p></details>
+    <details class="q"><summary>A rising parcel of air with no heat exchange will:</summary><p class="a">Reduce pressure, decrease density, increase volume</p></details>
+    <details class="q"><summary>Relative humidity of unsaturated air with rising temperature:</summary><p class="a">Decreases &#8212; and the dew point stays constant</p></details>
+    <details class="q"><summary>Saturated air, volume constant, temperature decreases &#8212; what happens to RH?</summary><p class="a">Relative humidity increases</p></details>
+    <details class="q"><summary>Effect of a descending air mass on relative humidity?</summary><p class="a">Decreases</p></details>
+    <details class="q"><summary>An air mass is unstable when:</summary><p class="a">An ascending parcel continues to rise of its own accord</p></details>
+    <details class="q"><summary>An air mass is stable when:</summary><p class="a">Vertical motion is suppressed &#8212; it weakens and disappears</p></details>
+    <details class="q"><summary>Which process increases atmospheric stability?</summary><p class="a">Cooling by the underlying surface</p></details>
+    <details class="q"><summary>Stability increases if:</summary><p class="a">Warm air is advected aloft and cold air below</p></details>
+    <details class="q"><summary>Cold air over a warm surface typically gives:</summary><p class="a">Cumuliform clouds, turbulence, good visibility</p></details>
+    <details class="q"><summary>Air cooled from below is characterised by:</summary><p class="a">Fog, poor visibility, layered clouds</p></details>
+    <details class="q"><summary>Warm air mass over a cold surface results in:</summary><p class="a">A ground inversion</p></details>
+    <details class="q"><summary>In mid-latitudes, cumulus tops are often limited by:</summary><p class="a">A temperature inversion</p></details>
+    <details class="q"><summary>What is the defining characteristic of a temperature inversion?</summary><p class="a">Stability &#8212; temperature increases with height</p></details>
+    <details class="q"><summary>Common cause of a surface inversion?</summary><p class="a">Radiational cooling on a clear, calm night, or warm air moving over a cold surface</p></details>
+    <details class="q"><summary>Surface-based inversions are most common during:</summary><p class="a">Clear winter nights over dry ground</p></details>
+    <details class="q"><summary>In winter, after breaking through a low-level inversion during descent with no pilot intervention:</summary><p class="a">Thrust increases and visibility deteriorates</p></details>
+    <details class="q"><summary>On a clear summer night over land, the minimum temperature is reached:</summary><p class="a">About half an hour after sunrise<span class="why">Outgoing radiation still exceeds incoming for a short while after the sun comes up.</span></p></details>
+    <details class="q"><summary>Which statement about the diurnal temperature range is correct?</summary><p class="a">The diurnal range is least in tropical countries<span class="why">High humidity and cloud damp the swing.</span></p></details>
+    <details class="q"><summary>A moist, stable layer of air forced to rise over mountains will form:</summary><p class="a">Stratified clouds</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 04 CLOUDS & FOG &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="cloud">
+  <div class="sec-head"><span class="eyebrow">050 04</span><h2>Clouds &amp; Fog</h2></div>
+  <p class="lede">Cloud type is a report on stability. Fog type is a report on how the air got cooled.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Level</th><th>Base (temperate)</th><th>Types</th><th>Signature</th></tr></thead>
+      <tbody>
+        <tr><td><b>High</b></td><td class="n">16 500&#8211;45 000 ft</td><td>Ci, Cs, Cc</td><td>Ice crystals &#8212; icing virtually ruled out. Cs gives the halo.</td></tr>
+        <tr><td><b>Medium</b></td><td class="n">6 500&#8211;23 000 ft</td><td>Ac, As, Ns</td><td><b>Ns</b> may extend through more than one layer; <b>Ac lenticularis</b> = mountain wave</td></tr>
+        <tr><td><b>Low</b></td><td class="n">Surface&#8211;6 500 ft</td><td>St, Sc, Cu, Cb</td><td>Cu/Cb are convective; St gives a greyish disc of sun with <em>no</em> halo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="numbers">
+    <div class="nh">Cloud amount &amp; ceiling</div>
+    <div class="nlist">
+      <div class="nrow"><span>FEW</span><span class="v">1&#8211;2 oktas</span></div>
+      <div class="nrow"><span>SCT</span><span class="v">3&#8211;4 oktas</span></div>
+      <div class="nrow"><span>BKN</span><span class="v">5&#8211;7 oktas</span></div>
+      <div class="nrow"><span>OVC</span><span class="v">8 oktas</span></div>
+      <div class="nrow"><span>Ceiling</span><span class="v">lowest BKN/OVC below 5000 ft</span></div>
+      <div class="nrow"><span>Radiation fog depth</span><span class="v">&#8776;500 ft</span></div>
+    </div>
+  </div>
+
+  <h3>Fog &#8212; five types, five mechanisms</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Type</th><th>Formed by</th><th>Conditions &amp; dispersal</th></tr></thead>
+      <tbody>
+        <tr><td><b>Radiation</b></td><td>Nocturnal long-wave cooling of the ground</td><td>Clear sky, light wind (2&#8211;8 kt), moist air, <b>land only</b>. Dispersed by surface heating or a <b>marked increase in surface wind</b>; may lift into low stratus.</td></tr>
+        <tr><td><b>Advection</b></td><td>Warm moist air over a cold surface</td><td>Land or <b>sea</b>; tolerates stronger winds; persists day and night. The classic west-coast winter case.</td></tr>
+        <tr><td><b>Steam / arctic sea smoke</b></td><td>Very cold air over a much warmer sea</td><td>Cold air mass, little wind, strong inversion above</td></tr>
+        <tr><td><b>Frontal</b></td><td>Rain evaporating into cold air ahead of a warm front</td><td>Forms <b>before</b> the warm front, dissipates <b>after it passes</b></td></tr>
+        <tr><td><b>Hill / upslope</b></td><td>Air forced up a slope, cooled to dew point</td><td>Reported as fog on the hill, cloud from below</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="caution">
+    <span class="ch">Two look-alikes</span>
+    <p><b>Fog</b> is reported below <b>1000 m</b> visibility; <b>mist (BR)</b> is 1000&#8211;5000 m with RH &#8805; 95 %; <b>haze (HZ)</b> is dry particles. <b>Hoar frost</b> forms on an aircraft parked outside under a clear sky with a strong ground inversion &#8212; sublimation directly to ice, no droplets involved.</p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; clouds &amp; fog</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the definition of a ceiling?</summary><p class="a">The lowest cloud layer below 5000 ft reported as BKN (5/8) or more</p></details>
+    <details class="q"><summary>Which cloud type may extend into more than one layer?</summary><p class="a">Nimbostratus</p></details>
+    <details class="q"><summary>Which cloud indicates turbulence / mountain waves?</summary><p class="a">Altocumulus lenticularis</p></details>
+    <details class="q"><summary>A cumulus congestus is:</summary><p class="a">A cumulus of great vertical extent</p></details>
+    <details class="q"><summary>A greyish cloud revealing the sun without a halo is:</summary><p class="a">Stratus<span class="why">A halo means ice crystals &#8212; cirrostratus.</span></p></details>
+    <details class="q"><summary>Which is a low-level cloud type?</summary><p class="a">Stratocumulus</p></details>
+    <details class="q"><summary>An Ac layer over a 500 m plain in summer &#8212; expected cloud base?</summary><p class="a">7000&#8211;15 000 ft</p></details>
+    <details class="q"><summary>Cumuliform clouds are characterised by:</summary><p class="a">Large droplets, instability, turbulence, showers and clear ice</p></details>
+    <details class="q"><summary>What is the average vertical extent of radiation fog?</summary><p class="a">About 500 ft</p></details>
+    <details class="q"><summary>One of the main reasons for radiation fog to dissipate or become low stratus:</summary><p class="a">Surface heating</p></details>
+    <details class="q"><summary>Radiation fog is also most likely to dissipate due to:</summary><p class="a">A marked increase in surface wind</p></details>
+    <details class="q"><summary>Steam fog (arctic sea smoke) occurs in air with:</summary><p class="a">Cold mass properties<span class="why">Favourable conditions: a cold air mass and little or no wind.</span></p></details>
+    <details class="q"><summary>When does frontal fog dissipate?</summary><p class="a">After the warm front has passed</p></details>
+    <details class="q"><summary>West coast, wind 260/10 kt, winter, sea temperature 18 &#176;C &#8212; when is fog likely?</summary><p class="a">When the shore is cold &#8212; these conditions create advection fog</p></details>
+    <details class="q"><summary>Fog is reported when visibility is below:</summary><p class="a">1 km</p></details>
+    <details class="q"><summary>Hoar frost is most likely to form when:</summary><p class="a">The aircraft is parked outside under a clear sky with a strong ground inversion</p></details>
+    <details class="q"><summary>Best satellite images to locate fog?</summary><p class="a">Infrared and visual used together</p></details>
+    <details class="q"><summary>Vertical visibility is reported when:</summary><p class="a">The sky is obscured and the cloud base cannot be measured</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 05 PRECIPITATION &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="precip">
+  <div class="sec-head"><span class="eyebrow">050 05</span><h2>Precipitation</h2></div>
+  <p class="lede">A short topic, but the "which cloud gives which precipitation" logic recurs everywhere.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Layer cloud &#8594; continuous or intermittent</b> precipitation (rain, snow, drizzle). <b>Convective cloud &#8594; showers</b>.</li>
+        <li><b>Drizzle (DZ)</b> comes from thick <em>stratus</em> only &#8212; small droplets, closely packed, and it is the <b>least likely</b> product of a mixed-phase cloud. It reduces visibility <em>more</em> than rain.</li>
+        <li>In a <b>cold cloud</b> (ice crystals + supercooled water) the Bergeron process runs: crystals grow at the droplets' expense, so <b>snow</b> forms first.</li>
+        <li><b>Virga / fallstreaks</b> &#8212; precipitation evaporating before reaching the ground. It is a visual <b>LLWS warning</b>: something is falling and cooling the air.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Hail</b> &#8212; transparent or partly opaque solid precipitation, &#8805;5 mm; needs strong updraughts, so effectively a Cb product. In an isolated temperate Cb it can be found from <b>ground to FL450</b> and can be thrown out of the anvil into clear air.</li>
+        <li><b>Ice pellets (PL)</b> &#8212; transparent, &#8804;5 mm, frozen raindrops. Evidence of an inversion aloft: rain fell through a sub-zero layer.</li>
+        <li><b>Freezing rain (FZRA)</b> &#8212; supercooled rain freezing on contact. Warm front, low levels; probability is lowest at high altitude.</li>
+        <li>Visibility is worse in wet snow than in rain; better in RA than in DZ.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; precipitation</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What are fallstreaks (virga)?</summary><p class="a">Precipitation evaporating before reaching the ground</p></details>
+    <details class="q"><summary>Showers mainly occur from:</summary><p class="a">Convective clouds</p></details>
+    <details class="q"><summary>Which element is most likely to form first in a cold cloud?</summary><p class="a">Snow</p></details>
+    <details class="q"><summary>Least likely precipitation from a mixed-phase cloud?</summary><p class="a">Drizzle</p></details>
+    <details class="q"><summary>Which phenomenon is precipitation when observed?</summary><p class="a">Drizzle (DZ)</p></details>
+    <details class="q"><summary>Transparent solid precipitation &#8804;5 mm formed from frozen rain is:</summary><p class="a">Ice pellets (the bank answer given is "hail" &#8212; check the exam wording; ICAO defines PL as frozen raindrops &#8804;5 mm and hail as &#8805;5 mm)</p></details>
+    <details class="q"><summary>Where can hail in an isolated temperate-latitude CB be expected?</summary><p class="a">From the ground to FL400 and above</p></details>
+    <details class="q"><summary>Which visibility statements are correct? (1) Visibility is worse in snow with high water content than in rain. (2) Visibility is greater in RA than in DZ.</summary><p class="a">Both 1 and 2 are correct</p></details>
+    <details class="q"><summary>Lowest freezing-rain probability altitude?</summary><p class="a">12 000 ft</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 06 AIR MASSES & FRONTS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="fronts">
+  <div class="sec-head"><span class="eyebrow">050 06</span><h2>Air Masses &amp; Fronts</h2></div>
+  <p class="lede">The heaviest scoring topic in most selection papers. Learn the two cross-sections and the occlusion rule and you can answer almost anything here.</p>
+
+  <h3>Air masses</h3>
+  <p>Classified by <b>source latitude</b> (Arctic / Polar / Tropical) and <b>surface</b> (Maritime / Continental). The surface it crosses on the way determines the weather it delivers.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Air mass</th><th>Character</th><th>Where you meet it</th></tr></thead>
+      <tbody>
+        <tr><td><b>Polar Maritime (PM)</b></td><td>Cool, moist, conditionally unstable &#8212; showers, good visibility</td><td>The most common over W/NW Europe</td></tr>
+        <tr><td><b>Arctic Maritime (AM)</b></td><td>Very cold, unstable</td><td>Northerly outbreaks</td></tr>
+        <tr><td><b>Polar Continental (PC)</b></td><td>Cold, dry, stable &#8212; winter only over Europe</td><td>Easterly flow from Russia</td></tr>
+        <tr><td><b>Tropical Maritime (TM)</b></td><td>Warm, moist, stable &#8212; stratus, advection fog, drizzle</td><td>Azores High; the <b>warm sector</b> air</td></tr>
+        <tr><td><b>Tropical Continental (TC)</b></td><td>Hot, dry, stable, hazy</td><td>North Africa / eastern Mediterranean</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 860 340" role="img" aria-label="Cross-sections of a warm front and a cold front showing slope, cloud sequence and precipitation area">
+      <defs>
+        <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+        </marker>
+      </defs>
+      <!-- WARM FRONT (left) -->
+      <text x="15" y="22" font-size="14" font-weight="600" fill="#B03A2C">WARM FRONT</text>
+      <text x="15" y="38" font-size="11.5" fill="currentColor">slope 1:150 &#183; moves at &#8532; of the geostrophic wind &#183; slower</text>
+      <line x1="15" y1="270" x2="415" y2="270" stroke="currentColor" stroke-width="2"/>
+      <!-- frontal surface -->
+      <line x1="30" y1="72" x2="380" y2="270" stroke="#B03A2C" stroke-width="2.5"/>
+      <!-- cloud shapes along it -->
+      <path d="M40 78 q22 -12 44 0 q20 -8 34 4 q-40 10 -78 -4z" fill="currentColor" opacity=".22"/>
+      <text x="52" y="102" font-size="11" fill="currentColor">Ci</text>
+      <path d="M120 122 q40 -14 90 2 q-46 12 -90 -2z" fill="currentColor" opacity=".26"/>
+      <text x="150" y="146" font-size="11" fill="currentColor">Cs</text>
+      <path d="M180 168 q52 -16 108 4 q-56 14 -108 -4z" fill="currentColor" opacity=".3"/>
+      <text x="222" y="192" font-size="11" fill="currentColor">As</text>
+      <path d="M245 214 q60 -18 120 6 l0 44 q-70 8 -120 -8z" fill="currentColor" opacity=".36"/>
+      <text x="298" y="248" font-size="11" fill="currentColor">Ns</text>
+      <!-- precipitation -->
+      <g stroke="#1D4E89" stroke-width="1.4">
+        <line x1="262" y1="262" x2="256" y2="270"/><line x1="282" y1="262" x2="276" y2="270"/>
+        <line x1="302" y1="262" x2="296" y2="270"/><line x1="322" y1="262" x2="316" y2="270"/>
+        <line x1="342" y1="262" x2="336" y2="270"/>
+      </g>
+      <line x1="200" y1="292" x2="380" y2="292" stroke="#1D4E89" stroke-width="1.5" marker-start="url(#ar3)" marker-end="url(#ar3)"/>
+      <text x="290" y="308" font-size="11" text-anchor="middle" fill="#1D4E89">400&#8211;600 km of precipitation ahead</text>
+      <text x="200" y="240" font-size="11.5" fill="currentColor">COLD AIR</text>
+      <text x="386" y="240" font-size="11.5" fill="#B03A2C">WARM AIR</text>
+      <text x="330" y="120" font-size="11" fill="#B03A2C">warm air overrides &#8594;</text>
+      <polygon points="380,270 392,264 392,276" fill="#B03A2C"/>
+
+      <!-- COLD FRONT (right) -->
+      <text x="470" y="22" font-size="14" font-weight="600" fill="#1D4E89">COLD FRONT</text>
+      <text x="470" y="38" font-size="11.5" fill="currentColor">slope 1:80 (steeper) &#183; moves at the full geostrophic wind &#183; faster</text>
+      <line x1="455" y1="270" x2="845" y2="270" stroke="currentColor" stroke-width="2"/>
+      <line x1="530" y1="72" x2="640" y2="270" stroke="#1D4E89" stroke-width="2.5"/>
+      <!-- Cb -->
+      <path d="M545 210 q10 -60 46 -70 q40 -12 54 26 q26 4 20 44 l0 60 q-70 10 -120 0z" fill="currentColor" opacity=".32"/>
+      <path d="M556 140 q40 -30 100 -8 q30 6 40 -6 q-16 -22 -46 -18 q-10 -30 -52 -22 q-40 8 -42 54z" fill="currentColor" opacity=".2"/>
+      <text x="600" y="196" font-size="11.5" fill="currentColor" font-weight="600">Cb</text>
+      <g stroke="#1D4E89" stroke-width="1.6">
+        <line x1="566" y1="258" x2="560" y2="270"/><line x1="588" y1="258" x2="582" y2="270"/>
+        <line x1="610" y1="258" x2="604" y2="270"/><line x1="632" y1="258" x2="626" y2="270"/>
+      </g>
+      <line x1="545" y1="292" x2="655" y2="292" stroke="#1D4E89" stroke-width="1.5" marker-start="url(#ar3)" marker-end="url(#ar3)"/>
+      <text x="600" y="308" font-size="11" text-anchor="middle" fill="#1D4E89">narrow, violent, ~50 km</text>
+      <!-- squall line -->
+      <path d="M700 250 q10 -46 34 -52 q28 -8 40 20 l0 52 q-40 8 -74 -20z" fill="#B03A2C" opacity=".22"/>
+      <text x="738" y="236" font-size="11" text-anchor="middle" fill="#B03A2C" font-weight="600">SQUALL</text>
+      <text x="738" y="250" font-size="11" text-anchor="middle" fill="#B03A2C" font-weight="600">LINE</text>
+      <text x="738" y="290" font-size="11" text-anchor="middle" fill="#B03A2C">ahead of the front</text>
+      <text x="480" y="240" font-size="11.5" fill="#1D4E89">COLD AIR</text>
+      <text x="666" y="240" font-size="11.5" fill="#B03A2C">WARM AIR</text>
+      <text x="500" y="120" font-size="11" fill="#1D4E89">cold air undercuts &#8594;</text>
+      <polygon points="640,270 652,264 652,276" fill="#1D4E89"/>
+    </svg>
+    <figcaption><b>One difference explains all the others.</b> The warm front's shallow 1:150 slope spreads its lifting over 400&#8211;600 km, so you get a gentle cloud sequence (Ci &#8594; Cs &#8594; As &#8594; Ns) and steady rain. The cold front's 1:80 slope shoves the warm air up violently over a narrow band &#8212; Cb, showers, and a squall line running <em>ahead</em> of the front.</figcaption>
+  </figure>
+
+  <h3>The warm front sequence, in order</h3>
+  <ul class="tight">
+    <li><b>Ahead:</b> Ci &#8594; Cs (halo) &#8594; As &#8594; Ns. Pressure <b>falls</b>. Wind <b>backs slightly</b>. Continuous rain, then very low stratus formed when the falling rain <b>saturates the cold air</b>. Frontal fog. Most of the significant surface weather occurs <b>before the passage</b>.</li>
+    <li><b>At passage:</b> wind <b>veers</b>, pressure steadies, temperature rises, precipitation eases.</li>
+    <li><b>Warm sector:</b> tropical maritime air &#8212; stratus, drizzle, poor visibility, advection fog risk. <b>Fog risk is greater at the warm front than at the cold front.</b></li>
+    <li><b>Cold front passage:</b> pressure had been <b>rising</b> just before it and then <b>falls</b> after? No &#8212; the classic: pressure <b>falls</b> ahead of the whole depression, reaches its minimum in the warm sector, and <b>rises sharply behind the cold front</b>. Wind veers sharply, temperature drops, visibility improves, showers.</li>
+    <li>Warm-front thunderstorms are possible if the <b>warm air is moist and the ELR exceeds the SALR</b> (i.e. the overrunning air is itself unstable).</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 780 250" role="img" aria-label="Cold occlusion compared with warm occlusion showing which air mass is coldest">
+      <text x="12" y="20" font-size="13.5" font-weight="600" fill="#6B3FA0">COLD OCCLUSION &#8212; the air behind is COLDER</text>
+      <line x1="12" y1="182" x2="370" y2="182" stroke="currentColor" stroke-width="2"/>
+      <!-- surfaces -->
+      <line x1="120" y1="182" x2="200" y2="60" stroke="#1D4E89" stroke-width="2.2"/>
+      <line x1="200" y1="60" x2="330" y2="182" stroke="#B03A2C" stroke-width="2.2"/>
+      <path d="M120 182 L200 60 L215 82 L150 182z" fill="#6B3FA0" opacity=".18"/>
+      <text x="55" y="160" font-size="11.5" fill="#1D4E89" font-weight="600">very cold</text>
+      <text x="55" y="174" font-size="11.5" fill="#1D4E89">(behind)</text>
+      <text x="250" y="160" font-size="11.5" fill="currentColor">less cold</text>
+      <text x="250" y="174" font-size="11.5" fill="currentColor">(ahead)</text>
+      <text x="228" y="96" font-size="11.5" fill="#B03A2C">warm air lifted clear of the ground</text>
+      <text x="130" y="210" font-size="11.5" fill="#6B3FA0">Cold air undercuts the cold front too &#8212; Cb embedded, showery.</text>
+      <text x="130" y="226" font-size="11.5" fill="#6B3FA0">Most frequent in Europe in <tspan font-weight="600">summer</tspan>.</text>
+
+      <text x="412" y="20" font-size="13.5" font-weight="600" fill="#6B3FA0">WARM OCCLUSION &#8212; the air behind is WARMER</text>
+      <line x1="412" y1="182" x2="768" y2="182" stroke="currentColor" stroke-width="2"/>
+      <line x1="530" y1="182" x2="600" y2="60" stroke="#1D4E89" stroke-width="2.2"/>
+      <line x1="600" y1="60" x2="730" y2="182" stroke="#B03A2C" stroke-width="2.2"/>
+      <path d="M600 60 L730 182 L700 182 L586 84z" fill="#6B3FA0" opacity=".18"/>
+      <text x="450" y="160" font-size="11.5" fill="currentColor">less cold</text>
+      <text x="450" y="174" font-size="11.5" fill="currentColor">(behind)</text>
+      <text x="742" y="160" font-size="11.5" text-anchor="end" fill="#1D4E89" font-weight="600">very cold</text>
+      <text x="742" y="174" font-size="11.5" text-anchor="end" fill="#1D4E89">(ahead)</text>
+      <text x="530" y="210" font-size="11.5" fill="#6B3FA0">The cold front rides up the warm-front surface &#8212; layered, Ns,</text>
+      <text x="530" y="226" font-size="11.5" fill="#6B3FA0">steady rain. Most frequent in Europe in <tspan font-weight="600">winter</tspan>.</text>
+    </svg>
+    <figcaption><b>Name the occlusion after the air behind it.</b> The cold front always catches the warm front; the only question is whether the air arriving behind is colder or warmer than the air already ahead. Cold occlusion &#8594; the rear air wins and undercuts &#8594; convective weather, summer. Warm occlusion &#8594; the rear air is lighter and rides up &#8594; layer cloud, winter.</figcaption>
+  </figure>
+
+  <div class="numbers">
+    <div class="nh">Frontal numbers</div>
+    <div class="nlist">
+      <div class="nrow"><span>Warm front slope</span><span class="v">1 : 150</span></div>
+      <div class="nrow"><span>Cold front slope</span><span class="v">1 : 80</span></div>
+      <div class="nrow"><span>Warm front precip. width</span><span class="v">400&#8211;600 km</span></div>
+      <div class="nrow"><span>Cold front precip. width</span><span class="v">&#8776;50 km</span></div>
+      <div class="nrow"><span>Warm front speed</span><span class="v">&#8776;&#8532; geostrophic</span></div>
+      <div class="nrow"><span>Cold front speed</span><span class="v">&#8776; full geostrophic</span></div>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; air masses &amp; fronts</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Most frequent air masses over Western Europe?</summary><p class="a">Polar and tropical air</p></details>
+    <details class="q"><summary>Which air mass sits in the warm sector?</summary><p class="a">Tropical air (tropical maritime)</p></details>
+    <details class="q"><summary>What cloud types are typical of a warm front?</summary><p class="a">Cirrus, Altostratus, Nimbostratus</p></details>
+    <details class="q"><summary>Warm-front air-mass movement?</summary><p class="a">Warm air overrides the cold air</p></details>
+    <details class="q"><summary>Relative motion at a cold front?</summary><p class="a">Cold air pushes under the warm air</p></details>
+    <details class="q"><summary>Slope and speed of a warm front compared to a cold front?</summary><p class="a">Smaller (shallower) and slower</p></details>
+    <details class="q"><summary>How does a cold front move compared to a warm front?</summary><p class="a">Faster</p></details>
+    <details class="q"><summary>Average slope of a cold front?</summary><p class="a">1:80</p></details>
+    <details class="q"><summary>Average precipitation width ahead of a warm front?</summary><p class="a">400&#8211;600 km</p></details>
+    <details class="q"><summary>Main factor producing very low cloud ahead of a warm front?</summary><p class="a">Saturation of the cold air by evaporating rain</p></details>
+    <details class="q"><summary>Wind change ahead of, and on passage of, a warm front?</summary><p class="a">Backs slightly ahead, veers on passage, and increases with height</p></details>
+    <details class="q"><summary>Significant surface weather with a warm front occurs:</summary><p class="a">Mostly before the passage</p></details>
+    <details class="q"><summary>Which frontal depression statement is correct?</summary><p class="a">Fog risk is greater near the warm front than the cold front</p></details>
+    <details class="q"><summary>Fog types around a warm-front passage?</summary><p class="a">Frontal fog before, advection fog after</p></details>
+    <details class="q"><summary>Warm-front thunderstorms are possible if:</summary><p class="a">The warm air is moist and the ELR exceeds the SALR &#8212; i.e. the cold air ahead is unstable</p></details>
+    <details class="q"><summary>Altimeter reading just before, and after, a cold front passage (aircraft on the ground)?</summary><p class="a">Increasing before the passage, then decreased after<span class="why">Pressure rises behind a cold front, so an altimeter left on an old QNH reads progressively lower.</span></p></details>
+    <details class="q"><summary>Where is the highest probability of thunderstorms?</summary><p class="a">At the cold front</p></details>
+    <details class="q"><summary>Where do you find squall lines?</summary><p class="a">Ahead of an active cold front</p></details>
+    <details class="q"><summary>A cold front crossing mountains:</summary><p class="a">Strengthens on the upwind side</p></details>
+    <details class="q"><summary>A stationary front is one in which:</summary><p class="a">There is no horizontal motion perpendicular to the front</p></details>
+    <details class="q"><summary>Cold occlusion &#8212; where is the coldest air, and when is it most frequent in Europe?</summary><p class="a">Coldest air behind the front; most frequent in summer</p></details>
+    <details class="q"><summary>Warm occlusion characteristic?</summary><p class="a">The air behind is warmer than the air ahead</p></details>
+    <details class="q"><summary>Mean position of the polar front in summer?</summary><p class="a">Newfoundland to northern Scotland (30&#176;N&#8211;65&#176;N band)</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 07 PRESSURE SYSTEMS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="press">
+  <div class="sec-head"><span class="eyebrow">050 07</span><h2>Pressure Systems</h2></div>
+  <p class="lede">Convergence and divergence: what happens at the surface is set by what the upper flow is doing.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Cyclone (low) &#8212; NH</h3>
+      <ul class="tight">
+        <li>Rotation <b>anticlockwise</b>, flow <b>convergent at the surface and rising</b>, divergent aloft.</li>
+        <li>Rising air &#8594; cooling &#8594; cloud, precipitation, poor weather, strong winds.</li>
+        <li>When <b>upper divergence exceeds surface convergence</b>: pressure <b>falls</b> and cloud forms &#8212; the depression deepens.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Anticyclone (high) &#8212; NH</h3>
+      <ul class="tight">
+        <li>Rotation <b>clockwise</b>, <b>subsiding</b> air, divergent at the surface.</li>
+        <li>Subsidence inversion, dry aloft, little cloud, light winds; in winter, trapped haze and fog under the inversion.</li>
+        <li><b>Warm anticyclone</b> &#8212; warm through its depth, pressure surfaces <b>bulge up at all levels</b>, extends to the tropopause, quasi-stationary, fine weather dominates in summer.</li>
+        <li><b>Cold anticyclone</b> &#8212; shallow, pressure surfaces bulge <b>up at low level and down aloft</b>; typically a winter continental high (Siberian).</li>
+        <li><b>Blocking high</b> &#8212; a quasi-stationary warm anticyclone between <b>50&#176;N and 70&#176;N</b> that diverts depressions around it.</li>
+      </ul>
+    </div>
+  </div>
+
+  <ul class="tight">
+    <li><b>Cold air drop (cut-off low)</b> &#8212; a pool of cold air detached from the polar flow. <b>Most evident in the mid-troposphere with little surface indication</b>: no fronts, but a deep unstable column giving showers and thunderstorms from a "quiet" surface chart.</li>
+    <li><b>Col</b> &#8212; between two highs and two lows: light variable winds, fog in winter, thunderstorms in summer.</li>
+    <li><b>Trough</b> extends low pressure, <b>ridge</b> extends high pressure.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; pressure systems</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the shape of a cyclone in the NH?</summary><p class="a">Convergent and rising from the ground upwards</p></details>
+    <details class="q"><summary>Upper-air divergence exceeding surface convergence causes:</summary><p class="a">Falling pressure and cloud formation</p></details>
+    <details class="q"><summary>Pressure surfaces bulging up at low levels and down aloft indicate:</summary><p class="a">A cold high-pressure area</p></details>
+    <details class="q"><summary>Pressure surfaces bulging upwards at all levels indicate:</summary><p class="a">A warm high</p></details>
+    <details class="q"><summary>Typical weather in a warm anticyclone over land?</summary><p class="a">Fine weather dominates in summer</p></details>
+    <details class="q"><summary>A blocking anticyclone in the NH is:</summary><p class="a">A quasi-stationary warm anticyclone between 50&#176;N and 70&#176;N</p></details>
+    <details class="q"><summary>A cold air drop is:</summary><p class="a">Most evident in the middle troposphere, with little surface indication</p></details>
+    <details class="q"><summary>Approach into a basin under a winter blocking high &#8212; what should you expect?</summary><p class="a">More thrust required after breaking through the inversion in the early morning</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 08 CLIMATOLOGY &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="clim">
+  <div class="sec-head"><span class="eyebrow">050 08</span><h2>Climatology</h2></div>
+  <p class="lede">Mostly recall. Learn the tropical revolving storm names, the monsoon directions, and the ITCZ position by season.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>ITCZ &amp; the tropics</h3>
+      <ul class="tight">
+        <li>The ITCZ follows the sun with a lag: north in <b>July</b>, south in <b>January</b>. It sits over Africa/Asia, <b>not over the North Atlantic</b> &#8212; a London&#8211;New York summer crossing never crosses it.</li>
+        <li>Equatorial precipitation: showers and thunderstorms all year, peaking around the equinoxes &#8212; <b>April&#8211;May and October&#8211;November</b>.</li>
+        <li>Main icing zone within the ITCZ: <b>FL160&#8211;FL260</b>.</li>
+      </ul>
+      <h3>Monsoon</h3>
+      <ul class="tight">
+        <li><b>Summer (India):</b> SW monsoon &#8212; hot land, moist air off the ocean, heavy rain.</li>
+        <li><b>Winter:</b> NE monsoon &#8212; dry continental outflow.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Tropical revolving storms</h3>
+      <ul class="tight">
+        <li>Need sea surface &#8805; <b>26&#8211;27 &#176;C</b>, latitude &#8805; <b>5&#176;</b> (Coriolis), and occur in <b>late summer / autumn</b> &#8212; never winter.</li>
+        <li>Most frequent region: the <b>NW Pacific</b> (typhoons).</li>
+        <li>Names: <b>Hurricane</b> (Atlantic/E Pacific), <b>Typhoon</b> (NW Pacific), <b>Cyclone</b> (Indian Ocean), <b>Willy-Willy</b> (Australia).</li>
+        <li>Seen from a distance the approach is announced by <b>frequent stratocumulus</b> and a long swell.</li>
+      </ul>
+      <h3>Mediterranean</h3>
+      <ul class="tight">
+        <li>Hot dry summers, mild wet winters, annual rainfall <b>well below 700 mm</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; climatology</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Where would you cross the ITCZ flying London&#8211;New York in summer?</summary><p class="a">Nowhere</p></details>
+    <details class="q"><summary>Main icing zone within the ITCZ?</summary><p class="a">FL160&#8211;FL260</p></details>
+    <details class="q"><summary>Equatorial precipitation characteristics?</summary><p class="a">Showers and thunderstorms year-round, peaking in April&#8211;May and October&#8211;November</p></details>
+    <details class="q"><summary>(1) The summer monsoon in India is a SW monsoon. (2) Hurricanes usually occur in winter.</summary><p class="a">1 correct, 2 incorrect</p></details>
+    <details class="q"><summary>Region with the greatest number of tropical revolving storms?</summary><p class="a">The north-west Pacific</p></details>
+    <details class="q"><summary>Willy-Willies are:</summary><p class="a">Australian tropical revolving storms</p></details>
+    <details class="q"><summary>Clouds indicating a tropical revolving storm from a distance?</summary><p class="a">Frequent stratocumulus</p></details>
+    <details class="q"><summary>Correct statement about the Mediterranean climate?</summary><p class="a">Annual rainfall significantly below 700 mm</p></details>
+    <details class="q"><summary>Typical tornado movement speed?</summary><p class="a">20&#8211;40 kt</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 09 FLIGHT HAZARDS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="haz">
+  <div class="sec-head"><span class="eyebrow">050 09</span><h2>Flight Hazards</h2></div>
+  <p class="lede">Icing, thunderstorms, wind shear, mountain waves, CAT. Together with altimetry this is where the marks are.</p>
+
+  <h3>Icing</h3>
+  <div class="numbers">
+    <div class="nh">Icing temperature bands</div>
+    <div class="nlist">
+      <div class="nrow"><span>Clear (glaze) ice</span><span class="v">0 &#176;C &#8594; &#8722;20 &#176;C</span></div>
+      <div class="nrow"><span>Mixed ice</span><span class="v">&#8722;10 &#176;C &#8594; &#8722;20 &#176;C</span></div>
+      <div class="nrow"><span>Rime ice</span><span class="v">&#8722;15 &#176;C &#8594; &#8722;40 &#176;C</span></div>
+      <div class="nrow"><span>No icing</span><span class="v">above 0 &#176;C, below &#8722;40/&#8722;45 &#176;C</span></div>
+      <div class="nrow"><span>Carburettor icing</span><span class="v">&#8722;10 &#176;C &#8594; +30 &#176;C, high RH</span></div>
+      <div class="nrow"><span>Highest icing risk cloud</span><span class="v">Cb, then Ns</span></div>
+    </div>
+  </div>
+  <ul class="tight">
+    <li><b>Clear ice</b> &#8212; <b>large supercooled droplets</b> that spread before freezing. Transparent, heavy, adheres beyond the de-ice boots, hard to shed. <b>The most dangerous.</b> Cumuliform cloud and freezing rain.</li>
+    <li><b>Rime ice</b> &#8212; <b>small droplets</b> that freeze <b>instantly and do not spread</b>. Opaque, brittle, follows the leading edge. Stratiform cloud.</li>
+    <li>Icing risk is <b>highest in Ns</b> among layer clouds (great depth, high water content) and virtually <b>ruled out in Cs</b> and other high cloud &#8212; ice crystals do not stick.</li>
+    <li><b>Carburettor icing</b> is worst at <b>+2 &#176;C with 90 % RH</b> &#8212; a warm, humid day, not a freezing one.</li>
+  </ul>
+
+  <h3>Thunderstorms</h3>
+  <p>Three ingredients: <b>unstable lapse rate (ELR &gt; SALR through a great depth)</b>, <b>high humidity</b>, and an <b>initial lifting trigger</b> (heating, orographic, frontal, or convergence). For air-mass storms over the sea, that trigger is <b>cold air advection over a warm sea</b>.</p>
+
+  <figure>
+    <svg viewBox="0 0 800 300" role="img" aria-label="The three stages of a single-cell thunderstorm with updraught and downdraught">
+      <defs>
+        <marker id="up" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#B03A2C"/>
+        </marker>
+        <marker id="dn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="#1D4E89"/>
+        </marker>
+      </defs>
+      <line x1="30" y1="250" x2="775" y2="250" stroke="currentColor" stroke-width="2"/>
+      <!-- stage 1 -->
+      <path d="M70 250 q-8 -70 40 -92 q46 -22 78 30 q-8 62 -14 62z" fill="currentColor" opacity=".28"/>
+      <line x1="130" y1="244" x2="130" y2="150" stroke="#B03A2C" stroke-width="2" marker-end="url(#up)"/>
+      <text x="130" y="278" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">1 &#183; DEVELOPING</text>
+      <text x="130" y="294" font-size="11" text-anchor="middle" fill="currentColor">15&#8211;20 min &#183; updraught only</text>
+      <text x="130" y="120" font-size="11" text-anchor="middle" fill="#B03A2C">3000&#8211;4000 ft/min</text>
+
+      <!-- stage 2 -->
+      <path d="M300 250 q-16 -130 46 -168 q66 -40 108 32 q26 4 22 46 l-6 90z" fill="currentColor" opacity=".32"/>
+      <path d="M336 78 q60 -34 128 -6 q30 12 42 -4 q-18 -26 -54 -20 q-16 -26 -60 -18 q-46 10 -56 48z" fill="currentColor" opacity=".2"/>
+      <text x="470" y="70" font-size="11" fill="currentColor">anvil</text>
+      <line x1="350" y1="244" x2="350" y2="110" stroke="#B03A2C" stroke-width="2" marker-end="url(#up)"/>
+      <line x1="418" y1="120" x2="418" y2="246" stroke="#1D4E89" stroke-width="2" marker-end="url(#dn)"/>
+      <g stroke="#1D4E89" stroke-width="1.4">
+        <line x1="392" y1="240" x2="386" y2="250"/><line x1="440" y1="240" x2="434" y2="250"/>
+        <line x1="464" y1="240" x2="458" y2="250"/>
+      </g>
+      <!-- gust front -->
+      <path d="M300 250 q-40 -6 -70 4" fill="none" stroke="#1D4E89" stroke-width="2"/>
+      <text x="240" y="238" font-size="10.5" text-anchor="middle" fill="#1D4E89">gust front</text>
+      <text x="380" y="278" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">2 &#183; MATURE</text>
+      <text x="380" y="294" font-size="11" text-anchor="middle" fill="currentColor">30&#8211;40 min &#183; up + down &#183; hail, microburst, lightning</text>
+
+      <!-- stage 3 -->
+      <path d="M600 250 q-14 -110 46 -142 q62 -32 100 22 l-14 120z" fill="currentColor" opacity=".18"/>
+      <line x1="660" y1="120" x2="660" y2="246" stroke="#1D4E89" stroke-width="2" marker-end="url(#dn)"/>
+      <line x1="712" y1="130" x2="712" y2="246" stroke="#1D4E89" stroke-width="2" marker-end="url(#dn)"/>
+      <text x="680" y="278" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">3 &#183; DISSIPATING</text>
+      <text x="680" y="294" font-size="11" text-anchor="middle" fill="currentColor">downdraught only &#183; total life &lt; 1 hour</text>
+    </svg>
+    <figcaption><b>The storm kills itself.</b> Once precipitation starts falling it drags cold air down through the cell; the downdraught spreads out as a gust front and cuts off the warm inflow that fed the updraught. That is why a single cell lasts under an hour &#8212; and why the <b>mature stage</b>, the only one with updraught and downdraught side by side, is the dangerous one.</figcaption>
+  </figure>
+
+  <div class="caution">
+    <span class="ch">Cb avoidance &#8212; the exam answers</span>
+    <p>Avoid by <b>at least 10 NM</b> laterally (20 NM in the tropics or above FL250), and overfly only by <b>5000 ft above the top</b>. If you cannot circumnavigate a Cb, <b>fly above it if performance allows</b> &#8212; never below, never through. Airborne weather radar detects <em>precipitation</em>, so it under-reads dry hail and the anvil; use it to avoid, not to penetrate.</p>
+  </div>
+
+  <h3>Wind shear</h3>
+  <ul class="tight">
+    <li><b>Vertical wind shear</b> = the vertical variation of the <em>horizontal</em> wind, measured in <b>kt per 100 ft</b> (ICAO: moderate 4.0&#8211;7.9, severe 8.0&#8211;11.9, extreme &#8805;12).</li>
+    <li><b>Horizontal wind shear</b> = change of the horizontal wind with horizontal distance at the same level.</li>
+    <li>Sources: thunderstorm outflow and <b>microbursts</b>, <b>low-level temperature inversions</b> (greatest shear at the <b>top of a surface-based inversion</b>), frontal surfaces, sea breeze fronts, and terrain. At night, expect it with <b>radiation inversions</b>.</li>
+    <li><b>Virga</b> is the visual cue. A microburst arises in the <b>downdraught of a Cb in the mature stage</b>: diameter under 4 km, life under 15 min, downdraughts of 3000&#8211;4000 ft/min, and it can be dry &#8212; no rain reaching the ground at all.</li>
+    <li>Reported as <b>WS ALL RWY</b> or <b>WS RWY nn</b> in a METAR; a <b>wind shear warning</b> (e.g. <code>MBST APCH RWY26</code>) is updated every <b>1 minute</b>.</li>
+  </ul>
+
+  <h3>Mountain waves &amp; CAT</h3>
+  <ul class="tight">
+    <li>Standing waves need wind <b>&#8805;20&#8211;25 kt perpendicular to the ridge (&#177;30&#176;)</b>, increasing with height, and a <b>stable layer</b> at ridge level.</li>
+    <li>Markers: <b>lenticularis</b> at the wave crests, <b>cap cloud</b> on the summit, <b>rotor cloud</b> in the turbulent zone. The <b>most hazardous conditions are in the rotor zone beneath the first wave crest on the lee side</b>.</li>
+    <li><b>CAT</b> sits around the jet core: strongest on the <b>cold-air side and just below the core</b>, and in sharp upper troughs. <b>Fastest escape from CAT near a jet: descend</b> (or turn towards the warm air).</li>
+  </ul>
+
+  <figure>
+    <svg viewBox="0 0 740 260" role="img" aria-label="Polar front jet cross-section showing core, CAT zones, tropopause break and surface front position">
+      <line x1="30" y1="222" x2="710" y2="222" stroke="currentColor" stroke-width="2"/>
+      <!-- tropopause break -->
+      <path d="M40 96 L300 96 L340 46 L700 46" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="6 4"/>
+      <text x="150" y="86" font-size="11" fill="currentColor">tropopause (cold side, low)</text>
+      <text x="560" y="38" font-size="11" fill="currentColor">tropopause (warm side, high)</text>
+      <!-- jet core -->
+      <ellipse cx="330" cy="104" rx="34" ry="17" fill="#B03A2C" opacity=".28"/>
+      <ellipse cx="330" cy="104" rx="58" ry="30" fill="none" stroke="#B03A2C" stroke-width="1.2" opacity=".55"/>
+      <ellipse cx="330" cy="104" rx="86" ry="45" fill="none" stroke="#B03A2C" stroke-width="1.2" opacity=".35"/>
+      <text x="330" y="108" font-size="11.5" text-anchor="middle" fill="#B03A2C" font-weight="600">CORE</text>
+      <text x="330" y="122" font-size="10" text-anchor="middle" fill="#B03A2C">&#8805;60 kt &#183; FL300 (300 hPa)</text>
+      <!-- CAT zones -->
+      <rect x="212" y="86" width="56" height="60" fill="#1D4E89" opacity=".18"/>
+      <text x="240" y="166" font-size="11" text-anchor="middle" fill="#1D4E89" font-weight="600">MAX CAT</text>
+      <text x="240" y="180" font-size="10.5" text-anchor="middle" fill="#1D4E89">cold side,</text>
+      <text x="240" y="192" font-size="10.5" text-anchor="middle" fill="#1D4E89">at / just below core</text>
+      <!-- labels cold warm -->
+      <text x="90" y="150" font-size="12" fill="#1D4E89" font-weight="600">COLD AIR</text>
+      <text x="90" y="166" font-size="11" fill="#1D4E89">(north)</text>
+      <text x="620" y="150" font-size="12" fill="#B03A2C" font-weight="600">WARM AIR</text>
+      <text x="620" y="166" font-size="11" fill="#B03A2C">(south)</text>
+      <!-- surface front -->
+      <polygon points="404,222 416,214 416,230" fill="#1D4E89"/>
+      <line x1="404" y1="214" x2="404" y2="230" stroke="#1D4E89" stroke-width="2"/>
+      <text x="404" y="248" font-size="11" text-anchor="middle" fill="#1D4E89">surface cold front</text>
+      <line x1="330" y1="200" x2="404" y2="200" stroke="currentColor" stroke-width="1.2"/>
+      <text x="367" y="194" font-size="10.5" text-anchor="middle" fill="currentColor">50&#8211;200 NM</text>
+      <text x="500" y="212" font-size="11" fill="currentColor">300&#8211;450 NM ahead of the surface warm front</text>
+    </svg>
+    <figcaption><b>The jet sits in the tropopause break, in the warm air, on the cold side of the temperature contrast.</b> The surface projection of the polar front jet falls 50&#8211;200 NM behind the surface cold front. Maximum CAT is on the cold-air side, level with or just below the core &#8212; so descending, and turning towards the warm air, gets you out fastest.</figcaption>
+  </figure>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; flight hazards</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Clear ice forms by the freezing of:</summary><p class="a">Large supercooled water droplets</p></details>
+    <details class="q"><summary>During rime ice formation, droplets freeze:</summary><p class="a">Rapidly, and they do not spread</p></details>
+    <details class="q"><summary>A small supercooled droplet impacting an airfoil will:</summary><p class="a">Freeze immediately and form rime ice</p></details>
+    <details class="q"><summary>In which cloud type is the risk of icing highest?</summary><p class="a">Nimbostratus (of the layer clouds &#8212; Cb overall)</p></details>
+    <details class="q"><summary>In which cloud type can icing be virtually ruled out?</summary><p class="a">Cirrostratus</p></details>
+    <details class="q"><summary>Carburettor icing is most likely at:</summary><p class="a">+2 &#176;C with 90 % relative humidity</p></details>
+    <details class="q"><summary>Thunderstorms develop most readily when:</summary><p class="a">ELR &gt; SALR through a great depth, high humidity, and an initial lifting trigger</p></details>
+    <details class="q"><summary>Initial lifting for air-mass thunderstorms over the sea?</summary><p class="a">Cold air advection over a warm sea</p></details>
+    <details class="q"><summary>Thunderstorm cloud and its maximum height?</summary><p class="a">Cumulonimbus, up to about 20 km</p></details>
+    <details class="q"><summary>What do you do if you cannot circumnavigate a CB?</summary><p class="a">Fly above it if performance allows</p></details>
+    <details class="q"><summary>Best way to deal with cold-front thunderstorms?</summary><p class="a">Avoid &#8212; using the airborne weather radar to route around them</p></details>
+    <details class="q"><summary>A microburst arises in the:</summary><p class="a">Downdraught of a cumulonimbus in the mature stage</p></details>
+    <details class="q"><summary>Vertical wind shear is:</summary><p class="a">The vertical variation of the horizontal wind &#8212; units kt/100 ft</p></details>
+    <details class="q"><summary>Horizontal wind shear definition?</summary><p class="a">Change of the horizontal wind with horizontal distance at the same height</p></details>
+    <details class="q"><summary>Which phenomenon indicates LLWS?</summary><p class="a">Virga</p></details>
+    <details class="q"><summary>Wind shear is mostly associated with:</summary><p class="a">Low-level temperature inversions</p></details>
+    <details class="q"><summary>The greatest low-level wind shear occurs:</summary><p class="a">At the top of a surface-based inversion</p></details>
+    <details class="q"><summary>Night-time LLWS is most likely with:</summary><p class="a">Radiation inversions</p></details>
+    <details class="q"><summary>How often is a wind shear report updated?</summary><p class="a">Every 1 minute</p></details>
+    <details class="q"><summary>METAR annotation when wind shear affects all runways?</summary><p class="a">WS ALL RWY</p></details>
+    <details class="q"><summary>The message "MBST APCH RWY26" belongs to which type?</summary><p class="a">A wind shear warning</p></details>
+    <details class="q"><summary>The most hazardous standing wave conditions occur:</summary><p class="a">In the rotor zone beneath the first wave on the lee side</p></details>
+    <details class="q"><summary>Altocumulus lenticularis indicates:</summary><p class="a">Mountain waves</p></details>
+    <details class="q"><summary>Fastest way out of CAT near a jet at FL290?</summary><p class="a">Descend</p></details>
+    <details class="q"><summary>Where can you expect the strongest turbulence in a polar front jet stream?</summary><p class="a">North of the core, in the cold air</p></details>
+    <details class="q"><summary>Where does the surface projection of the polar front jet stream lie?</summary><p class="a">50&#8211;200 NM behind the surface cold front, and 300&#8211;450 NM ahead of the warm front</p></details>
+    <details class="q"><summary>Minimum wind speed for classification as a jet stream?</summary><p class="a">60 kt</p></details>
+    <details class="q"><summary>At which season is the polar front jet stream strongest in the NH, and where is it fastest?</summary><p class="a">Winter; fastest over Japan</p></details>
+    <details class="q"><summary>Moderate turbulence at FL055 over plains with SCT CU is caused by:</summary><p class="a">Instability below the cumulus tops</p></details>
+    <details class="q"><summary>Safest departure with an inversion and wind shear on RWY 09/27?</summary><p class="a">Depart RWY 09 with a tailwind<span class="why">Below the inversion the surface wind is calm/light; above it the gradient wind is strong &#8212; take the runway that gives you an increasing headwind as you climb through it.</span></p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 10 MET INFORMATION &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="info">
+  <div class="sec-head"><span class="eyebrow">050 10</span><h2>Meteorological Information</h2></div>
+  <p class="lede">Observation rules, report timings, chart symbols and the codes they like to pick apart.</p>
+
+  <div class="numbers">
+    <div class="nh">Reports &amp; timings</div>
+    <div class="nlist">
+      <div class="nrow"><span>METAR</span><span class="v">every 30 min</span></div>
+      <div class="nrow"><span>SPECI</span><span class="v">on significant change</span></div>
+      <div class="nrow"><span>TAF issue interval</span><span class="v">every 3 h (short) / 6 h (long)</span></div>
+      <div class="nrow"><span>Short TAF validity</span><span class="v">9 h</span></div>
+      <div class="nrow"><span>Long TAF validity</span><span class="v">24&#8211;30 h</span></div>
+      <div class="nrow"><span>RVR reported below</span><span class="v">1500 m</span></div>
+      <div class="nrow"><span>Wind shear report update</span><span class="v">1 min</span></div>
+      <div class="nrow"><span>Surface wind measured at</span><span class="v">10 m</span></div>
+    </div>
+  </div>
+
+  <h3>Rules of observation</h3>
+  <ul class="tight">
+    <li><b>Meteorological visibility</b> in a METAR: the <b>greatest value reached over at least half the horizon circle</b> (with the minimum given separately if it differs significantly and is below 1500 m or 50 % of the prevailing visibility).</li>
+    <li><b>Winds are written in &#176;True in METAR/TAF and spoken in &#176;Magnetic</b> by ATC &#8212; the single most common trap in this topic.</li>
+    <li><b>CAVOK</b> requires: visibility <b>&#8805;10 km</b>, <b>no cloud below 5000 ft or below the highest MSA (whichever is greater)</b> and <b>no CB or TCU at any level</b>, and no significant weather. <code>OVC150</code> still qualifies &#8212; 15 000 ft is above the limit.</li>
+    <li><b>SIGMET</b> is issued for en-route phenomena hazardous to <em>all</em> aircraft: thunderstorms, severe turbulence, <b>severe mountain waves</b>, severe icing, hail, volcanic ash, TRS, sandstorms, radioactive cloud. <b>AIRMET</b> is the lower-level equivalent for light aircraft.</li>
+    <li><b>Runway friction coefficient</b>: 0.40+ good &#183; 0.36&#8211;0.39 medium/good &#183; 0.30&#8211;0.35 medium &#183; 0.26&#8211;0.29 medium/poor &#183; <b>0.25 and below ("friction coefficient 20") = poor</b>.</li>
+    <li>In-flight sources: <b>VOLMET</b>, <b>ATIS</b>, and any ATS unit.</li>
+    <li>Significant weather charts: well-separated Cb are annotated <b>OCNL CB</b>; <b>ISOL</b> = individual, <b>FRQ</b> = little or no separation, <b>EMBD</b> = embedded in layer cloud.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&#183; met information</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>How is meteorological visibility determined in a METAR?</summary><p class="a">The greatest value reached over at least half the horizon</p></details>
+    <details class="q"><summary>RVR is reported when visibility is below:</summary><p class="a">1500 m</p></details>
+    <details class="q"><summary>Which METAR can be abbreviated to CAVOK?</summary><p class="a">LSZB 28012KT 9999 OVC150 16/12 Q1012<span class="why">Cloud at 15 000 ft is above the 5000 ft / MSA limit, visibility is 10 km or more, and there is no significant weather.</span></p></details>
+    <details class="q"><summary>The METAR code "VCBLDU" means:</summary><p class="a">Blowing dust in the vicinity</p></details>
+    <details class="q"><summary>In which situation is a SIGMET issued?</summary><p class="a">Severe mountain waves (among the other hazardous en-route phenomena)</p></details>
+    <details class="q"><summary>Well-separated CBs on a SIGWX chart are annotated:</summary><p class="a">OCNL CB</p></details>
+    <details class="q"><summary>"Friction coefficient 20" in a runway report means:</summary><p class="a">Braking action poor</p></details>
+    <details class="q"><summary>Normal official in-flight weather information sources?</summary><p class="a">VOLMET, ATIS and all ATS units</p></details>
+    <details class="q"><summary>An ICAO turbulence description of "occupants are forced violently against seat belts, unsecured objects tossed about" corresponds to:</summary><p class="a">Severe</p></details>
+    <details class="q"><summary>Visibility with haze reported as "less than 3000 m but more than 1500 m" &#8212; how is it coded?</summary><p class="a">As a 4-digit prevailing visibility in metres with HZ, e.g. 2500 HZ</p></details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>050 Meteorology</b> &#8212; revision sheet for airline selection screening</div>
+    <div>Built from the Selection question bank (206 items), the ATPL summaries and CAE Oxford 050</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.qbank').forEach(function(bank){
+  var btn = bank.querySelector('.reveal');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var items = bank.querySelectorAll('details.q');
+    var opening = btn.textContent.trim() === 'Reveal all';
+    items.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'Hide all' : 'Reveal all';
+  });
+});
+</script>
