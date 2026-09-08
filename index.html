@@ -17,20 +17,21 @@
   /* subject accents - light */
   --s-met:#1D4E89;
   --s-pof:#C2470E;
+  --s-law:#0C7580;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --paper:#121211; --surface:#1B1B19; --surface-2:#252522; --ink:#EAE9E5;
     --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
     --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
-    --s-met:#6FA8DC; --s-pof:#F79155;
+    --s-met:#6FA8DC; --s-pof:#F79155; --s-law:#45C8D4;
   }
 }
 :root[data-theme="dark"]{
   --paper:#121211; --surface:#1B1B19; --surface-2:#252522; --ink:#EAE9E5;
   --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
   --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
-  --s-met:#6FA8DC; --s-pof:#F79155;
+  --s-met:#6FA8DC; --s-pof:#F79155; --s-law:#45C8D4;
 }
 
 *{box-sizing:border-box}
@@ -91,6 +92,7 @@ a.card:focus-visible{outline:2px solid var(--sc);outline-offset:3px}
 /* ---------- sheet colours ---------- */
 .s-met{--sc:var(--s-met)}
 .s-pof{--sc:var(--s-pof)}
+.s-law{--sc:var(--s-law)}
 
 /* ---------- how it works ---------- */
 .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:0 30px;
@@ -122,7 +124,7 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
       <p class="mast-sub">Single-page revision sheets built from the CAE Oxford syllabus and a working selection question bank. Theory, diagrams and the real questions, organised by syllabus topic.</p>
     </div>
     <div class="mast-meta">
-      <div><b>2</b> sheets ready</div>
+      <div><b>3</b> sheets ready</div>
       <div><b>1516</b> questions in the bank</div>
       <div><b>11</b> subject areas</div>
     </div>
@@ -133,7 +135,7 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
 
   <div class="shead">
     <h2>Ready</h2>
-    <span class="count">2 sheets</span>
+    <span class="count">3 sheets</span>
   </div>
   <p class="snote">Each sheet is a self-contained page: click any question to reveal its answer, or use <em>Reveal all</em> to work through a topic.</p>
 
@@ -155,29 +157,23 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
       <span class="go">Open sheet &rarr;</span>
     </a>
 
+    <a class="card s-law" href="https://issakzanini.github.io/atpl/lawopscomm/">
+      <div class="card-top"><span class="code">010 &middot; 070 &middot; 090</span><span class="state">Ready</span></div>
+      <h3>Air Law &amp; Operations</h3>
+      <p>Conventions and documents, airspace and separation, aerodrome lighting, wake turbulence, PANS-OPS and holding, fuel policy, cabin equipment, radiotelephony.</p>
+      <div class="stats"><span><b>233</b> questions</span><span><b>10</b> topics</span><span><b>4</b> diagrams</span></div>
+      <span class="go">Open sheet &rarr;</span>
+    </a>
+
   </div>
 
   <div class="shead">
     <h2>Planned</h2>
-    <span class="count">8 subject areas</span>
+    <span class="count">5 subject areas</span>
   </div>
   <p class="snote">Question banks are in hand for each of these; the sheets are not built yet.</p>
 
   <div class="grid">
-
-    <div class="card soon">
-      <div class="card-top"><span class="code">070</span><span class="state">Planned</span></div>
-      <h3>Operational Procedures</h3>
-      <p>EU 965/2012 Part-CAT, Part-ORO and Part-SPA: aircraft and equipment, crew and FTL, oxygen, fuel policy, ETOPS, operating minima and LVO.</p>
-      <div class="stats"><span>Part-CAT / ORO / SPA</span><span>ICAO Annexes</span></div>
-    </div>
-
-    <div class="card soon">
-      <div class="card-top"><span class="code">010</span><span class="state">Planned</span></div>
-      <h3>Air Law</h3>
-      <p>Rules of the air, airspace, licensing, aerodromes and lighting, wake turbulence categories, transponder codes.</p>
-      <div class="stats"><span><b>225</b> questions</span><span>densest on numbers</span></div>
-    </div>
 
     <div class="card soon">
       <div class="card-top"><span class="code">022</span><span class="state">Planned</span></div>
@@ -205,13 +201,6 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
       <h3>Human Performance</h3>
       <p>Physiology and the effects of altitude, vision and hearing, fatigue and sleep, decision making, CRM and human error.</p>
       <div class="stats"><span><b>178</b> questions</span></div>
-    </div>
-
-    <div class="card soon">
-      <div class="card-top"><span class="code">090</span><span class="state">Planned</span></div>
-      <h3>Communications</h3>
-      <p>VFR and IFR radiotelephony, standard phraseology, distress and urgency, communication failure procedures.</p>
-      <div class="stats"><span>from the summary notes</span></div>
     </div>
 
     <div class="card soon">
