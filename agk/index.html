@@ -1,1 +1,892 @@
+<meta charset="utf-8">
+<title>Airframe &amp; Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F7F4F2;
+  --surface:#FFFFFF;
+  --surface-2:#EFE9E7;
+  --ink:#241A18;
+  --muted:#6B5C59;
+  --line:#D8CCC9;
+  --line-soft:#E8DFDD;
+  --red:#A8322A;
+  --blu:#2A5570;
+  --tea:#14706A;
+  --caution:#8A6208;
+  --accent:#A8322A;
+  --accent-wash:#F5E7E4;
+  --caution-wash:#F6EEDA;
+  --shadow:0 1px 2px rgba(36,26,24,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#16110F; --surface:#1F1917; --surface-2:#2A211F; --ink:#EBE3E1;
+    --muted:#A79693; --line:#3A2E2B; --line-soft:#2C2422;
+    --red:#F08A7E; --blu:#82B2D2; --tea:#5FC3BB; --caution:#E0B25C;
+    --accent:#F08A7E; --accent-wash:#2A1815; --caution-wash:#241D11;
+    --shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#16110F; --surface:#1F1917; --surface-2:#2A211F; --ink:#EBE3E1;
+  --muted:#A79693; --line:#3A2E2B; --line-soft:#2C2422;
+  --red:#F08A7E; --blu:#82B2D2; --tea:#5FC3BB; --caution:#E0B25C;
+  --accent:#F08A7E; --accent-wash:#2A1815; --caution-wash:#241D11;
+  --shadow:0 1px 2px rgba(0,0,0,.45);
+}
 
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono,.num,td.n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+.masthead{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast-in{max-width:1080px;margin:0 auto;padding:26px 24px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;justify-content:space-between}
+.mast-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.subj-code{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  letter-spacing:.1em;color:var(--surface);background:var(--red);padding:5px 9px;border-radius:2px}
+h1{margin:0;font-size:44px;line-height:.98;font-weight:700;letter-spacing:.005em}
+.mast-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;max-width:46ch}
+.mast-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:1.9;letter-spacing:.04em}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+.rail{position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.rail-in{max-width:1080px;margin:0 auto;padding:9px 24px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.rail a{flex:0 0 auto;text-decoration:none;color:var(--muted);
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;padding:5px 10px;border-radius:3px;white-space:nowrap}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .rc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);margin-right:5px}
+.rail .sep{flex:0 0 auto;width:1px;background:var(--line);margin:2px 6px}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.part-band{display:flex;align-items:baseline;gap:14px;margin:46px 0 -14px;
+  padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.part-band .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--surface);background:var(--ink);padding:3px 8px;border-radius:2px;letter-spacing:.09em}
+.part-band .pt{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;letter-spacing:.02em}
+.part-band .pd{font-size:13.5px;color:var(--muted);margin-left:auto;text-align:right}
+
+section{padding:46px 0 8px;border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.1em}
+h2{margin:0;font-size:31px;font-weight:700;line-height:1.08}
+.lede{margin:2px 0 26px;color:var(--muted);font-size:15px;max-width:64ch}
+h3{margin:30px 0 8px;font-size:16px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--ink);padding-bottom:5px;border-bottom:1px solid var(--line)}
+p{margin:0 0 12px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 26px;align-items:start}
+ul.tight,ol.tight{margin:0 0 12px;padding-left:19px;max-width:68ch}
+ul.tight li,ol.tight li{margin-bottom:5px}
+b,strong{font-weight:600}
+.k{color:var(--accent);font-weight:600}
+
+.numbers{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--red);
+  border-radius:2px;padding:15px 18px;margin:18px 0;box-shadow:var(--shadow)}
+.numbers .nh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:9px}
+.nlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 26px;margin:0}
+.nrow{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:4px 0;border-bottom:1px dotted var(--line-soft);font-size:14.5px}
+.nrow:last-child{border-bottom:0}
+.nrow span:first-child{color:var(--muted)}
+.nrow .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13.5px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.tw{overflow-x:auto;margin:14px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:440px}
+th{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.07em;text-align:left;
+  border-bottom:1.5px solid var(--ink);padding:6px 10px 5px;color:var(--ink)}
+td{padding:6px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+tbody tr:hover{background:var(--surface-2)}
+
+.caution{background:var(--caution-wash);border:1px solid var(--caution);border-radius:2px;
+  padding:12px 15px;margin:16px 0;font-size:15px}
+.caution .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--caution);display:block;margin-bottom:3px}
+.caution p{margin:0;max-width:none}
+
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:16px 16px 10px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink)}
+figcaption{margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);
+  font-size:13.5px;color:var(--muted);line-height:1.5}
+figcaption b{color:var(--ink)}
+
+.qbank{margin:30px 0 10px;background:var(--surface-2);border-radius:3px;padding:16px 18px 18px}
+.qb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.qb-title{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.qb-title em{font-style:normal;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.reveal{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);background:transparent;
+  border:1px solid var(--accent);border-radius:2px;padding:4px 11px;cursor:pointer}
+.reveal:hover{background:var(--accent);color:var(--surface)}
+.reveal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q{border-bottom:1px solid var(--line);padding:0}
+details.q:last-of-type{border-bottom:0}
+details.q summary{cursor:pointer;list-style:none;padding:9px 30px 9px 0;position:relative;
+  font-size:15.5px;line-height:1.45}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";position:absolute;right:4px;top:8px;
+  font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:17px;line-height:1.4}
+details.q[open] summary::after{content:"\2212";color:var(--accent)}
+details.q summary:hover{color:var(--accent)}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q .a{margin:0 0 12px;padding:9px 13px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:0 2px 2px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.6;max-width:none}
+details.q .a .why{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--muted);line-height:1.5}
+
+.work{background:var(--surface);border:1px dashed var(--line);border-radius:2px;
+  padding:13px 16px;margin:16px 0;font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75}
+.work .wh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.work .res{color:var(--accent);font-weight:600}
+
+footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24px;margin-top:40px}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:34px} h2{font-size:26px}
+  .mast-meta{text-align:left} body{font-size:16px}
+  .part-band{flex-wrap:wrap} .part-band .pd{margin-left:0;text-align:left;width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div class="mast-title">
+      <span class="subj-code">021</span>
+      <div>
+        <h1>Airframe &amp; Systems</h1>
+        <p class="mast-sub">Revision sheet for airline selection screening &mdash; theory, diagrams, the real question bank, plus a type reference for the 737NG and E195.</p>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div><b>192</b> questions &middot; <b>9</b> topics</div>
+      <div>EASA ATPL(A) &middot; CAE Oxford 020</div>
+      <div>Click a question to reveal</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Topics">
+  <div class="rail-in">
+    <a href="#struct"><span class="rc">01</span>Structures</a>
+    <a href="#hyd"><span class="rc">02</span>Hydraulics</a>
+    <a href="#elec"><span class="rc">03</span>Electrics</a>
+    <a href="#eng"><span class="rc">04</span>Powerplant</a>
+    <a href="#fuel"><span class="rc">05</span>Fuel &amp; Oil</a>
+    <a href="#air"><span class="rc">06</span>Air Cond &amp; Press</a>
+    <a href="#ice"><span class="rc">07</span>Ice &amp; Fire</a>
+    <span class="sep"></span>
+    <a href="#b737"><span class="rc">08</span>Boeing 737NG</a>
+    <a href="#e195"><span class="rc">09</span>Embraer 195</a>
+  </div>
+</nav>
+
+<main>
+
+<div class="part-band">
+  <span class="pn">021</span>
+  <span class="pt">AIRFRAME &amp; SYSTEMS</span>
+  <span class="pd">Generic systems knowledge</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 01 STRUCTURES &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="struct">
+  <div class="sec-head"><span class="eyebrow">021 01</span><h2>Structures &amp; Materials</h2></div>
+  <p class="lede">Design philosophies and what each part of the airframe actually carries.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Design philosophies</h3>
+      <ul class="tight">
+        <li><b>Fail-safe</b> &mdash; more than one load-carrying component; the design relies on <b>redundant load paths</b>, so failure of one member does not cause failure of the structure.</li>
+        <li><b>Safe-life</b> &mdash; the component is retired after a <b>declared number of cycles or a time period</b>, whether or not it shows damage.</li>
+        <li><b>Damage tolerant</b> &mdash; damage is permitted provided it is detected before it becomes critical.</li>
+        <li><b>Redundancy</b> is the duplication, triplication or more of critical systems, so another can take over after a critical failure.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Structural members</h3>
+      <ul class="tight">
+        <li><b>Semi-monocoque fuselage</b> = <b>skin, frames and stringers</b>. The skin carries shear and pressurisation hoop loads.</li>
+        <li><b>Stringers</b> help the skin <b>withstand longitudinal compressive loads</b>.</li>
+        <li><b>Frames</b> give the fuselage its shape and distribute loads; <b>ribs</b> do the same in the wing, <b>maintaining the aerodynamic shape</b>.</li>
+        <li><b>Sandwich structures</b> are two thin sheets over a light core &mdash; strong for their weight, but <b>unsuitable for concentrated loads</b>.</li>
+        <li><b>Composites</b> are <em>not</em> equally strong in all directions, and they give a <em>higher</em> strength-to-weight ratio than metals.</li>
+        <li><b>Stress corrosion cracking</b> needs <b>tensile stress and a corrosive environment</b> together.</li>
+        <li><b>Elastic deformation</b> is temporary and reverses when the load is removed; plastic deformation is permanent.</li>
+        <li><b>Flutter</b> is avoided by <b>correct mass distribution within the control surface</b> (mass balancing).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; structures</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Fail-safe implies redundant load paths; a safe-life structure is based on a declared number of cycles. Are both correct?</summary><p class="a">Yes &mdash; both statements are correct</p></details>
+    <details class="q"><summary>For fail-safe designed structural components:</summary><p class="a">There is more than one load-carrying component and the design is based on redundancy</p></details>
+    <details class="q"><summary>What is the purpose of stringers in fuselage construction?</summary><p class="a">To assist the skin in withstanding longitudinal compressive loads</p></details>
+    <details class="q"><summary>A semi-monocoque fuselage structure usually consists of:</summary><p class="a">Skin, frames and stringers</p></details>
+    <details class="q"><summary>One function of a rib is to:</summary><p class="a">Maintain the aerodynamic shape of the wing</p></details>
+    <details class="q"><summary>A sandwich structural part is unsuitable for absorbing:</summary><p class="a">Concentrated loads</p></details>
+    <details class="q"><summary>Composite strength is the same in all directions, and composites give a lower strength/weight ratio than metals. Correct?</summary><p class="a">Both statements are incorrect</p></details>
+    <details class="q"><summary>What does stress corrosion cracking require?</summary><p class="a">Tensile stress and a corrosive environment</p></details>
+    <details class="q"><summary>Elastic deformation occurs when the shape change:</summary><p class="a">Is temporary and reverses after the force is removed</p></details>
+    <details class="q"><summary>One design method to avoid control surface flutter is:</summary><p class="a">Ensuring correct mass distribution within the control surface</p></details>
+    <details class="q"><summary>What is redundancy in systems?</summary><p class="a">The duplication, triplication or more of critical systems</p></details>
+    <details class="q"><summary>What is the main idea behind duplicating or triplicating systems?</summary><p class="a">To allow another system to take over after a critical failure</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 02 HYDRAULICS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="hyd">
+  <div class="sec-head"><span class="eyebrow">021 02</span><h2>Hydraulics, Gear &amp; Brakes</h2></div>
+  <p class="lede">One pressure, one fluid type, and a handful of components that recur in every question.</p>
+
+  <div class="numbers">
+    <div class="nh">Hydraulic numbers</div>
+    <div class="nlist">
+      <div class="nrow"><span>Transport system pressure</span><span class="v">3000 psi</span></div>
+      <div class="nrow"><span>Fluid type</span><span class="v">synthetic (phosphate ester)</span></div>
+      <div class="nrow"><span>Hydraulic pressure</span><span class="v">force / area</span></div>
+      <div class="nrow"><span>Hydraulic power</span><span class="v">pressure &times; volume flow</span></div>
+      <div class="nrow"><span>Hydroplaning friction</span><span class="v">&asymp; 0</span></div>
+      <div class="nrow"><span>PTU driven</span><span class="v">hydraulically</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Fluid</b> must be <b>incompressible, low-flammability</b>, and resist cavitation &mdash; <b>synthetic fluid resists cavitation best</b>. It is <b>irritating to eyes and skin</b>.</li>
+        <li>An <b>actuator (jack)</b> converts pressure into <b>linear motion</b>. A <b>pressure relief valve</b> protects against excessive pressure.</li>
+        <li>An <b>accumulator</b> stores energy and <b>supplies an emergency reserve in the event of a hydraulic failure</b>. Pre-charged to 1200 psi in a 3000 psi system, its gauge reads <b>3000 psi</b> when the system is pressurised.</li>
+        <li>Reservoir level <b>fluctuates with jack displacement and accumulator pressure</b>, even with no leaks.</li>
+        <li>The <b>RAT</b> provides emergency hydraulic power for the <b>flight controls</b> after loss of engine-driven power.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li>An <b>engine-driven pump delivers about six times the volume of an electric pump</b>.</li>
+        <li>Losing the main brake source: an <b>alternate hydraulic system takes over</b>.</li>
+        <li><b>Autobrake</b> applies the selected level with anti-skid, triggered by <b>main-wheel spin-up and weight-on-wheels logic</b>.</li>
+        <li>A <b>torsion (torque) link</b> prevents rotation of the oleo strut piston. An <b>anti-retract latch</b> blocks the gear lever <b>on the ground</b>.</li>
+        <li>An <b>under-inflated tyre wears at the shoulders</b>; an over-inflated one wears in the centre.</li>
+        <li><b>Trailing edge flaps</b> on large transports are <b>hydraulically powered with electrical backup</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; hydraulics</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Large transport aircraft hydraulic systems usually operate at:</summary><p class="a">3000 psi</p></details>
+    <details class="q"><summary>Which hydraulic fluid is most used in modern transport aeroplanes?</summary><p class="a">Synthetic oil</p></details>
+    <details class="q"><summary>Which hydraulic fluid has the highest resistance to cavitation?</summary><p class="a">Synthetic fluid</p></details>
+    <details class="q"><summary>What is a desired property of hydraulic fluid?</summary><p class="a">Low flammability</p></details>
+    <details class="q"><summary>Hydraulic pressure is:</summary><p class="a">Force divided by area</p></details>
+    <details class="q"><summary>Hydraulic power is a function of:</summary><p class="a">System pressure and volume flow</p></details>
+    <details class="q"><summary>An accumulator pre-charged to 1200 psi in a 3000 psi system will indicate:</summary><p class="a">3000 psi</p></details>
+    <details class="q"><summary>What is the purpose of an accumulator in a hydraulic brake system?</summary><p class="a">To supply an emergency reserve of power in the event of a hydraulic failure</p></details>
+    <details class="q"><summary>Discounting leaks, the hydraulic reservoir level will:</summary><p class="a">Fluctuate with jack displacement and accumulator pressure</p></details>
+    <details class="q"><summary>What does the RAT provide?</summary><p class="a">Emergency hydraulic power for the flight controls after loss of engine-driven hydraulic power</p></details>
+    <details class="q"><summary>How is the PTU driven?</summary><p class="a">Hydraulically</p></details>
+    <details class="q"><summary>Which component converts hydraulic pressure into linear motion?</summary><p class="a">An actuator (jack)</p></details>
+    <details class="q"><summary>What protects against excessive hydraulic pressure?</summary><p class="a">A pressure relief valve</p></details>
+    <details class="q"><summary>After loss of the main hydraulic brake source on a modern transport?</summary><p class="a">An alternate hydraulic system takes over</p></details>
+    <details class="q"><summary>How does the autobrake system apply braking?</summary><p class="a">By main-wheel spin-up and weight-on-wheels logic, together with anti-skid</p></details>
+    <details class="q"><summary>During hydroplaning, the friction coefficient is approximately:</summary><p class="a">0</p></details>
+    <details class="q"><summary>What does a torsion (torque) link do?</summary><p class="a">Prevents rotation of the oleo strut piston</p></details>
+    <details class="q"><summary>When does an anti-retract latch block the landing gear lever?</summary><p class="a">When the aircraft is on the ground</p></details>
+    <details class="q"><summary>An under-inflated tyre will:</summary><p class="a">Experience increased wear at the shoulders</p></details>
+    <details class="q"><summary>How are trailing edge flaps normally powered on large transports?</summary><p class="a">Hydraulically, with electrical backup</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 03 ELECTRICS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="elec">
+  <div class="sec-head"><span class="eyebrow">021 03</span><h2>Electrics</h2></div>
+  <p class="lede">Ohm's law, the AC chain, and what the CSD is for.</p>
+
+  <div class="numbers">
+    <div class="nh">Electrical numbers</div>
+    <div class="nlist">
+      <div class="nrow"><span>AC supply</span><span class="v">115/200 V, 3-phase</span></div>
+      <div class="nrow"><span>AC frequency</span><span class="v">400 Hz</span></div>
+      <div class="nrow"><span>DC supply</span><span class="v">28 V (via TRU)</span></div>
+      <div class="nrow"><span>Ohm's law</span><span class="v">I = V / R</span></div>
+      <div class="nrow"><span>Fuse rating</span><span class="v">amperes</span></div>
+      <div class="nrow"><span>Capacitance unit</span><span class="v">farad</span></div>
+      <div class="nrow"><span>Delta 3-phase line current</span><span class="v">1.73 &times; phase current</span></div>
+      <div class="nrow"><span>Generator frequency</span><span class="v">pole pairs &times; rotor speed</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Generation</h3>
+      <ul class="tight">
+        <li>A <b>CSD</b> drives the generator at <b>constant speed</b> so that the output <b>frequency stays constant</b>. Combined with the generator it becomes an <b>IDG</b>.</li>
+        <li>If the <b>CSD temperature indicator enters the red arc</b>, the pilot must <b>disconnect it &mdash; and that generator is lost for the rest of the flight</b>.</li>
+        <li><b>Generator output voltage is regulated by field strength.</b></li>
+        <li>AC generators in <b>parallel must have the same voltage and frequency</b>; <b>reactive load is balanced by the excitation current</b>, real load by the drive.</li>
+        <li>For <b>DC</b> generators to share load, <b>voltages must be almost equal</b>. A DC voltage regulator sits <b>in series with the shunt field coil</b>.</li>
+        <li>The <b>generator breaker</b> closes when generator voltage exceeds battery voltage, and opens when the reverse is true.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Conversion &amp; protection</h3>
+      <ul class="tight">
+        <li>An <b>inverter converts DC into AC</b>. A <b>TRU</b> does the reverse. A <b>relay is an electromagnetically operated switch</b>.</li>
+        <li>A <b>capacitor</b> in an AC circuit makes the <b>voltage lag the current by 90&deg;</b>; increasing frequency at constant voltage <b>increases the current</b>.</li>
+        <li>A <b>thermal current limiter</b> allows a <b>short-term overload before rupturing</b>.</li>
+        <li>An <b>open circuit</b> means <b>loss of continuity, so components cannot function</b>.</li>
+        <li><b>Pulling the fire shut-off handle</b> opens the <b>exciter control relay and the generator breaker</b>.</li>
+        <li>The <b>APU AC generator</b> supplies <b>three-phase 115/200 V, 400 Hz</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; electrics</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Regarding Ohm's law, the current in a circuit is:</summary><p class="a">Directly proportional to voltage and inversely proportional to resistance</p></details>
+    <details class="q"><summary>What is the most widely used AC frequency in aircraft?</summary><p class="a">400 Hz</p></details>
+    <details class="q"><summary>What does the APU AC generator supply?</summary><p class="a">Three-phase 115/200 V, 400 Hz AC</p></details>
+    <details class="q"><summary>What is the main purpose of a Constant Speed Drive?</summary><p class="a">To maintain a constant frequency &mdash; by driving the generator at constant speed</p></details>
+    <details class="q"><summary>In flight, if the CSD temperature indicator is in the red arc:</summary><p class="a">The pilot must disconnect it, and the generator is not available for the rest of the flight</p></details>
+    <details class="q"><summary>How is generator output voltage regulated?</summary><p class="a">By field strength</p></details>
+    <details class="q"><summary>When AC generators are connected in parallel, how are reactive loads balanced?</summary><p class="a">By means of the excitation current</p></details>
+    <details class="q"><summary>When AC generators operate in parallel they must have the same:</summary><p class="a">Voltage and frequency</p></details>
+    <details class="q"><summary>For DC generators to share load equally in parallel:</summary><p class="a">Their voltages must be almost equal</p></details>
+    <details class="q"><summary>The function of the generator breaker is to:</summary><p class="a">Close when generator voltage is greater than battery voltage, and open when the opposite is true</p></details>
+    <details class="q"><summary>What is an inverter?</summary><p class="a">A unit used to convert DC into AC</p></details>
+    <details class="q"><summary>What is a relay?</summary><p class="a">An electromagnetically operated switch</p></details>
+    <details class="q"><summary>In an AC circuit, a capacitor causes the:</summary><p class="a">Voltage to lag the current by 90&deg;</p></details>
+    <details class="q"><summary>AC voltage across a capacitor constant, frequency increased &mdash; the current will:</summary><p class="a">Increase</p></details>
+    <details class="q"><summary>In a delta-connected three-phase system:</summary><p class="a">Line current = 1.73 &times; phase current; line voltage = phase voltage</p></details>
+    <details class="q"><summary>AC generator frequency depends on:</summary><p class="a">The number of pole pairs and the rotor speed</p></details>
+    <details class="q"><summary>What does a thermal current-limiter fuse allow?</summary><p class="a">A short-term overload before rupturing</p></details>
+    <details class="q"><summary>Electrical fuse ratings are expressed in:</summary><p class="a">Amperes</p></details>
+    <details class="q"><summary>What is the unit of capacitance?</summary><p class="a">The farad</p></details>
+    <details class="q"><summary>What does pulling the fire shut-off handle cause?</summary><p class="a">The exciter control relay and the generator breaker to open</p></details>
+    <details class="q"><summary>A boost pump circuit breaker trips in cruise and cannot be reset. What happens?</summary><p class="a">The pump remains inoperative</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 04 POWERPLANT &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="eng">
+  <div class="sec-head"><span class="eyebrow">021 04</span><h2>Powerplant</h2></div>
+  <p class="lede">Follow the gas through the engine once and most of this topic is settled.</p>
+
+  <figure>
+    <svg viewBox="0 0 800 340" role="img" aria-label="Gas path through a turbofan showing how pressure, temperature and velocity change through intake, compressor, combustor, turbine and nozzle">
+      <!-- engine outline -->
+      <path d="M60 100 L170 100 L300 116 L470 116 L560 106 L700 132" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M60 190 L170 190 L300 174 L470 174 L560 184 L700 158" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="60" y1="100" x2="60" y2="190" stroke="currentColor" stroke-width="1.6"/>
+      <line x1="700" y1="132" x2="700" y2="158" stroke="currentColor" stroke-width="1.6"/>
+      <!-- station dividers -->
+      <g stroke="currentColor" stroke-width="1" stroke-dasharray="4 4" opacity=".7">
+        <line x1="170" y1="98" x2="170" y2="192"/>
+        <line x1="300" y1="114" x2="300" y2="176"/>
+        <line x1="470" y1="114" x2="470" y2="176"/>
+        <line x1="560" y1="106" x2="560" y2="186"/>
+      </g>
+      <!-- combustor -->
+      <rect x="302" y="126" width="166" height="38" rx="16" fill="#A8322A" opacity=".26" stroke="#A8322A" stroke-width="1.4"/>
+      <text x="385" y="150" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">COMBUSTION</text>
+      <!-- labels -->
+      <g font-size="11.5" text-anchor="middle" fill="currentColor">
+        <text x="115" y="212">INTAKE</text>
+        <text x="235" y="212">COMPRESSOR</text>
+        <text x="385" y="212">CHAMBER</text>
+        <text x="515" y="212">TURBINE</text>
+        <text x="640" y="212">NOZZLE</text>
+      </g>
+      <!-- curves -->
+      <text x="34" y="252" font-size="11.5" fill="#A8322A" font-weight="600">T</text>
+      <polyline points="60,272 170,270 300,254 470,232 560,258 700,266" fill="none" stroke="#A8322A" stroke-width="2.4"/>
+      <text x="34" y="292" font-size="11.5" fill="#2A5570" font-weight="600">P</text>
+      <polyline points="60,300 170,296 300,278 470,276 560,300 700,310" fill="none" stroke="#2A5570" stroke-width="2.4"/>
+      <text x="34" y="324" font-size="11.5" fill="#14706A" font-weight="600">V</text>
+      <polyline points="60,320 170,326 300,330 470,330 560,318 700,290" fill="none" stroke="#14706A" stroke-width="2.4"/>
+      <text x="740" y="266" font-size="11" fill="#A8322A">temperature</text>
+      <text x="740" y="310" font-size="11" fill="#2A5570">pressure</text>
+      <text x="740" y="290" font-size="11" fill="#14706A">velocity</text>
+
+      <text x="235" y="80" font-size="11" text-anchor="middle" fill="currentColor">velocity down, pressure up</text>
+      <text x="515" y="80" font-size="11" text-anchor="middle" fill="currentColor">pressure down, work extracted</text>
+      <text x="640" y="80" font-size="11" text-anchor="middle" fill="currentColor">velocity up</text>
+      <text x="385" y="96" font-size="11" text-anchor="middle" fill="#A8322A">temperature peak</text>
+    </svg>
+    <figcaption><b>Each section trades one quantity for another.</b> The compressor converts velocity into pressure; the combustor adds heat at roughly constant pressure; the turbine converts pressure back into work to drive the compressor; the nozzle turns what is left into velocity, which is thrust. That is also why a <b>divergent subsonic intake</b> slows the flow and raises static pressure while <b>total temperature stays constant</b> &mdash; no work and no heat are added there.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3>Compressor &amp; turbine</h3>
+      <ul class="tight">
+        <li><b>Compressor stage</b>: velocity decreases, <b>pressure increases</b>. <b>Turbine stator (nozzle guide vanes)</b>: <b>velocity increases, static pressure decreases</b>.</li>
+        <li>Axial compressor <b>pressure ratio is set primarily by the number of stages</b>; a <b>centrifugal</b> compressor manages about <b>12:1</b>.</li>
+        <li><b>Compressor stall</b> comes from <b>axial velocity too low relative to rotor speed</b>, or from <b>distorted intake airflow</b>. If axial velocity rises relative to blade speed, the <b>stall margin increases</b>.</li>
+        <li><b>Variable bypass valves</b> prevent fan and LP compressor stall during <b>start and low rotor speeds</b>.</li>
+        <li>The <b>diffuser</b> sits <b>in front of the combustion chamber</b>. An <b>annular</b> chamber gives <b>more favourable thermal load distribution on the HP turbine</b>.</li>
+        <li><b>EGT is measured at the HP turbine outlet</b>; gas temperature is limited to protect the <b>turbine blades</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Thrust &amp; control</h3>
+      <ul class="tight">
+        <li><b>Bypass ratio</b> = <b>cold (bypass) mass flow &divide; hot (core) mass flow</b>. 888 &divide; 111 = <b>8</b>; 200 &divide; 20 = <b>10</b>.</li>
+        <li>Thrust is indicated by <b>EPR or N1</b>. At <b>constant EPR, thrust decreases as altitude increases</b>.</li>
+        <li>An engine is <b>flat rated</b> if thrust <b>stays constant with rising OAT up to a corner point and then falls</b>.</li>
+        <li><b>FADEC</b> is powered by its <b>own engine-mounted sources</b> in flight, and includes <b>overspeed and/or EGT protection</b>.</li>
+        <li>On high-bypass engines, <b>reverse thrust reverses only the fan airflow</b>.</li>
+        <li><b>Maximum Cruise Thrust is not a certified rating.</b></li>
+        <li><b>Jet noise</b> is reduced by <b>lowering exhaust velocity</b> &mdash; which is why high-bypass engines are quieter.</li>
+        <li>Using <b>bleed air decreases aircraft performance</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; powerplant</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>For a fan-jet engine, what is the bypass ratio?</summary><p class="a">Cold air mass flow divided by hot air mass flow</p></details>
+    <details class="q"><summary>Bypass mass flow 888 kg/s, HP compressor mass flow 111 kg/s &mdash; bypass ratio?</summary><p class="a">8</p></details>
+    <details class="q"><summary>What is true about a compressor stage in a turbine engine?</summary><p class="a">Velocity decreases and pressure increases</p></details>
+    <details class="q"><summary>In the stator of a turbine, how do gas velocity and static pressure vary?</summary><p class="a">Velocity increases and static pressure decreases</p></details>
+    <details class="q"><summary>What determines the pressure ratio of an axial compressor?</summary><p class="a">The number of stages</p></details>
+    <details class="q"><summary>Typical pressure ratio of a centrifugal compressor?</summary><p class="a">12 : 1</p></details>
+    <details class="q"><summary>What can cause compressor stall?</summary><p class="a">An axial airflow velocity that is low relative to the rotor speed &mdash; or distorted intake airflow</p></details>
+    <details class="q"><summary>What is the purpose of variable bypass valves in a high-bypass turbofan?</summary><p class="a">To prevent fan and LP compressor stall during engine start and at low rotor speeds</p></details>
+    <details class="q"><summary>In a divergent subsonic gas turbine intake, which parameter remains constant?</summary><p class="a">Total temperature &mdash; the speed decreases and the static pressure rises</p></details>
+    <details class="q"><summary>In a subsonic convergent duct:</summary><p class="a">Velocity increases, pressure decreases and temperature decreases</p></details>
+    <details class="q"><summary>Where is the diffuser located in a turbofan?</summary><p class="a">In front of the combustion chamber</p></details>
+    <details class="q"><summary>What is an advantage of an annular combustion chamber?</summary><p class="a">Reduced thermal stress on the turbine &mdash; a more favourable thermal load distribution on the HP turbine</p></details>
+    <details class="q"><summary>Where is EGT typically measured?</summary><p class="a">At the HP turbine outlet</p></details>
+    <details class="q"><summary>Why is gas temperature limited in a gas turbine?</summary><p class="a">To ensure turbine blade temperature limits are not exceeded</p></details>
+    <details class="q"><summary>What is the primary performance indicator for turbofan thrust?</summary><p class="a">Either EPR or N1</p></details>
+    <details class="q"><summary>With a constant EPR, what happens to thrust as altitude increases?</summary><p class="a">Thrust decreases</p></details>
+    <details class="q"><summary>An engine is flat-rated if maximum thrust:</summary><p class="a">Stays constant initially with increasing OAT and then decreases</p></details>
+    <details class="q"><summary>Where does FADEC sensor power come from in normal flight?</summary><p class="a">The FADEC power sources on the engine</p></details>
+    <details class="q"><summary>What protection does FADEC normally include?</summary><p class="a">Engine overspeed and/or EGT protection</p></details>
+    <details class="q"><summary>On most high bypass ratio engines, reverse thrust is achieved by reversing:</summary><p class="a">Only the direction of the fan airflow</p></details>
+    <details class="q"><summary>Which jet engine rating is NOT a certified rating?</summary><p class="a">Maximum Cruise Thrust</p></details>
+    <details class="q"><summary>How can jet exhaust noise be reduced?</summary><p class="a">By lowering the jet exhaust velocity</p></details>
+    <details class="q"><summary>If a twin-spool engine is controlled by N2 and the LP shaft ruptures:</summary><p class="a">Overspeed of the LP turbine may occur</p></details>
+    <details class="q"><summary>What is the effect of using compressor bleed air to power systems?</summary><p class="a">It decreases aircraft performance</p></details>
+    <details class="q"><summary>What can the APU substitute for on the ground?</summary><p class="a">The ground power unit, the starting system and the air-conditioning unit</p></details>
+    <details class="q"><summary>What do APU automatic controls protect against?</summary><p class="a">High TGT, overspeed, loss of oil pressure and high oil pressure</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 05 FUEL &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="fuel">
+  <div class="sec-head"><span class="eyebrow">021 05</span><h2>Fuel &amp; Oil</h2></div>
+  <p class="lede">Three fuels, one order to remember, and the fuel/oil heat exchanger trick.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Fuel</th><th>Freezing point</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>Jet A</b></td><td class="n">&minus;40 &deg;C</td><td>USA only; high flash point, low volatility</td></tr>
+        <tr><td><b>Jet A-1</b></td><td class="n">&minus;47 &deg;C</td><td>Standard commercial fuel worldwide</td></tr>
+        <tr><td><b>Jet B</b></td><td class="n">&minus;50 &deg;C</td><td>Wide-cut, more volatile, lower flash point</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><b>Decreasing freezing point: Jet A, Jet A-1, Jet B.</b> Jet A has a <b>higher freezing point and a higher flash point</b> than Jet B.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Cross-feed</b> lets you <b>feed any engine from any tank</b> and adjust fuel distribution.</li>
+        <li><b>Baffles</b> in the wing tanks <b>restrict fuel movement</b>.</li>
+        <li>A <b>compensated capacitance gauging system</b> compensates for <b>density changes due to temperature</b>.</li>
+        <li>The <b>automatic fuelling shut-off valve</b> stops fuelling at a <b>set level in the tank</b>.</li>
+        <li><b>Fuel dump systems</b> are required where <b>MTOW is significantly higher than MLW</b>.</li>
+        <li>LP fuel pumps are usually <b>electrically driven centrifugal pumps</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li>Fuel is <b>heated to prevent icing of the LP fuel filter</b>. The <b>fuel-cooled oil cooler</b> does both jobs at once: it <b>cools the oil and heats the fuel</b>.</li>
+        <li>An <b>internal leak in the fuel/oil heat exchanger downstream of the HP pump</b> makes the <b>oil level rise</b> &mdash; fuel is at the higher pressure.</li>
+        <li><b>Fuel flow</b> is measured <b>between the fuel control unit and the burners</b>.</li>
+        <li>The <b>pressurising and dump valve</b> admits fuel to the nozzles <b>only when pressure is sufficient for proper atomisation</b>.</li>
+        <li>A <b>pressure relief valve that does not seat</b> causes <b>low oil pressure</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; fuel &amp; oil</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Describe Jet A turbine kerosene.</summary><p class="a">Freezes at &minus;40 &deg;C, available in the USA only, high flash point and low volatility</p></details>
+    <details class="q"><summary>What is the correct order of decreasing freezing points?</summary><p class="a">Jet A, Jet A-1, Jet B</p></details>
+    <details class="q"><summary>Jet A vs Jet B &mdash; freezing point and flash point?</summary><p class="a">Jet A has both a higher freezing point and a higher flash point</p></details>
+    <details class="q"><summary>What can the cross-feed fuel system be used for?</summary><p class="a">To feed any engine from any fuel tank and adjust fuel distribution</p></details>
+    <details class="q"><summary>What is the purpose of baffles in a wing fuel tank?</summary><p class="a">To restrict fuel movement in the tank</p></details>
+    <details class="q"><summary>In a compensated capacitance fuel gauging system, what is compensated?</summary><p class="a">Changes in fuel density due to temperature</p></details>
+    <details class="q"><summary>What does the automatic fuelling shut-off valve do?</summary><p class="a">Stops fuelling as soon as a certain fuel level is reached in the tank</p></details>
+    <details class="q"><summary>When are fuel dump systems required?</summary><p class="a">On transport category aircraft where MTOW is significantly higher than MLW</p></details>
+    <details class="q"><summary>Why is fuel for gas turbine engines heated?</summary><p class="a">To prevent icing-up of the LP fuel filter</p></details>
+    <details class="q"><summary>What is the reason for a low pressure fuel-cooled oil cooler?</summary><p class="a">To cool the oil and heat the fuel</p></details>
+    <details class="q"><summary>Internal leakage of a fuel/oil heat exchanger downstream of the HP pump causes the oil level to:</summary><p class="a">Rise</p></details>
+    <details class="q"><summary>Where is fuel flow measured?</summary><p class="a">In the line between the fuel control unit and the engine burners</p></details>
+    <details class="q"><summary>What is the pressurising function of the pressurising and dump valve?</summary><p class="a">To admit fuel to the nozzles only when pressure is sufficient for proper atomisation</p></details>
+    <details class="q"><summary>A pressure relief valve that does not seat correctly causes:</summary><p class="a">Low oil pressure</p></details>
+    <details class="q"><summary>On most transport aircraft, fuel LP pumps are:</summary><p class="a">Electrically driven centrifugal pumps</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 06 AIR &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="air">
+  <div class="sec-head"><span class="eyebrow">021 06</span><h2>Air Conditioning &amp; Pressurisation</h2></div>
+  <p class="lede">The bootstrap cycle explains every air-conditioning question, and the outflow valve explains every pressurisation one.</p>
+
+  <figure>
+    <svg viewBox="0 0 820 260" role="img" aria-label="Bootstrap air cycle machine showing bleed air passing through the primary heat exchanger, compressor, secondary heat exchanger and turbine before reaching the cabin">
+      <defs><marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+      <g font-size="11.5">
+        <rect x="20" y="96" width="96" height="48" rx="3" fill="#A8322A" opacity=".22" stroke="#A8322A" stroke-width="1.4"/>
+        <text x="68" y="118" text-anchor="middle" fill="currentColor" font-weight="600">BLEED AIR</text>
+        <text x="68" y="134" text-anchor="middle" fill="currentColor">hot, high pressure</text>
+
+        <rect x="156" y="96" width="104" height="48" rx="3" fill="#2A5570" opacity=".20" stroke="#2A5570" stroke-width="1.4"/>
+        <text x="208" y="114" text-anchor="middle" fill="currentColor" font-weight="600">PRIMARY</text>
+        <text x="208" y="130" text-anchor="middle" fill="currentColor">heat exchanger</text>
+
+        <rect x="300" y="96" width="96" height="48" rx="3" fill="#A8322A" opacity=".18" stroke="#A8322A" stroke-width="1.4"/>
+        <text x="348" y="118" text-anchor="middle" fill="currentColor" font-weight="600">COMPRESSOR</text>
+        <text x="348" y="134" text-anchor="middle" fill="currentColor">P and T rise</text>
+
+        <rect x="436" y="96" width="104" height="48" rx="3" fill="#2A5570" opacity=".20" stroke="#2A5570" stroke-width="1.4"/>
+        <text x="488" y="114" text-anchor="middle" fill="currentColor" font-weight="600">SECONDARY</text>
+        <text x="488" y="130" text-anchor="middle" fill="currentColor">heat exchanger</text>
+
+        <rect x="580" y="96" width="96" height="48" rx="3" fill="#14706A" opacity=".22" stroke="#14706A" stroke-width="1.4"/>
+        <text x="628" y="118" text-anchor="middle" fill="currentColor" font-weight="600">TURBINE</text>
+        <text x="628" y="134" text-anchor="middle" fill="currentColor">expansion, T drops</text>
+
+        <rect x="716" y="96" width="88" height="48" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="760" y="124" text-anchor="middle" fill="currentColor" font-weight="600">CABIN</text>
+      </g>
+      <g stroke="currentColor" stroke-width="1.8" marker-end="url(#aa)">
+        <line x1="116" y1="120" x2="150" y2="120"/>
+        <line x1="260" y1="120" x2="294" y2="120"/>
+        <line x1="396" y1="120" x2="430" y2="120"/>
+        <line x1="540" y1="120" x2="574" y2="120"/>
+        <line x1="676" y1="120" x2="710" y2="120"/>
+      </g>
+      <!-- shaft link -->
+      <path d="M348 96 L348 60 L628 60 L628 96" fill="none" stroke="#14706A" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="488" y="52" font-size="11.5" text-anchor="middle" fill="#14706A" font-weight="600">common shaft &mdash; the turbine drives the compressor</text>
+      <!-- ram air -->
+      <text x="208" y="176" font-size="11" text-anchor="middle" fill="#2A5570">ram air</text>
+      <text x="488" y="176" font-size="11" text-anchor="middle" fill="#2A5570">ram air</text>
+      <line x1="208" y1="168" x2="208" y2="146" stroke="#2A5570" stroke-width="1.4" marker-end="url(#aa)"/>
+      <line x1="488" y1="168" x2="488" y2="146" stroke="#2A5570" stroke-width="1.4" marker-end="url(#aa)"/>
+      <text x="410" y="212" font-size="11.5" text-anchor="middle" fill="currentColor">The <tspan font-weight="600">pack cooling fan</tspan> drives ram air through both heat exchangers on the ground and in slow flight.</text>
+      <text x="410" y="232" font-size="11.5" text-anchor="middle" fill="currentColor">Bleed is taken from a <tspan font-weight="600">low-pressure compressor stage</tspan>, and from the HP stage only when demand requires it.</text>
+    </svg>
+    <figcaption><b>Why compress air you are trying to cool?</b> Because raising its temperature before the second heat exchanger makes that exchanger far more effective, and because the energy put in is recovered across the turbine &mdash; where expansion produces the real temperature drop. The turbine and compressor share one shaft, so the turbine's work drives the compressor: that loop is what "bootstrap" means.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3>Pressurisation</h3>
+      <ul class="tight">
+        <li>Cabin pressure is controlled by the <b>outflow valve</b>, which in level flight at constant cabin altitude sits <b>partially open</b>.</li>
+        <li><b>Cabin altitude</b> = cabin pressure expressed as an altitude. <b>Differential pressure</b> = <b>cabin pressure minus ambient pressure</b>.</li>
+        <li>Maximum differential on a modern transport is about <b>7&ndash;9 psi</b>; for a 41 000 ft certified ceiling, about <b>9 psi</b>.</li>
+        <li>In automatic mode the controller manages <b>cabin altitude, rate of change of cabin altitude, and the differential pressure limit</b>.</li>
+        <li>If all outflow valves close with packs on, the <b>differential rises to its maximum</b> (the relief valve then protects the structure).</li>
+        <li>A <b>cabin rate of descent means cabin pressure is increasing</b>. If cabin pressure falls, the cabin VSI shows a <b>rate of climb</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Air conditioning</h3>
+      <ul class="tight">
+        <li>Bleed is taken from the <b>low pressure compressor, and from the high pressure compressor when demand requires it</b>.</li>
+        <li>The <b>heat exchangers cool the bleed air before and after the ACM compressor</b>. The <b>ACM causes a pressure and temperature drop</b>.</li>
+        <li>The <b>pack inlet flow valve</b> maintains a <b>constant and sufficient mass flow to ventilate the cabin</b>.</li>
+        <li>Temperature is controlled <b>automatically by comparing outlet temperature with the selected temperature</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; air conditioning &amp; pressurisation</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Where is cabin air for modern aircraft usually taken from?</summary><p class="a">The low pressure compressor, and from the high pressure compressor if necessary</p></details>
+    <details class="q"><summary>In a bootstrap system, what is the purpose of the heat exchangers?</summary><p class="a">To cool the bleed air in front of and behind the compressor of the air cycle machine</p></details>
+    <details class="q"><summary>What does the turbine in a bootstrap system do?</summary><p class="a">Drives the compressor and creates a temperature drop</p></details>
+    <details class="q"><summary>What does the pack cooling fan provide?</summary><p class="a">Cooling air to the primary and secondary heat exchangers during slow flight and ground operation</p></details>
+    <details class="q"><summary>What is the purpose of the pack inlet flow valve?</summary><p class="a">To maintain a constant and sufficient air mass flow to ventilate the cabin</p></details>
+    <details class="q"><summary>How is air-conditioning temperature regulated?</summary><p class="a">Automatically, by sensing outlet temperature against the selected temperature</p></details>
+    <details class="q"><summary>What controls cabin pressurisation?</summary><p class="a">The cabin outflow valve</p></details>
+    <details class="q"><summary>During level flight at constant cabin altitude, the outflow valves are:</summary><p class="a">Partially open</p></details>
+    <details class="q"><summary>What is cabin altitude?</summary><p class="a">Cabin pressure expressed as an altitude</p></details>
+    <details class="q"><summary>What is cabin differential pressure?</summary><p class="a">Cabin pressure minus ambient pressure</p></details>
+    <details class="q"><summary>Maximum cabin differential on a modern large transport?</summary><p class="a">Approximately 7&ndash;9 psi</p></details>
+    <details class="q"><summary>Maximum cabin differential for an aeroplane certified to 41 000 ft?</summary><p class="a">Approximately 9 psi</p></details>
+    <details class="q"><summary>What does the cabin pressure controller do in automatic mode?</summary><p class="a">Controls cabin altitude, controls the rate of change of cabin altitude, and limits differential pressure</p></details>
+    <details class="q"><summary>If all outflow valves fully close in cruise with packs ON?</summary><p class="a">The differential pressure would go to its maximum value</p></details>
+    <details class="q"><summary>A cabin rate of descent results in:</summary><p class="a">A cabin pressure increase</p></details>
+    <details class="q"><summary>At FL310 the outflow valve fully opens and depressurisation occurs &mdash; what does the cabin VSI show?</summary><p class="a">Cabin altitude increases until the differential is zero, then it descends at the same rate as the aircraft</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 07 ICE & FIRE &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="ice">
+  <div class="sec-head"><span class="eyebrow">021 07</span><h2>Ice, Fire &amp; Oxygen</h2></div>
+  <p class="lede">Protection systems: what is heated by what, and how detection works.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Ice protection</h3>
+      <ul class="tight">
+        <li><b>Engine intakes</b>: <b>hot bleed air</b>. <b>Wings on large jets</b>: bleed air. <b>Pneumatic boots</b>: mainly <b>wings</b> on turboprops. <b>Propellers</b>: <b>electrical</b>. <b>Fluid (TKS) systems</b>: <b>wing leading edges</b>.</li>
+        <li><b>Windscreen heating</b> cycles on and off to hold roughly <b>18&ndash;35 &deg;C</b>.</li>
+        <li>A <b>differential pressure ice detector heats the small holes first</b>; the Smiths detector is <b>activated by an increase in dynamic pressure</b>.</li>
+        <li><b>AoA vanes</b> are protected by <b>electric heating</b>.</li>
+        <li>Loss of <b>static wick dischargers</b> causes <b>increased background noise and poor radio reception in precipitation</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Fire &amp; oxygen</h3>
+      <ul class="tight">
+        <li><b>Continuous loop detector</b>: when heated, its <b>resistance decreases and leakage current increases</b>. With no fault protection, an <b>accidental ground triggers the alarm</b>; a crushed element whose core does not touch the casing has <b>no effect</b>.</li>
+        <li><b>Smoke detectors</b> use a <b>labyrinth optical detector</b> reflecting light onto a photosensitive cell.</li>
+        <li>A <b>tailpipe fire</b> is fuel pooled in the exhaust igniting &mdash; visible flame, no engine fire warning.</li>
+        <li><b>Chemical oxygen generators</b> beat gaseous ones for the cabin: <b>easier maintenance and reduced risk of explosion</b>.</li>
+        <li>The <b>passenger mask is continuous-flow</b> and <b>should not be used if there is smoke in the cabin</b>. <b>PBE</b> protects crew against fumes and noxious gases.</li>
+        <li>A <b>diluter-demand regulator on NORMAL</b> will eventually deliver <b>100 % oxygen above a certain cabin altitude</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; ice, fire &amp; oxygen</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>How are engine air intakes of large transports protected against ice?</summary><p class="a">By hot bleed air</p></details>
+    <details class="q"><summary>Pneumatic mechanical ice protection systems are mainly used for:</summary><p class="a">Wings</p></details>
+    <details class="q"><summary>Propeller ice protection on most turboprops is:</summary><p class="a">Electrical</p></details>
+    <details class="q"><summary>Airborne fluid de-icing systems are mainly used on:</summary><p class="a">Wing leading edges</p></details>
+    <details class="q"><summary>Windscreen heating systems usually:</summary><p class="a">Cycle on and off to maintain roughly 18 &deg;C to 35 &deg;C</p></details>
+    <details class="q"><summary>What does a differential pressure ice accretion detector do?</summary><p class="a">It heats the small holes first</p></details>
+    <details class="q"><summary>What causes increased background noise and poor radio reception in heavy precipitation?</summary><p class="a">Loss of multiple static wick dischargers</p></details>
+    <details class="q"><summary>When part of a continuous loop fire detection system is heated:</summary><p class="a">Its resistance decreases and the leakage current increases</p></details>
+    <details class="q"><summary>Single-loop continuous fire detection with no fault protection &mdash; the line is accidentally grounded. What happens?</summary><p class="a">The fire alarm is triggered</p></details>
+    <details class="q"><summary>Same system, the element is crushed but the inner core does not touch the casing?</summary><p class="a">There will be no effect</p></details>
+    <details class="q"><summary>How do smoke detectors operate?</summary><p class="a">A labyrinth optical detector where light reflects onto a photosensitive cell</p></details>
+    <details class="q"><summary>What causes a tailpipe fire indication?</summary><p class="a">Fuel pooled in the exhaust ignites, causing a visible flame</p></details>
+    <details class="q"><summary>Advantages of a chemical oxygen source over a gaseous one for the cabin?</summary><p class="a">Easier maintenance and reduced risk of explosion</p></details>
+    <details class="q"><summary>Is it useful to use passenger oxygen in severe cabin smoke?</summary><p class="a">No &mdash; the passenger mask is continuous-flow and in principle should not be used with smoke in the cabin</p></details>
+    <details class="q"><summary>What does protective breathing equipment do?</summary><p class="a">Protects crew members against fumes and noxious gases</p></details>
+    <details class="q"><summary>A diluter-demand regulator selected to NORMAL:</summary><p class="a">Above a certain cabin altitude it will eventually provide 100 % oxygen</p></details>
+  </div>
+</section>
+
+<div class="part-band">
+  <span class="pn">TYPE</span>
+  <span class="pt">AIRCRAFT REFERENCE</span>
+  <span class="pd">Boeing 737NG and Embraer 195</span>
+</div>
+
+<div class="caution" style="margin-top:26px">
+  <span class="ch">How to use this part</span>
+  <p>These are <b>published typical figures for orientation in a technical interview</b>, not operating data. Numbers vary between variants, engine options and operators, and the <b>FCOM and your company's manuals always govern</b>. Learn the architecture &mdash; how many systems, what drives what, where the bleed comes from &mdash; because that is what interviewers actually ask.</p>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 08 B737 &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="b737">
+  <div class="sec-head"><span class="eyebrow">TYPE</span><h2>Boeing 737NG</h2></div>
+  <p class="lede">Conventional architecture with manual reversion &mdash; the 737 is the classic "cables and hydraulics" answer.</p>
+
+  <div class="numbers">
+    <div class="nh">737-800 reference figures</div>
+    <div class="nlist">
+      <div class="nrow"><span>Engines</span><span class="v">2 &times; CFM56-7B</span></div>
+      <div class="nrow"><span>Thrust</span><span class="v">up to 26 000 lbf</span></div>
+      <div class="nrow"><span>Derates</span><span class="v">24k / 22k lbf</span></div>
+      <div class="nrow"><span>Hydraulic systems</span><span class="v">A, B, Standby</span></div>
+      <div class="nrow"><span>Hydraulic pressure</span><span class="v">3000 psi</span></div>
+      <div class="nrow"><span>AC electrical</span><span class="v">3-phase 115 V 400 Hz</span></div>
+      <div class="nrow"><span>DC electrical</span><span class="v">28 V via TRUs</span></div>
+      <div class="nrow"><span>Generators</span><span class="v">2 engine IDGs + APU</span></div>
+      <div class="nrow"><span>Bleed stages</span><span class="v">5th, and 9th on demand</span></div>
+      <div class="nrow"><span>Max cabin differential</span><span class="v">9.1 psi</span></div>
+      <div class="nrow"><span>APU electrical + bleed to</span><span class="v">10 000 ft</span></div>
+      <div class="nrow"><span>APU bleed only to</span><span class="v">17 000 ft</span></div>
+      <div class="nrow"><span>APU electrical only to</span><span class="v">41 000 ft</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Hydraulics</h3>
+      <ul class="tight">
+        <li><b>Three systems: A, B and Standby.</b> A and B each have an <b>engine-driven pump plus an electric pump</b>; the <b>Standby system is electrically powered</b> and drives a reduced set of services.</li>
+        <li>An <b>engine-driven pump moves roughly six times the volume of an electric pump</b>.</li>
+        <li>Flight controls have <b>manual reversion</b> &mdash; ailerons and elevator can be flown by cable if both systems fail.</li>
+      </ul>
+      <h3>Air</h3>
+      <ul class="tight">
+        <li>Bleed from the <b>5th stage</b> of the compressor, switching to the <b>9th stage when demand is high</b>. Two packs, one outflow valve.</li>
+        <li>Wing anti-ice and engine cowl anti-ice both use bleed air.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Electrics</h3>
+      <ul class="tight">
+        <li>Two <b>engine-driven IDGs</b> supply <b>115 V 400 Hz three-phase AC</b>; the APU generator can supply either or both buses. <b>TRUs</b> give <b>28 V DC</b>.</li>
+        <li>The 737 does <b>not parallel</b> its generators &mdash; each bus is fed by one source at a time.</li>
+      </ul>
+      <h3>Airframe notes</h3>
+      <ul class="tight">
+        <li><b>Triple-slotted trailing edge flaps</b>, leading edge <b>slats and Krueger flaps</b> (the Kruegers sit inboard, near the root).</li>
+        <li>Main gear <b>has no doors</b> &mdash; the wheels sit exposed in the wells, sealed by the tyres themselves.</li>
+        <li>Engines are <b>pneumatically started</b> from bleed air.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 09 E195 &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="e195">
+  <div class="sec-head"><span class="eyebrow">TYPE</span><h2>Embraer 195</h2></div>
+  <p class="lede">A newer generation: three hydraulic systems, a PTU, partial fly-by-wire and Primus Epic avionics.</p>
+
+  <div class="numbers">
+    <div class="nh">E195 reference figures</div>
+    <div class="nlist">
+      <div class="nrow"><span>Engines</span><span class="v">2 &times; GE CF34-10E</span></div>
+      <div class="nrow"><span>Thrust</span><span class="v">&asymp; 20 000 lbf (89 kN)</span></div>
+      <div class="nrow"><span>Wingspan</span><span class="v">28.72 m</span></div>
+      <div class="nrow"><span>Length</span><span class="v">38.65 m</span></div>
+      <div class="nrow"><span>MTOW</span><span class="v">&asymp; 52 500 kg</span></div>
+      <div class="nrow"><span>Passengers</span><span class="v">&asymp; 118&ndash;124</span></div>
+      <div class="nrow"><span>Service ceiling</span><span class="v">41 000 ft</span></div>
+      <div class="nrow"><span>Range</span><span class="v">&asymp; 2300 NM</span></div>
+      <div class="nrow"><span>Cruise speed</span><span class="v">&asymp; M 0.78 / 480 kt</span></div>
+      <div class="nrow"><span>Hydraulic systems</span><span class="v">1, 2 and 3</span></div>
+      <div class="nrow"><span>Hydraulic pressure</span><span class="v">3000 psi (2900 &plusmn;200)</span></div>
+      <div class="nrow"><span>Avionics</span><span class="v">Honeywell Primus Epic</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Hydraulics</h3>
+      <ul class="tight">
+        <li><b>Three systems.</b> Systems <b>1 and 2</b> each have an <b>engine-driven pump as the primary source and an electric motor-driven pump as standby</b>.</li>
+        <li><b>System 3</b> is <b>fully electric</b>: one electric pump for normal use, a second for high-demand periods.</li>
+        <li>A <b>PTU</b> transfers power between systems &mdash; for example after a right engine EDP failure. It transfers <b>power, not fluid</b>.</li>
+        <li>Electric pump power comes from the <b>IDGs</b>, backed up by the <b>APU generator and the RAT</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Flight controls &amp; electrics</h3>
+      <ul class="tight">
+        <li>First-generation E-Jets are <b>partially fly-by-wire</b>: the <b>rudder and the multifunction spoilers are FBW</b>, while <b>ailerons and elevators remain cable-driven to hydraulic actuators</b>. Only the <b>E2 generation is full fly-by-wire</b> &mdash; a distinction worth getting right in an interview.</li>
+        <li>Electrical generation is <b>115 V 400 Hz AC</b> from two engine <b>IDGs</b>, plus an <b>APU generator</b> and a <b>RAT</b> for emergencies.</li>
+        <li>Avionics are <b>Honeywell Primus Epic</b> with five large displays.</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 800 300" role="img" aria-label="Side by side comparison of the Boeing 737NG and Embraer 195 hydraulic architectures">
+      <text x="200" y="26" font-size="15" text-anchor="middle" fill="#A8322A" font-weight="600">BOEING 737NG</text>
+      <text x="600" y="26" font-size="15" text-anchor="middle" fill="#2A5570" font-weight="600">EMBRAER 195</text>
+      <line x1="400" y1="40" x2="400" y2="286" stroke="currentColor" stroke-width="1" opacity=".4"/>
+
+      <!-- 737 -->
+      <g font-size="11.5">
+        <rect x="40" y="56" width="150" height="62" rx="3" fill="#A8322A" opacity=".16" stroke="#A8322A" stroke-width="1.3"/>
+        <text x="115" y="78" text-anchor="middle" fill="currentColor" font-weight="600">SYSTEM A</text>
+        <text x="115" y="94" text-anchor="middle" fill="currentColor">engine 1 EDP</text>
+        <text x="115" y="109" text-anchor="middle" fill="currentColor">+ electric pump</text>
+
+        <rect x="210" y="56" width="150" height="62" rx="3" fill="#A8322A" opacity=".16" stroke="#A8322A" stroke-width="1.3"/>
+        <text x="285" y="78" text-anchor="middle" fill="currentColor" font-weight="600">SYSTEM B</text>
+        <text x="285" y="94" text-anchor="middle" fill="currentColor">engine 2 EDP</text>
+        <text x="285" y="109" text-anchor="middle" fill="currentColor">+ electric pump</text>
+
+        <rect x="125" y="140" width="150" height="52" rx="3" fill="#A8322A" opacity=".10" stroke="#A8322A" stroke-width="1.3" stroke-dasharray="5 3"/>
+        <text x="200" y="162" text-anchor="middle" fill="currentColor" font-weight="600">STANDBY</text>
+        <text x="200" y="178" text-anchor="middle" fill="currentColor">electric only</text>
+
+        <text x="200" y="220" text-anchor="middle" fill="currentColor" font-weight="600">Manual reversion available</text>
+        <text x="200" y="238" text-anchor="middle" fill="currentColor">cables back up aileron and elevator</text>
+        <text x="200" y="266" text-anchor="middle" fill="currentColor">No PTU &mdash; the standby system is the third source</text>
+      </g>
+
+      <!-- E195 -->
+      <g font-size="11.5">
+        <rect x="436" y="56" width="150" height="62" rx="3" fill="#2A5570" opacity=".16" stroke="#2A5570" stroke-width="1.3"/>
+        <text x="511" y="78" text-anchor="middle" fill="currentColor" font-weight="600">SYSTEM 1</text>
+        <text x="511" y="94" text-anchor="middle" fill="currentColor">engine 1 EDP</text>
+        <text x="511" y="109" text-anchor="middle" fill="currentColor">+ EMDP standby</text>
+
+        <rect x="606" y="56" width="150" height="62" rx="3" fill="#2A5570" opacity=".16" stroke="#2A5570" stroke-width="1.3"/>
+        <text x="681" y="78" text-anchor="middle" fill="currentColor" font-weight="600">SYSTEM 2</text>
+        <text x="681" y="94" text-anchor="middle" fill="currentColor">engine 2 EDP</text>
+        <text x="681" y="109" text-anchor="middle" fill="currentColor">+ EMDP standby</text>
+
+        <rect x="521" y="140" width="150" height="52" rx="3" fill="#2A5570" opacity=".10" stroke="#2A5570" stroke-width="1.3"/>
+        <text x="596" y="162" text-anchor="middle" fill="currentColor" font-weight="600">SYSTEM 3</text>
+        <text x="596" y="178" text-anchor="middle" fill="currentColor">two electric pumps</text>
+
+        <!-- PTU -->
+        <path d="M511 118 L511 130 L681 130 L681 118" fill="none" stroke="#14706A" stroke-width="2"/>
+        <text x="596" y="126" font-size="11" text-anchor="middle" fill="#14706A" font-weight="600">PTU</text>
+
+        <text x="600" y="220" text-anchor="middle" fill="currentColor" font-weight="600">Partial fly-by-wire</text>
+        <text x="600" y="238" text-anchor="middle" fill="currentColor">rudder and spoilers FBW; ailerons and elevator by cable</text>
+        <text x="600" y="266" text-anchor="middle" fill="currentColor">PTU transfers power between systems 1 and 2</text>
+      </g>
+    </svg>
+    <figcaption><b>Both aircraft carry three hydraulic systems at 3000 psi, but they build the third one differently.</b> The 737's Standby is a reduced-capability electric system reserved for essential services; the E195's System 3 is a full electric system in its own right, and a <b>PTU</b> lets systems 1 and 2 back each other up &mdash; a transfer of <em>power</em> through a hydraulic motor-pump pair, never a transfer of fluid.</figcaption>
+  </figure>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>Airframe &amp; Systems</b> &mdash; revision sheet for airline selection screening</div>
+    <div>Question bank from the Selection material; type figures from published sources, not operating data</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.qbank').forEach(function(bank){
+  var btn = bank.querySelector('.reveal');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var items = bank.querySelectorAll('details.q');
+    var opening = btn.textContent.trim() === 'Reveal all';
+    items.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'Hide all' : 'Reveal all';
+  });
+});
+</script>
