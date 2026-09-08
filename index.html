@@ -18,6 +18,9 @@
   --s-met:#1D4E89;
   --s-pof:#C2470E;
   --s-law:#0C7580;
+  --s-nav:#8A6508;
+  --s-ins:#1F6B3A;
+  --s-agk:#A8322A;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -25,6 +28,7 @@
     --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
     --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
     --s-met:#6FA8DC; --s-pof:#F79155; --s-law:#45C8D4;
+    --s-nav:#F0C05A; --s-ins:#5FC98A; --s-agk:#F08A7E;
   }
 }
 :root[data-theme="dark"]{
@@ -32,6 +36,7 @@
   --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
   --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
   --s-met:#6FA8DC; --s-pof:#F79155; --s-law:#45C8D4;
+    --s-nav:#F0C05A; --s-ins:#5FC98A; --s-agk:#F08A7E;
 }
 
 *{box-sizing:border-box}
@@ -93,6 +98,9 @@ a.card:focus-visible{outline:2px solid var(--sc);outline-offset:3px}
 .s-met{--sc:var(--s-met)}
 .s-pof{--sc:var(--s-pof)}
 .s-law{--sc:var(--s-law)}
+.s-nav{--sc:var(--s-nav)}
+.s-ins{--sc:var(--s-ins)}
+.s-agk{--sc:var(--s-agk)}
 
 /* ---------- how it works ---------- */
 .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:0 30px;
@@ -124,7 +132,7 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
       <p class="mast-sub">Single-page revision sheets built from the CAE Oxford syllabus and a working selection question bank. Theory, diagrams and the real questions, organised by syllabus topic.</p>
     </div>
     <div class="mast-meta">
-      <div><b>3</b> sheets ready</div>
+      <div><b>6</b> sheets ready</div>
       <div><b>1516</b> questions in the bank</div>
       <div><b>11</b> subject areas</div>
     </div>
@@ -135,7 +143,7 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
 
   <div class="shead">
     <h2>Ready</h2>
-    <span class="count">3 sheets</span>
+    <span class="count">6 sheets</span>
   </div>
   <p class="snote">Each sheet is a self-contained page: click any question to reveal its answer, or use <em>Reveal all</em> to work through a topic.</p>
 
@@ -165,36 +173,39 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
       <span class="go">Open sheet &rarr;</span>
     </a>
 
+    <a class="card s-nav" href="https://issakzanini.github.io/atpl/nav/">
+      <div class="card-top"><span class="code">061 &middot; 033</span><span class="state">Ready</span></div>
+      <h3>Navigation &amp; Flight Planning</h3>
+      <p>Great circles and rhumb lines, magnetism, time, Mercator and Lambert charts, DR calculations, fuel policy, PSR and ETP, mass and balance.</p>
+      <div class="stats"><span><b>223</b> questions</span><span><b>9</b> topics</span><span><b>4</b> diagrams</span></div>
+      <span class="go">Open sheet &rarr;</span>
+    </a>
+
+    <a class="card s-ins" href="https://issakzanini.github.io/atpl/insrnav/">
+      <div class="card-top"><span class="code">022 &middot; 062</span><span class="state">Ready</span></div>
+      <h3>Instruments &amp; Radio Navigation</h3>
+      <p>Compass errors, pitot-static and the speed chain, gyroscopes, inertial systems, autoflight and FMS, GPWS and TCAS, ILS, radar and GNSS.</p>
+      <div class="stats"><span><b>340</b> questions</span><span><b>11</b> topics</span><span><b>4</b> diagrams</span></div>
+      <span class="go">Open sheet &rarr;</span>
+    </a>
+
+    <a class="card s-agk" href="https://issakzanini.github.io/atpl/agk/">
+      <div class="card-top"><span class="code">021</span><span class="state">Ready</span></div>
+      <h3>Airframe &amp; Systems</h3>
+      <p>Structures, hydraulics, electrics, powerplant, fuel, air conditioning and pressurisation, ice and fire protection &mdash; plus a 737NG and E195 type reference.</p>
+      <div class="stats"><span><b>192</b> questions</span><span><b>9</b> topics</span><span><b>3</b> diagrams</span></div>
+      <span class="go">Open sheet &rarr;</span>
+    </a>
+
   </div>
 
   <div class="shead">
     <h2>Planned</h2>
-    <span class="count">5 subject areas</span>
+    <span class="count">2 subject areas</span>
   </div>
   <p class="snote">Question banks are in hand for each of these; the sheets are not built yet.</p>
 
   <div class="grid">
-
-    <div class="card soon">
-      <div class="card-top"><span class="code">022</span><span class="state">Planned</span></div>
-      <h3>Instrumentation</h3>
-      <p>Compasses and turning errors, air data instruments, gyros, autoflight, EFIS and warning systems.</p>
-      <div class="stats"><span><b>221</b> questions</span></div>
-    </div>
-
-    <div class="card soon">
-      <div class="card-top"><span class="code">060</span><span class="state">Planned</span></div>
-      <h3>Navigation</h3>
-      <p>General navigation and charts, radio navigation aids, ILS and markers, DME, plus the mass and balance items in the same bank.</p>
-      <div class="stats"><span><b>209</b> questions</span><span>GNAV + RNAV + M&amp;B</span></div>
-    </div>
-
-    <div class="card soon">
-      <div class="card-top"><span class="code">021</span><span class="state">Planned</span></div>
-      <h3>Airframe &amp; Systems</h3>
-      <p>Engines and bypass, electrics, pneumatics and air conditioning, fire protection, hydraulics, fuel and ice protection.</p>
-      <div class="stats"><span><b>201</b> questions</span></div>
-    </div>
 
     <div class="card soon">
       <div class="card-top"><span class="code">040</span><span class="state">Planned</span></div>
