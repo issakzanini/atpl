@@ -1,1 +1,982 @@
+<meta charset="utf-8">
+<title>Instruments &amp; Radio Navigation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F2F6F2;
+  --surface:#FFFFFF;
+  --surface-2:#E8EEE8;
+  --ink:#14241A;
+  --muted:#5A6C5E;
+  --line:#C6D4C8;
+  --line-soft:#DCE6DD;
+  --grn:#1F6B3A;
+  --blu:#24557F;
+  --och:#8F620A;
+  --caution:#A83A22;
+  --accent:#1F6B3A;
+  --accent-wash:#E4EFE7;
+  --caution-wash:#F8EAE4;
+  --shadow:0 1px 2px rgba(20,36,26,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1410; --surface:#141E17; --surface-2:#1D2A20; --ink:#E2EAE4;
+    --muted:#93A597; --line:#29392E; --line-soft:#1F2C23;
+    --grn:#5FC98A; --blu:#7FB0D8; --och:#E5B45C; --caution:#EF9075;
+    --accent:#5FC98A; --accent-wash:#132119; --caution-wash:#271812;
+    --shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1410; --surface:#141E17; --surface-2:#1D2A20; --ink:#E2EAE4;
+  --muted:#93A597; --line:#29392E; --line-soft:#1F2C23;
+  --grn:#5FC98A; --blu:#7FB0D8; --och:#E5B45C; --caution:#EF9075;
+  --accent:#5FC98A; --accent-wash:#132119; --caution-wash:#271812;
+  --shadow:0 1px 2px rgba(0,0,0,.45);
+}
 
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono,.num,td.n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+.masthead{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast-in{max-width:1080px;margin:0 auto;padding:26px 24px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;justify-content:space-between}
+.mast-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.subj-code{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  letter-spacing:.1em;color:var(--surface);background:var(--grn);padding:5px 9px;border-radius:2px}
+h1{margin:0;font-size:44px;line-height:.98;font-weight:700;letter-spacing:.005em}
+.mast-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;max-width:46ch}
+.mast-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:1.9;letter-spacing:.04em}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+.rail{position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.rail-in{max-width:1080px;margin:0 auto;padding:9px 24px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.rail a{flex:0 0 auto;text-decoration:none;color:var(--muted);
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;padding:5px 10px;border-radius:3px;white-space:nowrap}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .rc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);margin-right:5px}
+.rail .sep{flex:0 0 auto;width:1px;background:var(--line);margin:2px 6px}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.part-band{display:flex;align-items:baseline;gap:14px;margin:46px 0 -14px;
+  padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.part-band .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--surface);background:var(--ink);padding:3px 8px;border-radius:2px;letter-spacing:.09em}
+.part-band .pt{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;letter-spacing:.02em}
+.part-band .pd{font-size:13.5px;color:var(--muted);margin-left:auto;text-align:right}
+
+section{padding:46px 0 8px;border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.1em}
+h2{margin:0;font-size:31px;font-weight:700;line-height:1.08}
+.lede{margin:2px 0 26px;color:var(--muted);font-size:15px;max-width:64ch}
+h3{margin:30px 0 8px;font-size:16px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--ink);padding-bottom:5px;border-bottom:1px solid var(--line)}
+p{margin:0 0 12px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 26px;align-items:start}
+ul.tight,ol.tight{margin:0 0 12px;padding-left:19px;max-width:68ch}
+ul.tight li,ol.tight li{margin-bottom:5px}
+b,strong{font-weight:600}
+.k{color:var(--accent);font-weight:600}
+
+.numbers{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--grn);
+  border-radius:2px;padding:15px 18px;margin:18px 0;box-shadow:var(--shadow)}
+.numbers .nh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:9px}
+.nlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 26px;margin:0}
+.nrow{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:4px 0;border-bottom:1px dotted var(--line-soft);font-size:14.5px}
+.nrow:last-child{border-bottom:0}
+.nrow span:first-child{color:var(--muted)}
+.nrow .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13.5px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.tw{overflow-x:auto;margin:14px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:440px}
+th{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.07em;text-align:left;
+  border-bottom:1.5px solid var(--ink);padding:6px 10px 5px;color:var(--ink)}
+td{padding:6px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+tbody tr:hover{background:var(--surface-2)}
+
+.caution{background:var(--caution-wash);border:1px solid var(--caution);border-radius:2px;
+  padding:12px 15px;margin:16px 0;font-size:15px}
+.caution .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--caution);display:block;margin-bottom:3px}
+.caution p{margin:0;max-width:none}
+
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:16px 16px 10px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink)}
+figcaption{margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);
+  font-size:13.5px;color:var(--muted);line-height:1.5}
+figcaption b{color:var(--ink)}
+
+.qbank{margin:30px 0 10px;background:var(--surface-2);border-radius:3px;padding:16px 18px 18px}
+.qb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.qb-title{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.qb-title em{font-style:normal;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.reveal{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);background:transparent;
+  border:1px solid var(--accent);border-radius:2px;padding:4px 11px;cursor:pointer}
+.reveal:hover{background:var(--accent);color:var(--surface)}
+.reveal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q{border-bottom:1px solid var(--line);padding:0}
+details.q:last-of-type{border-bottom:0}
+details.q summary{cursor:pointer;list-style:none;padding:9px 30px 9px 0;position:relative;
+  font-size:15.5px;line-height:1.45}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";position:absolute;right:4px;top:8px;
+  font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:17px;line-height:1.4}
+details.q[open] summary::after{content:"\2212";color:var(--accent)}
+details.q summary:hover{color:var(--accent)}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q .a{margin:0 0 12px;padding:9px 13px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:0 2px 2px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.6;max-width:none}
+details.q .a .why{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--muted);line-height:1.5}
+
+.work{background:var(--surface);border:1px dashed var(--line);border-radius:2px;
+  padding:13px 16px;margin:16px 0;font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75}
+.work .wh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.work .res{color:var(--accent);font-weight:600}
+
+footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24px;margin-top:40px}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:34px} h2{font-size:26px}
+  .mast-meta{text-align:left} body{font-size:16px}
+  .part-band{flex-wrap:wrap} .part-band .pd{margin-left:0;text-align:left;width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div class="mast-title">
+      <span class="subj-code">022 &middot; 062</span>
+      <div>
+        <h1>Instruments &amp; Radio Navigation</h1>
+        <p class="mast-sub">Revision sheet for airline selection screening &mdash; theory, diagrams and the real question bank, by syllabus topic.</p>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div><b>340</b> questions in the banks</div>
+      <div>EASA ATPL(A) &middot; CAE Oxford 022 / 060-2</div>
+      <div>Click a question to reveal</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Topics">
+  <div class="rail-in">
+    <a href="#compass"><span class="rc">01</span>Compass</a>
+    <a href="#pitot"><span class="rc">02</span>Pitot-Static</a>
+    <a href="#gyro"><span class="rc">03</span>Gyroscopes</a>
+    <a href="#inertial"><span class="rc">04</span>Inertial</a>
+    <a href="#auto"><span class="rc">05</span>Autoflight &amp; FMS</a>
+    <a href="#warn"><span class="rc">06</span>Warning Systems</a>
+    <span class="sep"></span>
+    <a href="#prop"><span class="rc">07</span>Propagation</a>
+    <a href="#aids"><span class="rc">08</span>NDB, VOR, DME</a>
+    <a href="#ils"><span class="rc">09</span>ILS</a>
+    <a href="#radar"><span class="rc">10</span>Radar &amp; SSR</a>
+    <a href="#gnss"><span class="rc">11</span>GNSS &amp; PBN</a>
+  </div>
+</nav>
+
+<main>
+
+<div class="part-band">
+  <span class="pn">022</span>
+  <span class="pt">INSTRUMENTATION</span>
+  <span class="pd">What the instruments measure and how they lie</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 01 COMPASS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="compass">
+  <div class="sec-head"><span class="eyebrow">022 01</span><h2>Direct Reading Compass</h2></div>
+  <p class="lede">Nineteen questions in this bank, and all of them come from one fact: the magnet is pendulously suspended and the Earth's field dips.</p>
+
+  <figure>
+    <svg viewBox="0 0 760 300" role="img" aria-label="Compass rose showing where acceleration errors and turning errors are maximum and where they are zero">
+      <!-- acceleration -->
+      <text x="180" y="24" font-size="14" font-weight="600" fill="#1F6B3A">ACCELERATION ERROR</text>
+      <text x="180" y="40" font-size="11.5" text-anchor="middle" fill="currentColor">maximum on EAST / WEST &middot; zero on NORTH / SOUTH</text>
+      <circle cx="180" cy="165" r="90" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <!-- max sectors E/W -->
+      <path d="M180 165 L270 165 A90 90 0 0 0 245 102 Z" fill="#1F6B3A" opacity=".22"/>
+      <path d="M180 165 L270 165 A90 90 0 0 1 245 228 Z" fill="#1F6B3A" opacity=".22"/>
+      <path d="M180 165 L90 165 A90 90 0 0 0 115 228 Z" fill="#1F6B3A" opacity=".22"/>
+      <path d="M180 165 L90 165 A90 90 0 0 1 115 102 Z" fill="#1F6B3A" opacity=".22"/>
+      <text x="180" y="66" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">N</text>
+      <text x="180" y="278" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">S</text>
+      <text x="288" y="170" font-size="13" text-anchor="middle" fill="#1F6B3A" font-weight="600">E</text>
+      <text x="72" y="170" font-size="13" text-anchor="middle" fill="#1F6B3A" font-weight="600">W</text>
+      <text x="180" y="160" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">A N D S</text>
+      <text x="180" y="178" font-size="10.5" text-anchor="middle" fill="currentColor">Accelerate &rarr; North</text>
+      <text x="180" y="192" font-size="10.5" text-anchor="middle" fill="currentColor">Decelerate &rarr; South</text>
+
+      <!-- turning -->
+      <text x="560" y="24" font-size="14" font-weight="600" fill="#24557F">TURNING ERROR</text>
+      <text x="560" y="40" font-size="11.5" text-anchor="middle" fill="currentColor">maximum on NORTH / SOUTH &middot; zero on EAST / WEST</text>
+      <circle cx="560" cy="165" r="90" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M560 165 L560 75 A90 90 0 0 1 623 100 Z" fill="#24557F" opacity=".22"/>
+      <path d="M560 165 L560 75 A90 90 0 0 0 497 100 Z" fill="#24557F" opacity=".22"/>
+      <path d="M560 165 L560 255 A90 90 0 0 1 497 230 Z" fill="#24557F" opacity=".22"/>
+      <path d="M560 165 L560 255 A90 90 0 0 0 623 230 Z" fill="#24557F" opacity=".22"/>
+      <text x="560" y="66" font-size="13" text-anchor="middle" fill="#24557F" font-weight="600">N</text>
+      <text x="560" y="278" font-size="13" text-anchor="middle" fill="#24557F" font-weight="600">S</text>
+      <text x="668" y="170" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">E</text>
+      <text x="452" y="170" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">W</text>
+      <text x="560" y="160" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">U N O S</text>
+      <text x="560" y="178" font-size="10.5" text-anchor="middle" fill="currentColor">Undershoot North</text>
+      <text x="560" y="192" font-size="10.5" text-anchor="middle" fill="currentColor">Overshoot South</text>
+    </svg>
+    <figcaption><b>The two errors are exactly out of phase, and both grow with magnetic latitude.</b> Acceleration acts on the pendulous mass along the fore-and-aft axis, so it does nothing when the magnet already lies along that axis &mdash; on north or south. Turning tilts the card, which matters most when the card's north-seeking end is ahead or behind you. At the magnetic equator there is no dip, so <b>both errors vanish</b>; at the poles both are maximum.</figcaption>
+  </figure>
+
+  <div class="work">
+    <div class="wh">Compass to True &mdash; reverse the signs</div>
+    Compass Heading 124&deg;, Deviation &minus;3&deg;, Variation 4&deg;W<br>
+    MH = 124 &minus; 3 = 121&deg; &nbsp;&rarr;&nbsp; TH = 121 &minus; 4 = <span class="res">117&deg;</span><br>
+    <span style="color:var(--muted)">Going Compass &rarr; True, subtract West. Going True &rarr; Compass, add West.</span>
+  </div>
+
+  <ul class="tight">
+    <li>Turning right through <b>north</b> the compass <b>under-indicates</b> the turn, and <b>liquid swirl increases the effect</b>. Through <b>south</b> it over-indicates.</li>
+    <li><b>Hard iron</b> magnetism is <b>permanent</b>; <b>soft iron</b> is <b>temporary</b>. Compass calibration (swinging) reduces <b>deviation</b> and determines it <b>on any heading</b>.</li>
+    <li>A <b>flux valve</b> senses the direction of the Earth's field for a <b>remote reading (gyromagnetic) compass</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; compass</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Compass Heading 124&deg;, Deviation &minus;3&deg;, Variation 4&deg;W &mdash; what is the True Heading?</summary><p class="a">117&deg;</p></details>
+    <details class="q"><summary>The direct indicating compass is no longer reliable when approaching:</summary><p class="a">The magnetic poles</p></details>
+    <details class="q"><summary>What happens to a compass directly overhead the north magnetic pole?</summary><p class="a">The compass tip will point directly down</p></details>
+    <details class="q"><summary>NH: on an easterly heading, a longitudinal acceleration causes:</summary><p class="a">An apparent turn to the North</p></details>
+    <details class="q"><summary>NH: accelerating on a westerly heading, the compass card will turn:</summary><p class="a">Anti-clockwise, giving an apparent turn towards the North</p></details>
+    <details class="q"><summary>NH: accelerating on an easterly heading, the compass card will turn:</summary><p class="a">Clockwise, giving an apparent turn toward the North</p></details>
+    <details class="q"><summary>NH: during a take-off run in a westerly direction, the compass indicates:</summary><p class="a">An apparent turn to the north</p></details>
+    <details class="q"><summary>NH: take-off on runway 045 &mdash; what does the compass indicate during the run?</summary><p class="a">A value below 045&deg;<span class="why">Accelerating swings the indication toward north, so the reading falls.</span></p></details>
+    <details class="q"><summary>NH: deceleration after landing in a northerly direction?</summary><p class="a">No apparent turn &mdash; there is no acceleration error on north or south</p></details>
+    <details class="q"><summary>NH: deceleration after landing in an easterly direction?</summary><p class="a">An apparent turn to the south</p></details>
+    <details class="q"><summary>NH: decelerating on a westerly heading, the card turns:</summary><p class="a">Clockwise, giving an apparent turn toward the south</p></details>
+    <details class="q"><summary>At the magnetic equator, accelerating after take-off on heading West:</summary><p class="a">The compass indicates the correct heading<span class="why">No dip means no pendulous error.</span></p></details>
+    <details class="q"><summary>The turning error of a direct reading compass:</summary><p class="a">Increases when the magnetic latitude increases &mdash; it is maximum at the magnetic poles</p></details>
+    <details class="q"><summary>Where are turning errors greatest?</summary><p class="a">On north/south headings, and at high latitudes</p></details>
+    <details class="q"><summary>Turning right from 330&deg;(C) to 040&deg;(C) in the NH, the compass will:</summary><p class="a">Under-indicate the turn, and liquid swirl will increase the effect</p></details>
+    <details class="q"><summary>NH, accurate rate-one turn right from 135&deg;. After 30 seconds the compass should read:</summary><p class="a">More than 225&deg;<span class="why">Rate one is 3&deg;/s, so 90&deg; in 30 s. The turn passes through south, where the compass over-reads.</span></p></details>
+    <details class="q"><summary>Hard iron and soft iron magnetism &mdash; which statement is correct?</summary><p class="a">Hard iron is permanent; soft iron is non-permanent</p></details>
+    <details class="q"><summary>What does magnetic compass calibration reduce?</summary><p class="a">Deviation &mdash; and it determines the deviation on any heading</p></details>
+    <details class="q"><summary>In a gyromagnetic compass, the direction of the Earth's field is given by:</summary><p class="a">The flux valve</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 02 PITOT-STATIC &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="pitot">
+  <div class="sec-head"><span class="eyebrow">022 02</span><h2>Pitot-Static System</h2></div>
+  <p class="lede">Three instruments, two pressure sources. Work out which source each one needs and every blockage question answers itself.</p>
+
+  <figure>
+    <svg viewBox="0 0 780 320" role="img" aria-label="Pitot static system schematic showing which pressures feed the airspeed indicator, altimeter and vertical speed indicator, with the effect of each blockage">
+      <!-- pitot -->
+      <rect x="40" y="60" width="86" height="26" rx="3" fill="#1F6B3A" opacity=".25" stroke="#1F6B3A" stroke-width="1.4"/>
+      <text x="83" y="78" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">PITOT</text>
+      <text x="83" y="50" font-size="11" text-anchor="middle" fill="#1F6B3A">total pressure P&#8202;T</text>
+      <!-- static -->
+      <rect x="40" y="216" width="86" height="26" rx="3" fill="#24557F" opacity=".25" stroke="#24557F" stroke-width="1.4"/>
+      <text x="83" y="234" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">STATIC</text>
+      <text x="83" y="262" font-size="11" text-anchor="middle" fill="#24557F">static pressure P&#8202;S</text>
+
+      <!-- instruments -->
+      <g>
+        <rect x="300" y="46" width="150" height="54" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="375" y="70" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">ASI</text>
+        <text x="375" y="88" font-size="11" text-anchor="middle" fill="currentColor">P&#8202;T &minus; P&#8202;S</text>
+
+        <rect x="300" y="128" width="150" height="54" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="375" y="152" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">ALTIMETER</text>
+        <text x="375" y="170" font-size="11" text-anchor="middle" fill="currentColor">P&#8202;S only</text>
+
+        <rect x="300" y="210" width="150" height="54" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text x="375" y="234" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">VSI</text>
+        <text x="375" y="252" font-size="11" text-anchor="middle" fill="currentColor">rate of change of P&#8202;S</text>
+      </g>
+      <!-- lines -->
+      <path d="M126 73 L300 73" stroke="#1F6B3A" stroke-width="2.4" fill="none"/>
+      <path d="M126 229 L200 229 L200 155 L300 155" stroke="#24557F" stroke-width="2.4" fill="none"/>
+      <path d="M126 229 L200 229 L200 237 L300 237" stroke="#24557F" stroke-width="2.4" fill="none"/>
+      <path d="M200 229 L200 95 L300 95" stroke="#24557F" stroke-width="2.4" fill="none"/>
+
+      <!-- failure column -->
+      <text x="620" y="34" font-size="13" text-anchor="middle" fill="currentColor" font-weight="600">IF BLOCKED</text>
+      <text x="620" y="66" font-size="11.5" text-anchor="middle" fill="#1F6B3A" font-weight="600">PITOT blocked, static clear</text>
+      <text x="620" y="82" font-size="11.5" text-anchor="middle" fill="currentColor">ASI behaves like an altimeter:</text>
+      <text x="620" y="97" font-size="11.5" text-anchor="middle" fill="currentColor">rises in the climb, falls in the descent</text>
+
+      <text x="620" y="132" font-size="11.5" text-anchor="middle" fill="#24557F" font-weight="600">STATIC blocked</text>
+      <text x="620" y="148" font-size="11.5" text-anchor="middle" fill="currentColor">Altimeter frozen at the blockage reading</text>
+      <text x="620" y="163" font-size="11.5" text-anchor="middle" fill="currentColor">ASI under-reads in climb, over-reads in descent</text>
+      <text x="620" y="178" font-size="11.5" text-anchor="middle" fill="currentColor">VSI falls gradually to zero</text>
+
+      <text x="620" y="212" font-size="11.5" text-anchor="middle" fill="#8F620A" font-weight="600">ALTERNATE STATIC (unpressurised cabin)</text>
+      <text x="620" y="228" font-size="11.5" text-anchor="middle" fill="currentColor">Cabin pressure is lower than ambient, so</text>
+      <text x="620" y="243" font-size="11.5" text-anchor="middle" fill="currentColor">both the ASI and the altimeter <tspan font-weight="600">over-read</tspan></text>
+      <text x="620" y="290" font-size="11.5" text-anchor="middle" fill="currentColor">P&#8202;T = P&#8202;S + P&#8202;D, so the altimeter feed can also be written P&#8202;T &minus; P&#8202;D</text>
+    </svg>
+    <figcaption><b>Only the ASI needs both sources.</b> That is why a pitot blockage leaves the ASI reading static pressure changes &mdash; it behaves like an altimeter &mdash; while a static blockage freezes the altimeter and corrupts the ASI in the opposite sense in climb and descent.</figcaption>
+  </figure>
+
+  <figure>
+    <svg viewBox="0 0 780 150" role="img" aria-label="The speed chain from indicated airspeed to true airspeed showing the correction applied at each step">
+      <defs><marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+      <g font-size="13">
+        <rect x="24" y="52" width="118" height="44" rx="3" fill="#1F6B3A" opacity=".16" stroke="#1F6B3A" stroke-width="1.4"/>
+        <text x="83" y="80" text-anchor="middle" fill="currentColor" font-weight="600">IAS</text>
+        <rect x="234" y="52" width="118" height="44" rx="3" fill="#1F6B3A" opacity=".16" stroke="#1F6B3A" stroke-width="1.4"/>
+        <text x="293" y="80" text-anchor="middle" fill="currentColor" font-weight="600">CAS</text>
+        <rect x="444" y="52" width="118" height="44" rx="3" fill="#1F6B3A" opacity=".16" stroke="#1F6B3A" stroke-width="1.4"/>
+        <text x="503" y="80" text-anchor="middle" fill="currentColor" font-weight="600">EAS</text>
+        <rect x="654" y="52" width="102" height="44" rx="3" fill="#1F6B3A" opacity=".16" stroke="#1F6B3A" stroke-width="1.4"/>
+        <text x="705" y="80" text-anchor="middle" fill="currentColor" font-weight="600">TAS</text>
+      </g>
+      <line x1="142" y1="74" x2="228" y2="74" stroke="currentColor" stroke-width="1.8" marker-end="url(#sa)"/>
+      <line x1="352" y1="74" x2="438" y2="74" stroke="currentColor" stroke-width="1.8" marker-end="url(#sa)"/>
+      <line x1="562" y1="74" x2="648" y2="74" stroke="currentColor" stroke-width="1.8" marker-end="url(#sa)"/>
+      <text x="185" y="42" font-size="11.5" text-anchor="middle" fill="#24557F" font-weight="600">instrument +</text>
+      <text x="185" y="56" font-size="11.5" text-anchor="middle" fill="#24557F" font-weight="600">position error</text>
+      <text x="395" y="42" font-size="11.5" text-anchor="middle" fill="#24557F" font-weight="600">compressibility</text>
+      <text x="605" y="42" font-size="11.5" text-anchor="middle" fill="#24557F" font-weight="600">density</text>
+      <text x="390" y="128" font-size="11.5" text-anchor="middle" fill="currentColor">Compressibility only matters above about <tspan font-weight="600">200 kt TAS</tspan>. At ISA sea level, <tspan font-weight="600">CAS = TAS</tspan>.</text>
+    </svg>
+    <figcaption><b>Four names, three corrections.</b> Learn the order and the exam question "TAS is obtained from IAS by correcting for&hellip;" answers itself: all three, in this sequence.</figcaption>
+  </figure>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Manoeuvre</th><th>TAS</th><th>Mach</th><th>CAS</th></tr></thead>
+      <tbody>
+        <tr><td><b>Climb at constant CAS</b> (below tropopause)</td><td>Increases</td><td>Increases</td><td>&mdash;</td></tr>
+        <tr><td><b>Descent at constant CAS</b></td><td>Decreases</td><td>Decreases</td><td>&mdash;</td></tr>
+        <tr><td><b>Climb at constant Mach</b></td><td>Decreases</td><td>&mdash;</td><td>Decreases</td></tr>
+        <tr><td><b>Descent at constant Mach</b></td><td>Increases</td><td>&mdash;</td><td>Increases</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; pitot-static</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Given PT total, PS static, PD dynamic &mdash; what is the relationship?</summary><p class="a">P&#8202;T = P&#8202;D + P&#8202;S</p></details>
+    <details class="q"><summary>Which instruments are connected to the pitot-static system?</summary><p class="a">Altimeter, vertical speed indicator and airspeed indicator</p></details>
+    <details class="q"><summary>The airspeed indicator measures:</summary><p class="a">P&#8202;T &minus; P&#8202;S</p></details>
+    <details class="q"><summary>In an ASI capsule there is what inside and what outside?</summary><p class="a">Total pressure inside, static pressure outside</p></details>
+    <details class="q"><summary>Altimeter capsule pressure and casing pressure correspond to:</summary><p class="a">Vacuum (or very low pressure) in the capsule; static pressure in the casing</p></details>
+    <details class="q"><summary>If the static source of an altimeter becomes blocked during descent:</summary><p class="a">It continues to indicate the reading at which the blockage occurred</p></details>
+    <details class="q"><summary>In case of static blockage, the ASI:</summary><p class="a">Under-reads in the climb and over-reads in the descent</p></details>
+    <details class="q"><summary>A blocked pitot head with a clear static source causes the ASI to:</summary><p class="a">React like an altimeter</p></details>
+    <details class="q"><summary>Pitot probe blocked during the climb after take-off &mdash; what does the IAS do?</summary><p class="a">Indicated airspeed increases steadily</p></details>
+    <details class="q"><summary>If the static supply to a VSI becomes blocked during a descent:</summary><p class="a">The reading gradually reduces to zero</p></details>
+    <details class="q"><summary>Alternate static source in a light unpressurised aircraft &mdash; ASI and altimeter?</summary><p class="a">Both tend to over-read</p></details>
+    <details class="q"><summary>Increasing the reference pressure on the sub-scale causes the indicated altitude to:</summary><p class="a">Increase</p></details>
+    <details class="q"><summary>CAS is obtained from IAS by correcting for:</summary><p class="a">Position and instrument errors</p></details>
+    <details class="q"><summary>EAS is obtained from CAS by correcting for:</summary><p class="a">Compressibility</p></details>
+    <details class="q"><summary>TAS is obtained from IAS by correcting for:</summary><p class="a">Instrument, position, compressibility and density</p></details>
+    <details class="q"><summary>Compressibility error must be taken into account above what speed?</summary><p class="a">Approximately 200 kt TAS</p></details>
+    <details class="q"><summary>In a standard atmosphere at sea level, CAS is:</summary><p class="a">Equal to TAS</p></details>
+    <details class="q"><summary>Which parameter determines the relationship between EAS and TAS?</summary><p class="a">Density altitude</p></details>
+    <details class="q"><summary>Mach number is defined as:</summary><p class="a">The ratio of dynamic pressure to static pressure</p></details>
+    <details class="q"><summary>Climb at constant CAS below the tropopause &mdash; what happens?</summary><p class="a">TAS and Mach number both increase</p></details>
+    <details class="q"><summary>Constant Mach climb below the tropopause?</summary><p class="a">CAS and TAS both decrease</p></details>
+    <details class="q"><summary>Constant Mach descent below the tropopause?</summary><p class="a">TAS increases</p></details>
+    <details class="q"><summary>When descending at a constant CAS, what happens to EAS?</summary><p class="a">EAS increases</p></details>
+    <details class="q"><summary>The maximum TAS is obtained at:</summary><p class="a">The flight level at which CAS = V&#8202;MO and M = M&#8202;MO simultaneously</p></details>
+    <details class="q"><summary>The position error of the static vent varies substantially with:</summary><p class="a">The speed of the aircraft</p></details>
+    <details class="q"><summary>At FL310 after depressurisation and an emergency descent, what does the cabin VSI show?</summary><p class="a">Cabin altitude increases until the differential is zero, then the cabin VSI shows a descent equal to the aircraft VSI</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 03 GYRO &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="gyro">
+  <div class="sec-head"><span class="eyebrow">022 03</span><h2>Gyroscopes</h2></div>
+  <p class="lede">Two properties, three instruments, and the wander that has to be corrected.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>Properties</h3>
+      <ul class="tight">
+        <li><b>Rigidity in space</b> and <b>precession</b>. Rigidity is improved by <b>increasing RPM and concentrating the mass at the periphery</b>.</li>
+        <li>A gyro <b>precesses when a force is applied at right angles to its rotational axis</b>, and the result appears 90&deg; further round in the direction of rotation.</li>
+        <li>Without external action, a free gyro's axis is fixed <b>with reference to space</b>.</li>
+      </ul>
+      <h3>Wander</h3>
+      <ul class="tight">
+        <li><b>Apparent wander (earth rate)</b> &mdash; the Earth turns beneath the gyro. It <b>varies with latitude</b>: 15 &times; sin(lat) per hour, so it is <b>zero at the equator</b> and maximum at the poles.</li>
+        <li><b>Transport wander</b> &mdash; caused by the <b>convergence of meridians</b> as the aircraft moves; it depends on <b>ground speed, true track and mean latitude</b>.</li>
+        <li><b>Drift</b> is wander in the <b>horizontal</b> plane; <b>topple</b> is wander in the vertical plane.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>The three instruments</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Instrument</th><th>Gyro</th><th>Spin axis</th></tr></thead>
+          <tbody>
+            <tr><td><b>Directional gyro</b></td><td>2 DOF</td><td>Horizontal</td></tr>
+            <tr><td><b>Artificial horizon</b></td><td>2 DOF + erection</td><td>Vertical (local)</td></tr>
+            <tr><td><b>Turn indicator</b></td><td>Rate gyro, 1 DOF</td><td>Parallel to the pitch axis</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="tight">
+        <li>An air-driven artificial horizon uses <b>four pendulous vanes</b> for erection. Acceleration on take-off gives a <b>false nose-up</b>; deceleration on landing a <b>false nose-down</b>.</li>
+        <li>After the first 90&deg; of a turn at constant pitch and bank, a classic artificial horizon shows <b>too much nose-up and too little bank</b>.</li>
+        <li><b>Rate of turn</b> depends on <b>bank angle and airspeed</b>. <b>Rate one is 3&deg; per second</b>.</li>
+        <li><b>Needle right, ball left</b> = turning right with <b>not enough bank</b> (slipping in).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="work">
+    <div class="wh">Apparent drift</div>
+    Earth rate = 15&deg;/hour &times; sin(latitude)<br>
+    At 45&deg;N: 15 &times; sin 45&deg; = 15 &times; 0.707 = <span class="res">&asymp; 11&deg; per hour</span><br>
+    At the equator: 15 &times; 0 = <span class="res">0&deg; per hour</span>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; gyroscopes</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What are the basic properties of a gyroscope?</summary><p class="a">Rigidity in space and precession</p></details>
+    <details class="q"><summary>How is the rigidity of a gyro improved?</summary><p class="a">By increasing RPM and concentrating the mass at the periphery</p></details>
+    <details class="q"><summary>When does a gyro begin to precess?</summary><p class="a">When a force is applied at right angles to its rotational axis</p></details>
+    <details class="q"><summary>Apparent wander due to Earth rotation:</summary><p class="a">Varies with latitude</p></details>
+    <details class="q"><summary>At what latitude is apparent wander zero?</summary><p class="a">The equator</p></details>
+    <details class="q"><summary>Apparent drift of a free gyro at 45&deg;N?</summary><p class="a">11&deg; per hour to the right</p></details>
+    <details class="q"><summary>What is the error due to convergence of meridians called?</summary><p class="a">Transport error</p></details>
+    <details class="q"><summary>Drift refers to wander of the gyro axis in which plane?</summary><p class="a">The horizontal plane</p></details>
+    <details class="q"><summary>DG error due to aircraft movement depends on:</summary><p class="a">Ground speed, true track and average latitude</p></details>
+    <details class="q"><summary>Which instrument uses a 2-DOF gyro with a horizontal spin axis?</summary><p class="a">The directional gyro</p></details>
+    <details class="q"><summary>The artificial horizon uses a gyro with:</summary><p class="a">2 degrees of freedom plus an erection system aligning it to the local vertical</p></details>
+    <details class="q"><summary>Four pendulous vanes are used in:</summary><p class="a">An air-driven artificial horizon</p></details>
+    <details class="q"><summary>Air-driven AH during acceleration on take-off?</summary><p class="a">A false nose-up indication</p></details>
+    <details class="q"><summary>After the initial 90&deg; of a turn at constant pitch and bank, a classic AH shows:</summary><p class="a">Too much nose-up and too little bank</p></details>
+    <details class="q"><summary>The spin axis of a turn indicator gyro is parallel to:</summary><p class="a">The pitch axis</p></details>
+    <details class="q"><summary>Rate of turn depends on:</summary><p class="a">Bank angle and aircraft speed</p></details>
+    <details class="q"><summary>What is the standard rate of turn?</summary><p class="a">3&deg; per second</p></details>
+    <details class="q"><summary>Needle right, ball left indicates:</summary><p class="a">Turning right with not enough bank</p></details>
+    <details class="q"><summary>Taxiing in a right turn, what does the turn indicator show?</summary><p class="a">Pointer right, ball left</p></details>
+    <details class="q"><summary>A gravity erector system corrects the error on:</summary><p class="a">The attitude indicator (artificial horizon)</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 04 INERTIAL &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="inertial">
+  <div class="sec-head"><span class="eyebrow">022 04</span><h2>Inertial Systems</h2></div>
+  <p class="lede">Accelerometers plus integration. The whole subject is knowing how many times you integrate.</p>
+
+  <div class="work">
+    <div class="wh">The integration chain</div>
+    Acceleration &nbsp;&mdash;(integrate once)&rarr;&nbsp; <b>Speed</b> &nbsp;&mdash;(integrate again)&rarr;&nbsp; <b>Distance / position</b><br><br>
+    Instantaneous <b>speed</b> needs one integration <b>plus the initial speed</b>.<br>
+    Instantaneous <b>position</b> needs double integration <b>plus initial position and speed</b>.<br>
+    <span style="color:var(--muted)">The integration process is, in effect, a multiplication by time.</span>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li>An INS is <b>self-contained</b> &mdash; it needs no ground signals. Its <b>position error increases with time</b>, and <b>drift</b> is the error with the greatest effect.</li>
+        <li>Alignment aligns the platform to the <b>local vertical and true north</b>. The sequence is <b>local vertical, true north, latitude, latitude comparison</b>.</li>
+        <li>Once aligned it outputs <b>N/S and E/W acceleration, attitude and true heading</b>.</li>
+        <li><b>TAS input</b> is required only to give a <b>wind vector readout</b> &mdash; so if the <b>ADC fails, the IRS no longer provides wind direction and speed</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Strapdown</b> means the gyros and accelerometers are <b>fixed to the aircraft structure</b> rather than on a stabilised platform. It gives a <b>shorter alignment and is more reliable</b>.</li>
+        <li>A <b>ring laser gyro measures angular movement about its sensitive axis</b>, using the <b>frequency difference between two counter-rotating laser beams</b>.</li>
+        <li><b>IRS ATT mode</b> is a back-up providing <b>attitude and heading only</b>.</li>
+        <li>IRS outputs include <b>true and magnetic heading, ground speed, latitude and longitude, true track, present position and attitude</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; inertial</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the operating principle of an INS?</summary><p class="a">Measuring acceleration and integrating it to obtain speed and position</p></details>
+    <details class="q"><summary>An INS is:</summary><p class="a">A self-contained system operating without ground signals</p></details>
+    <details class="q"><summary>How is a change in speed obtained?</summary><p class="a">By a single integration of acceleration over time</p></details>
+    <details class="q"><summary>What does double integration of the E/W accelerometer give?</summary><p class="a">Distance east/west</p></details>
+    <details class="q"><summary>Instantaneous position from accelerations requires:</summary><p class="a">Double integration plus initial position and speed</p></details>
+    <details class="q"><summary>What is the position error of a stand-alone INS?</summary><p class="a">It increases with time</p></details>
+    <details class="q"><summary>Which INS error has the greatest effect?</summary><p class="a">Drift</p></details>
+    <details class="q"><summary>What does the alignment of a gyro-stabilised inertial platform align to?</summary><p class="a">The vertical axis and true north</p></details>
+    <details class="q"><summary>What is the correct IRS alignment sequence?</summary><p class="a">Local vertical, true north, latitude, latitude comparison</p></details>
+    <details class="q"><summary>What does "strapdown INS" mean?</summary><p class="a">Gyros and accelerometers are fixed to the aircraft structure</p></details>
+    <details class="q"><summary>Strapdown compared with a stabilised platform?</summary><p class="a">Shorter alignment and more reliable</p></details>
+    <details class="q"><summary>What is the principle of a laser gyro?</summary><p class="a">The frequency difference between two counter-rotating laser beams</p></details>
+    <details class="q"><summary>What is the TAS input to an INS required for?</summary><p class="a">To provide the wind vector readout</p></details>
+    <details class="q"><summary>If the ADC fails, what does the IRS no longer provide?</summary><p class="a">Wind direction and speed</p></details>
+    <details class="q"><summary>What does IRS ATT mode provide?</summary><p class="a">Only attitude and heading information</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 05 AUTOFLIGHT &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="auto">
+  <div class="sec-head"><span class="eyebrow">022 05</span><h2>Automatic Flight &amp; FMS</h2></div>
+  <p class="lede">What the FMS knows, where it gets its position, and what the autothrottle is doing.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li>The <b>FMS is a global 4D flight management system</b>: <b>lateral and vertical navigation and guidance plus performance management</b>.</li>
+        <li>The <b>navigation database</b> holds <b>waypoints, SIDs and STARs, runway approaches, airport reference data and magnetic variation</b>. Flight-envelope data lives in the separate <b>performance database</b>.</li>
+        <li>The <b>FMC position</b> is a computed position from multiple sources &mdash; <b>IRS, DME, VOR, LOC, GPS</b>. DME/DME gives the most accurate radio fix.</li>
+        <li><b>VNAV</b> vertical command outputs are <b>flight path angle and speed target</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li>The <b>flight director</b> gives the attitude needed to <b>join a desired path</b>.</li>
+        <li>During an automatic approach the <b>autothrottle holds IAS</b> (SPEED mode); it <b>can also be used for take-off</b>, and it protects the envelope through <b>reversion modes</b>.</li>
+        <li>A <b>semi-automatic landing system disconnects at the decision height</b>. During a <b>CAT II automatic approach, height comes from the radio altimeter</b>.</li>
+        <li>The <b>stick shaker</b> is part of the <b>stall warning system</b>; a stall <b>protection</b> system takes over and lowers the nose.</li>
+        <li>The <b>angle of attack vane feeds the ADC</b> and is protected by <b>electric heating</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; autoflight &amp; FMS</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>The Flight Management System is defined as:</summary><p class="a">A global 4D Flight Management System</p></details>
+    <details class="q"><summary>What does the FMS provide on a modern commercial aircraft?</summary><p class="a">Lateral and vertical navigation and guidance, and performance management</p></details>
+    <details class="q"><summary>What does the FMS navigation database typically include?</summary><p class="a">Waypoints, SIDs and STARs, and magnetic variation</p></details>
+    <details class="q"><summary>Where is data relating to aircraft flight envelope computations stored?</summary><p class="a">In the performance database</p></details>
+    <details class="q"><summary>What is the FMC position?</summary><p class="a">The computed position based on multiple sources &mdash; IRS, radio, ILS, GPS</p></details>
+    <details class="q"><summary>Which navigation receivers are commonly used for FMS position updates?</summary><p class="a">DME, VOR, LOC and GPS</p></details>
+    <details class="q"><summary>Which combination is likely to give the most accurate RNAV position fixes?</summary><p class="a">DME/DME</p></details>
+    <details class="q"><summary>For an FMS with VNAV coupled to the autopilot, the vertical command output can be:</summary><p class="a">Flight path angle and speed target</p></details>
+    <details class="q"><summary>The flight director provides information to:</summary><p class="a">Join a desired path with the optimum attitude</p></details>
+    <details class="q"><summary>During an approach with the autopilot engaged, what does the autothrottle do?</summary><p class="a">Holds IAS</p></details>
+    <details class="q"><summary>How does the autothrust system protect the flight envelope?</summary><p class="a">Through reversion modes</p></details>
+    <details class="q"><summary>A semi-automatic landing system disconnects automatically:</summary><p class="a">At the decision height</p></details>
+    <details class="q"><summary>During a CAT II automatic approach, height information is supplied by:</summary><p class="a">The radio altimeter</p></details>
+    <details class="q"><summary>The stick shaker is part of which system?</summary><p class="a">The stall warning system</p></details>
+    <details class="q"><summary>The AoA vane feeds its output to:</summary><p class="a">The ADC</p></details>
+    <details class="q"><summary>What does the PFD provide information about?</summary><p class="a">Aircraft attitude and heading</p></details>
+    <details class="q"><summary>Which datalink system performs air-ground communications?</summary><p class="a">ACARS &mdash; consisting of on-board units and ground units</p></details>
+    <details class="q"><summary>A MAYDAY datalink message can be sent to ATC via:</summary><p class="a">The CPDLC application</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 06 WARNING &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="warn">
+  <div class="sec-head"><span class="eyebrow">022 06</span><h2>Warning Systems</h2></div>
+  <p class="lede">GPWS modes and TCAS logic. The mode table is worth learning verbatim &mdash; it is asked almost word for word.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Mode</th><th>Condition</th><th>Aural alert</th></tr></thead>
+      <tbody>
+        <tr><td class="n"><b>1</b></td><td>Excessive descent rate</td><td>"SINKRATE" then "WHOOP WHOOP PULL UP"</td></tr>
+        <tr><td class="n"><b>2</b></td><td>Excessive terrain closure rate</td><td>"TERRAIN" then "PULL UP"</td></tr>
+        <tr><td class="n"><b>3</b></td><td>Altitude loss after take-off or go-around</td><td>"DON'T SINK"</td></tr>
+        <tr><td class="n"><b>4</b></td><td>Unsafe terrain clearance, not in landing configuration</td><td>"TOO LOW GEAR", "TOO LOW FLAPS", "TOO LOW TERRAIN"</td></tr>
+        <tr><td class="n"><b>5</b></td><td>Excessive deviation below glideslope</td><td>"GLIDESLOPE"</td></tr>
+        <tr><td class="n"><b>6</b></td><td>Callouts and excessive bank angle</td><td>"MINIMUMS", "BANK ANGLE"</td></tr>
+        <tr><td class="n"><b>7</b></td><td>Windshear</td><td>Caution and warning alerts</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>EGPWS / TAWS</h3>
+      <ul class="tight">
+        <li>The <b>EGPWS has its own world terrain database</b>; the <b>Terrain Look-Ahead</b> function uses <b>an electronic map giving ground elevation</b>.</li>
+        <li>Functions: <b>Terrain Clearance Floor, Terrain Look Ahead Alerting, Terrain Alerting and Display</b>. Display colours: <b>green, amber, red and blue</b>.</li>
+        <li>If the computed position becomes less accurate, the <b>terrain display diverges from the real terrain</b>.</li>
+        <li><b>TAWS</b> = Terrain Awareness Warning System, and it must be coupled to a <b>3D position sensor</b>. A caution alert gives you <b>40 to 60 seconds</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>TCAS II</h3>
+      <ul class="tight">
+        <li>Works on <b>transponder replies</b> &mdash; secondary radar principle, <b>independent of ATC</b>, and <b>no advisory at all against an aircraft without a transponder</b>.</li>
+        <li>Range is measured by the <b>time between interrogation and reply</b>; the collision logic is based on <b>time</b>, not distance.</li>
+        <li>Resolutions are in the <b>vertical plane only</b>, and a <b>Mode S transponder is needed to coordinate</b> the manoeuvre with the other aircraft.</li>
+        <li>Intruder with no altitude reporting &rarr; <b>traffic advisory only</b>.</li>
+        <li>Display: <b>TA = amber solid circle</b>, <b>RA = red filled square</b>.</li>
+        <li><b>Preventive RA</b> = keep the vertical speed within limits. <b>Corrective RA</b> = change the vertical speed. Follow the RA <b>immediately</b>, and <b>if it conflicts with ATC, follow the RA and tell ATC</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="numbers">
+    <div class="nh">Flight warning system priorities &amp; colours</div>
+    <div class="nlist">
+      <div class="nrow"><span>Priority, highest first</span><span class="v">Stall &gt; Windshear &gt; GPWS &gt; TCAS</span></div>
+      <div class="nrow"><span>Warning (immediate action)</span><span class="v">Red</span></div>
+      <div class="nrow"><span>Caution (action, not immediate)</span><span class="v">Amber</span></div>
+      <div class="nrow"><span>Advisory</span><span class="v">not red, preferably not amber</span></div>
+      <div class="nrow"><span>Radio altimeter band</span><span class="v">SHF, 4200&ndash;4400 MHz</span></div>
+      <div class="nrow"><span>Software level A</span><span class="v">Catastrophic</span></div>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; warning systems</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Which aural alerts belong to GPWS mode 1?</summary><p class="a">"SINKRATE, SINKRATE", then "WHOOP WHOOP PULL UP" if it intensifies</p></details>
+    <details class="q"><summary>The aural alert for mode 3 (altitude loss after take-off or go-around)?</summary><p class="a">"DON'T SINK"</p></details>
+    <details class="q"><summary>The aural alerts for mode 4?</summary><p class="a">"TOO LOW GEAR", "TOO LOW FLAPS", "TOO LOW TERRAIN"</p></details>
+    <details class="q"><summary>The aural alert for mode 5?</summary><p class="a">"GLIDESLOPE"</p></details>
+    <details class="q"><summary>A GPWS aural call of "MINIMUMS" refers to which mode?</summary><p class="a">Mode 6</p></details>
+    <details class="q"><summary>What is the EGPWS?</summary><p class="a">An enhanced GPWS with its own world terrain database</p></details>
+    <details class="q"><summary>What does the EGPWS Terrain Look-Ahead function use?</summary><p class="a">An electronic map of the world giving ground elevation</p></details>
+    <details class="q"><summary>What does TAWS mean, and what must it be coupled to?</summary><p class="a">Terrain Awareness Warning System, coupled to a 3D position sensor</p></details>
+    <details class="q"><summary>How long does a pilot have to respond to an EGPWS caution alert?</summary><p class="a">40 to 60 seconds</p></details>
+    <details class="q"><summary>What does TCAS II provide?</summary><p class="a">The intruder's relative position and possibly an avoidance manoeuvre in the vertical plane only</p></details>
+    <details class="q"><summary>What is the principle of TCAS based on?</summary><p class="a">The transponders fitted in the aircraft</p></details>
+    <details class="q"><summary>How does TCAS determine the range of an intruder?</summary><p class="a">By measuring the time between interrogation and reply</p></details>
+    <details class="q"><summary>The anti-collision logic of TCAS II is based on:</summary><p class="a">Time</p></details>
+    <details class="q"><summary>Why does a TCAS II aircraft also need a Mode S transponder?</summary><p class="a">The datalink is required to coordinate evasive manoeuvres</p></details>
+    <details class="q"><summary>Intruder with no altitude reporting capability &mdash; what does TCAS issue?</summary><p class="a">A traffic advisory only</p></details>
+    <details class="q"><summary>How are a TA and an RA shown on the TCAS display?</summary><p class="a">TA: an amber solid circle. RA: a red filled square</p></details>
+    <details class="q"><summary>What is a preventive resolution advisory?</summary><p class="a">It advises the pilot to keep the vertical speed within given limits</p></details>
+    <details class="q"><summary>If a TCAS RA conflicts with an ATC instruction?</summary><p class="a">Follow the TCAS RA and inform ATC</p></details>
+    <details class="q"><summary>What is the FWS priority order from highest to lowest?</summary><p class="a">Stall, Windshear, GPWS, TCAS</p></details>
+    <details class="q"><summary>Which colour signals an alarm requiring action, but not immediately?</summary><p class="a">Amber</p></details>
+    <details class="q"><summary>A software failure classified as Level A is:</summary><p class="a">Catastrophic</p></details>
+    <details class="q"><summary>In which band do modern low-altitude radio altimeters operate?</summary><p class="a">Super High Frequency &mdash; centimetric wavelengths</p></details>
+  </div>
+</section>
+
+<div class="part-band">
+  <span class="pn">062</span>
+  <span class="pt">RADIO NAVIGATION</span>
+  <span class="pd">Propagation, ground aids, radar, GNSS and PBN</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 07 PROPAGATION &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="prop">
+  <div class="sec-head"><span class="eyebrow">062 01</span><h2>Radio Propagation</h2></div>
+  <p class="lede">Wave behaviour decides the range of every aid that follows.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Modulation</b> is the <b>addition of information onto a carrier wave</b>. <b>Keying</b> is interrupting the carrier to make dots and dashes.</li>
+        <li><b>Phase angle</b> is a <b>fraction of one wavelength expressed in degrees</b>. <b>Polarization</b> describes the <b>orientation of the electric field oscillation</b>.</li>
+        <li><b>Refraction</b> is a change in the direction of a wave caused by a change in its speed.</li>
+        <li>The <b>simplest antenna is a dipole</b> &mdash; a wire half a wavelength long. <b>Directional antennas</b>: loop, parabolic, slotted planar and helical.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>VHF and above propagate as space waves</b> &mdash; line of sight. Range is limited by <b>the curvature of the Earth and line of sight</b>, and depends on <b>the height of both antennas</b>. It is degraded by <b>terrain and obstacles</b>, and by <b>tropospheric conditions and atmospheric absorption</b>.</li>
+        <li><b>HF</b> travels as <b>sky waves day and night</b>, with a very small ground-wave range. The <b>skip distance increases with a higher frequency and a higher reflecting layer</b>.</li>
+        <li><b>Coastal refraction</b> mainly affects the <b>NDB</b>.</li>
+        <li><b>VOR uses metric wavelengths</b> (VHF).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; propagation</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is modulation?</summary><p class="a">The addition of information onto a carrier wave</p></details>
+    <details class="q"><summary>What does the term "keying" mean?</summary><p class="a">Interrupting the carrier wave to break it into dots and dashes</p></details>
+    <details class="q"><summary>What is the phase angle of a wave?</summary><p class="a">A fraction of one wavelength expressed in degrees</p></details>
+    <details class="q"><summary>What does polarization describe?</summary><p class="a">The orientation of the electric field oscillation</p></details>
+    <details class="q"><summary>What is the change in direction of a radio wave due to a speed change called?</summary><p class="a">Refraction</p></details>
+    <details class="q"><summary>Radio waves in the VHF band and above propagate mainly as:</summary><p class="a">Space waves</p></details>
+    <details class="q"><summary>What limits the effective range of VHF transmissions?</summary><p class="a">The curvature of the Earth and line of sight</p></details>
+    <details class="q"><summary>Which factor affects VHF propagation the most?</summary><p class="a">Terrain and obstacles on the Earth's surface</p></details>
+    <details class="q"><summary>How do HF radio waves travel?</summary><p class="a">As sky waves day and night; the ground wave range is very small</p></details>
+    <details class="q"><summary>The skip distance of HF transmissions increases with:</summary><p class="a">A higher frequency and a higher reflecting ionospheric layer</p></details>
+    <details class="q"><summary>Coastal refraction mainly affects which aid?</summary><p class="a">The NDB</p></details>
+    <details class="q"><summary>VOR uses which wavelengths?</summary><p class="a">Metric</p></details>
+    <details class="q"><summary>What is the simplest type of antenna?</summary><p class="a">A dipole &mdash; a wire half a wavelength long</p></details>
+    <details class="q"><summary>Which list contains only directional antennas?</summary><p class="a">Loop, parabolic, slotted planar and helical</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 08 AIDS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="aids">
+  <div class="sec-head"><span class="eyebrow">062 02</span><h2>NDB, VOR &amp; DME</h2></div>
+  <p class="lede">The three conventional aids, and the slant range trap.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>NDB is the ground equipment; ADF is the airborne equipment.</b> Passage of a locator is shown by a <b>180&deg; needle swing of the ADF indicator</b>.</li>
+        <li>To plot a <b>VOR</b> bearing you apply the variation <b>at the VOR</b>. On an <b>RMI</b>: apply variation at the <b>aircraft position for an NDB</b>, at the <b>beacon position for a VOR</b>.</li>
+        <li><b>CDI full deflection</b> = <b>10&deg; or more</b> off the radial.</li>
+        <li>VOR transmissions are affected by <b>uneven propagation over irregular ground</b>. A <b>TVOR</b> is the aid with deliberately limited range.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>DME measures slant range</b>, so overhead a station it reads your <b>height</b>, not zero.</li>
+        <li>Accurate DME groundspeed requires <b>flying directly towards or away from</b> the station.</li>
+        <li>In <b>tracking mode</b> the interrogator transmits a <b>low pulse-pair rate</b>; interrogation <b>does not start until pulse-pairs from the tuned station are received</b>.</li>
+        <li>At a <b>co-located VOR/DME</b> the DME has the <b>same ident but a different tone</b>.</li>
+      </ul>
+      <div class="work">
+        <div class="wh">DME slant range overhead</div>
+        FL360 overhead a sea-level DME &rarr; 36 000 ft &divide; 6080 = <span class="res">&asymp; 6 NM</span><br>
+        FL180 &rarr; 18 000 &divide; 6080 = <span class="res">&asymp; 3 NM</span><br>
+        16 400 ft &rarr; <span class="res">&asymp; 2.7 NM</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; NDB, VOR, DME</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>Concerning ADF and NDB, which is correct?</summary><p class="a">The NDB is ground equipment, the ADF is airborne equipment</p></details>
+    <details class="q"><summary>How is passage of a locator beacon indicated?</summary><p class="a">By a 180&deg; needle swing of the ADF indicator</p></details>
+    <details class="q"><summary>To plot a VOR bearing, whose variation do you need?</summary><p class="a">The variation at the VOR</p></details>
+    <details class="q"><summary>Converting RMI bearings to true &mdash; where is variation applied?</summary><p class="a">NDB: at the aircraft position. VOR: at the beacon position</p></details>
+    <details class="q"><summary>A CDI at full left deflection indicates:</summary><p class="a">10&deg; or more off the radial</p></details>
+    <details class="q"><summary>VOR transmissions may be affected by:</summary><p class="a">Uneven propagation over irregular ground</p></details>
+    <details class="q"><summary>Which navigation aid has deliberately limited range?</summary><p class="a">TVOR</p></details>
+    <details class="q"><summary>A DME at MSL, aircraft passing vertically overhead at FL360 &mdash; what range is shown?</summary><p class="a">About 6 NM<span class="why">DME measures slant range, and overhead the slant range is the height.</span></p></details>
+    <details class="q"><summary>Same question at FL180?</summary><p class="a">About 3 NM</p></details>
+    <details class="q"><summary>Distance shown from a VOR/DME directly below you at 16 400 ft?</summary><p class="a">2.7 NM</p></details>
+    <details class="q"><summary>When is DME groundspeed computation accurate?</summary><p class="a">When flying directly towards or away from the DME</p></details>
+    <details class="q"><summary>In DME tracking mode, what does the interrogator do?</summary><p class="a">It transmits at a low pulse-pair rate</p></details>
+    <details class="q"><summary>At a co-located VOR/DME station, the DME has:</summary><p class="a">The same ident but a different tone</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 09 ILS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="ils">
+  <div class="sec-head"><span class="eyebrow">062 03</span><h2>ILS &amp; Markers</h2></div>
+  <p class="lede">Two beams, three markers, and a set of frequencies and colours that come up every time.</p>
+
+  <figure>
+    <svg viewBox="0 0 800 300" role="img" aria-label="ILS approach geometry showing the glide path, the localizer 90 and 150 hertz lobes and the three marker beacons with their frequencies and lights">
+      <line x1="40" y1="240" x2="770" y2="240" stroke="currentColor" stroke-width="2"/>
+      <!-- runway -->
+      <rect x="620" y="232" width="130" height="8" fill="currentColor" opacity=".3"/>
+      <text x="685" y="262" font-size="11.5" text-anchor="middle" fill="currentColor">RUNWAY</text>
+      <!-- glide path -->
+      <line x1="80" y1="106" x2="640" y2="240" stroke="#1F6B3A" stroke-width="2.6"/>
+      <text x="300" y="164" font-size="12" fill="#1F6B3A" font-weight="600">GLIDE PATH 3&deg;</text>
+      <!-- glide path lobes -->
+      <line x1="80" y1="126" x2="640" y2="240" stroke="#1F6B3A" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>
+      <line x1="80" y1="86" x2="640" y2="240" stroke="#1F6B3A" stroke-width="1" stroke-dasharray="4 4" opacity=".6"/>
+      <text x="150" y="80" font-size="11" fill="#1F6B3A">150 Hz below &middot; 90 Hz above</text>
+      <!-- markers -->
+      <g>
+        <polygon points="120,240 140,214 160,240" fill="#24557F" opacity=".55"/>
+        <text x="140" y="200" font-size="12" text-anchor="middle" fill="#24557F" font-weight="600">OM</text>
+        <text x="140" y="272" font-size="11" text-anchor="middle" fill="currentColor">400 Hz</text>
+        <text x="140" y="286" font-size="11" text-anchor="middle" fill="#24557F" font-weight="600">BLUE &middot; dashes</text>
+
+        <polygon points="400,240 420,218 440,240" fill="#8F620A" opacity=".55"/>
+        <text x="420" y="204" font-size="12" text-anchor="middle" fill="#8F620A" font-weight="600">MM</text>
+        <text x="420" y="272" font-size="11" text-anchor="middle" fill="currentColor">1300 Hz</text>
+        <text x="420" y="286" font-size="11" text-anchor="middle" fill="#8F620A" font-weight="600">AMBER &middot; dots and dashes</text>
+
+        <polygon points="560,240 575,222 590,240" fill="currentColor" opacity=".4"/>
+        <text x="575" y="210" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">IM</text>
+        <text x="575" y="272" font-size="11" text-anchor="middle" fill="currentColor">3000 Hz</text>
+        <text x="575" y="286" font-size="11" text-anchor="middle" fill="currentColor" font-weight="600">WHITE &middot; dots</text>
+      </g>
+      <text x="400" y="36" font-size="12" text-anchor="middle" fill="currentColor" font-weight="600">All three markers transmit on the same carrier: 75 MHz</text>
+      <text x="400" y="54" font-size="11.5" text-anchor="middle" fill="currentColor">The audio tone rises as you get closer &mdash; 400, 1300, 3000 Hz</text>
+      <!-- localizer note -->
+      <text x="700" y="120" font-size="11.5" text-anchor="end" fill="currentColor" font-weight="600">LOCALIZER</text>
+      <text x="700" y="136" font-size="11" text-anchor="end" fill="currentColor">90 Hz left, 150 Hz right</text>
+      <text x="700" y="150" font-size="11" text-anchor="end" fill="currentColor">DDM increases linearly with</text>
+      <text x="700" y="164" font-size="11" text-anchor="end" fill="currentColor">angular displacement</text>
+    </svg>
+    <figcaption><b>One carrier, three tones.</b> The markers all sit on 75 MHz and are told apart by their modulation: 400 Hz at the outer, 1300 at the middle, 3000 at the inner &mdash; pitch rising as the runway gets closer, with the cockpit lights running blue, amber, white. The paired DME is <b>zero-referenced at the threshold</b>, and only the localizer frequency is tuned.</figcaption>
+  </figure>
+
+  <ul class="tight">
+    <li>The ILS produces a radiation pattern <b>amplitude-modulated by 90 Hz and 150 Hz</b> signals; the <b>difference in depth of modulation (DDM) increases linearly</b> with angular displacement from the centreline.</li>
+    <li><b>False glide paths</b> arise from <b>multiple lobes of the radiation pattern in the vertical plane</b>.</li>
+    <li><b>Scalloping</b> is rapid side-to-side indicator movement that is <b>not flyable</b>.</li>
+    <li><b>FM-immunity filters protect the localizer only.</b></li>
+    <li>Maximum safe deviation below the glide path is <b>half scale</b> &mdash; on a 5-dot indicator, <b>2.5 dots fly-up</b>. Beyond that, <b>go around</b>.</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; ILS</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the carrier frequency of all ILS marker beacons?</summary><p class="a">75 MHz</p></details>
+    <details class="q"><summary>What are the audio frequencies of the outer, middle and inner markers?</summary><p class="a">OM 400 Hz, MM 1300 Hz, IM 3000 Hz</p></details>
+    <details class="q"><summary>Which ILS marker has the highest aural frequency?</summary><p class="a">The inner marker</p></details>
+    <details class="q"><summary>How is passage of the middle marker indicated to the pilot?</summary><p class="a">An amber (yellow) light</p></details>
+    <details class="q"><summary>What is the identification of the middle marker?</summary><p class="a">Dots and dashes</p></details>
+    <details class="q"><summary>The ILS produces:</summary><p class="a">A radiation pattern amplitude-modulated by a 90 Hz and a 150 Hz signal</p></details>
+    <details class="q"><summary>Concerning the localizer, the DDM:</summary><p class="a">Increases linearly with respect to the angular displacement from the centreline</p></details>
+    <details class="q"><summary>ILS is subject to false glide paths resulting from:</summary><p class="a">Multiple lobes of the radiation pattern in the vertical plane</p></details>
+    <details class="q"><summary>What is ILS scalloping?</summary><p class="a">Rapid side-to-side indicator changes that are not flyable</p></details>
+    <details class="q"><summary>What do FM-immunity filters protect?</summary><p class="a">The localizer only</p></details>
+    <details class="q"><summary>How is the DME frequency selected for an ILS/DME installation?</summary><p class="a">It is paired with the localizer frequency, so only the localizer frequency is set</p></details>
+    <details class="q"><summary>Where is an ILS-paired DME zero-referenced?</summary><p class="a">At the threshold</p></details>
+    <details class="q"><summary>Maximum safe "fly-up" indication on a 5-dot glide path indicator?</summary><p class="a">2.5 dots &mdash; half scale. Beyond that, initiate a go-around</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 10 RADAR &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="radar">
+  <div class="sec-head"><span class="eyebrow">062 04</span><h2>Radar, Transponders &amp; AWR</h2></div>
+  <p class="lede">Primary radar sees echoes, secondary radar asks questions.</p>
+
+  <div class="numbers">
+    <div class="nh">Radar &amp; transponder numbers</div>
+    <div class="nlist">
+      <div class="nrow"><span>Mode A codes available</span><span class="v">4096</span></div>
+      <div class="nrow"><span>Mode S altitude increment</span><span class="v">25 ft</span></div>
+      <div class="nrow"><span>Max unambiguous range set by</span><span class="v">PRF</span></div>
+      <div class="nrow"><span>Minimum range set by</span><span class="v">pulse length</span></div>
+      <div class="nrow"><span>PRF means</span><span class="v">pulses per second</span></div>
+      <div class="nrow"><span>Severe turbulence on AWR</span><span class="v">steep colour gradient</span></div>
+    </div>
+  </div>
+
+  <ul class="tight">
+    <li><b>Garbling</b> in SSR happens in the <b>ground receiver, from the superposition of two replies from different transponders</b>.</li>
+    <li>Pressing <b>IDENT</b> sends an <b>SPI pulse from the aircraft transponder</b>, making the symbol <b>flash on the ATC display</b>. "RECYCLE SQUAWK" means reselect the mode and code.</li>
+    <li><b>Mode S Enhanced Surveillance</b> can show the controller the pilot's <b>selected altitude</b>.</li>
+    <li>On the <b>airborne weather radar</b>, the most severe turbulence shows as a <b>steep colour gradient</b>; the weather <b>behind a large echo cannot be defined</b> (attenuation shadow).</li>
+  </ul>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; radar &amp; SSR</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>How many usable SSR Mode A codes are there?</summary><p class="a">4096</p></details>
+    <details class="q"><summary>Mode S transponders provide vertical tracking using an altitude increment of:</summary><p class="a">25 ft</p></details>
+    <details class="q"><summary>What determines the maximum unambiguous range of a primary radar?</summary><p class="a">The pulse repetition frequency</p></details>
+    <details class="q"><summary>What determines the minimum radar range?</summary><p class="a">Pulse length</p></details>
+    <details class="q"><summary>What does Pulse Recurrence Frequency signify?</summary><p class="a">The number of pulses transmitted per second</p></details>
+    <details class="q"><summary>What causes garbling in an SSR?</summary><p class="a">Superposition of two replies from different transponders in the ground receiver</p></details>
+    <details class="q"><summary>When and from where is an SPI pulse sent?</summary><p class="a">From the aircraft transponder, when the pilot pushes the IDENT button</p></details>
+    <details class="q"><summary>What does pressing IDENT cause?</summary><p class="a">The aircraft symbol to flash on the ATC display</p></details>
+    <details class="q"><summary>With Mode S Enhanced Surveillance, what pilot-selected item can the controller see?</summary><p class="a">The selected altitude</p></details>
+    <details class="q"><summary>How is the most severe turbulence shown on the AWR display?</summary><p class="a">By a steep colour gradient</p></details>
+    <details class="q"><summary>What can be said about the weather behind a large AWR echo?</summary><p class="a">The weather cannot be defined</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 11 GNSS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="gnss">
+  <div class="sec-head"><span class="eyebrow">062 05</span><h2>GNSS &amp; Performance Based Navigation</h2></div>
+  <p class="lede">The constellation numbers are pure recall; the RNAV/RNP distinction is one sentence.</p>
+
+  <div class="numbers">
+    <div class="nh">NAVSTAR GPS</div>
+    <div class="nlist">
+      <div class="nrow"><span>Satellites</span><span class="v">24 (nominal)</span></div>
+      <div class="nrow"><span>Orbital planes</span><span class="v">6 planes &times; 4 satellites</span></div>
+      <div class="nrow"><span>Orbit height</span><span class="v">20 200 km</span></div>
+      <div class="nrow"><span>Inclination</span><span class="v">55&deg;</span></div>
+      <div class="nrow"><span>Orbital period</span><span class="v">&asymp; 12 hours</span></div>
+      <div class="nrow"><span>Coordinate system</span><span class="v">WGS 84</span></div>
+      <div class="nrow"><span>Civil carrier / code</span><span class="v">1575 MHz, one code</span></div>
+      <div class="nrow"><span>Frequency band</span><span class="v">UHF</span></div>
+      <div class="nrow"><span>Clock type</span><span class="v">Atomic</span></div>
+      <div class="nrow"><span>2D fix / 3D fix</span><span class="v">3 / 4 satellites</span></div>
+      <div class="nrow"><span>3D with RAIM after exclusion</span><span class="v">5 satellites</span></div>
+      <div class="nrow"><span>GLONASS</span><span class="v">24 sats, 3 planes, 19 100 km, 11 h 15</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li>A GPS position line is obtained by <b>timing how long a satellite transmission takes to reach the receiver</b>; the primary information takes the form of <b>spheres with the aircraft at the centre</b>.</li>
+        <li>Four satellites give <b>latitude, longitude, altitude and time</b>.</li>
+        <li>The <b>navigation message</b> carries <b>almanac data and satellite status</b>, plus <b>orbit and clock references</b>. Clock corrections correct <b>satellite time</b>.</li>
+        <li>GPS satellites use <b>helical antennas because the signal has circular polarization</b>. Airframe <b>shadowing may prevent reception</b>.</li>
+        <li><b>SBAS</b> broadcasts corrections from <b>geostationary satellites</b>, split into <b>clock, ephemeris and ionospheric</b> errors. <b>GBAS</b> covers roughly <b>30 km</b>. <b>ABAS/AAIM</b> uses GNSS plus additional sensors such as an IRS.</li>
+        <li>Altitude datum for IFR on airways using GPS remains <b>barometric</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>RNAV vs RNP</b>: both require accuracy checks, but <b>only RNP has performance monitoring and alerting</b> requirements.</li>
+        <li>System performance is defined by <b>accuracy, integrity and continuity</b>.</li>
+        <li>"X" in RNAV X or RNP X is the <b>lateral navigation accuracy in NM achieved at least 95 % of the flight time</b>.</li>
+        <li><b>B-RNAV / RNAV 5</b>: &plusmn;5 NM for 95 % of the time. <b>RNP 1</b>: &plusmn;1 NM lateral and longitudinal. <b>Precision RNAV requires RNP 1</b>.</li>
+        <li><b>2D</b> = horizontal only. <b>3D</b> = horizontal plus vertical. <b>4D</b> adds <b>time</b>.</li>
+        <li>A <b>phantom station</b> is a waypoint defined by a <b>radial and DME distance from a VOR/DME</b>. <b>INS is the example of a self-contained RNAV system.</b></li>
+        <li>If the GPS position differs unacceptably from conventional systems, or RAIM is unavailable, the flight <b>may continue using other certified navigation systems</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; GNSS &amp; PBN</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>How many satellites are in the nominal NAVSTAR GPS constellation, and how are they arranged?</summary><p class="a">24 satellites on 6 orbital planes with 4 in each</p></details>
+    <details class="q"><summary>At what height do GPS satellites orbit, and at what inclination?</summary><p class="a">About 20 200 km above the WGS 84 ellipsoid, inclined 55&deg;</p></details>
+    <details class="q"><summary>Which coordinate system do GPS receivers use?</summary><p class="a">WGS 84</p></details>
+    <details class="q"><summary>Minimum satellites for a 2D fix, and for an accurate 3D fix?</summary><p class="a">3 for 2D, 4 for 3D</p></details>
+    <details class="q"><summary>RAIM has excluded a satellite &mdash; how many are needed to keep a 3D fix with RAIM?</summary><p class="a">5</p></details>
+    <details class="q"><summary>How is a GNSS position line obtained?</summary><p class="a">By timing the period taken for a satellite's transmission to reach the receiver</p></details>
+    <details class="q"><summary>Using GPS, what form does the primary position information take?</summary><p class="a">Spheres, with the aircraft at the centre</p></details>
+    <details class="q"><summary>Which parameters can a receiver determine from four satellites?</summary><p class="a">Latitude, longitude, altitude and time</p></details>
+    <details class="q"><summary>Which carrier and code does commercial aviation use?</summary><p class="a">Only the 1575 MHz carrier wave and one code</p></details>
+    <details class="q"><summary>What type of clock is used in GPS satellites?</summary><p class="a">Atomic</p></details>
+    <details class="q"><summary>How long does a GLONASS satellite take to orbit the Earth?</summary><p class="a">11 hours 15 minutes</p></details>
+    <details class="q"><summary>How does SBAS improve GNSS accuracy?</summary><p class="a">By providing an additional signal from geostationary satellites</p></details>
+    <details class="q"><summary>How are SBAS pseudo-range corrections split?</summary><p class="a">Into clock, ephemeris and ionospheric errors</p></details>
+    <details class="q"><summary>What does GBAS mean, and what is its coverage?</summary><p class="a">Ground Based Augmentation System, covering approximately 30 km</p></details>
+    <details class="q"><summary>What is the altitude datum for IFR flights on airways using GPS?</summary><p class="a">Barometric altitude</p></details>
+    <details class="q"><summary>Why do GPS satellites use helical antennas?</summary><p class="a">Because the signal has circular polarization</p></details>
+    <details class="q"><summary>What must you do if RAIM is not available during an IFR flight using GPS?</summary><p class="a">The flight may be continued using other certified navigation systems</p></details>
+    <details class="q"><summary>What is the difference between RNAV and RNP?</summary><p class="a">Both require accuracy checks, but only RNP has performance monitoring requirements</p></details>
+    <details class="q"><summary>Which factors define RNAV or RNP system performance requirements?</summary><p class="a">Accuracy, integrity and continuity</p></details>
+    <details class="q"><summary>What does "X" mean in RNAV X or RNP X?</summary><p class="a">The lateral navigation accuracy in NM, achieved at least 95 % of the flight time</p></details>
+    <details class="q"><summary>What track-keeping accuracy does Basic RNAV require?</summary><p class="a">&plusmn;5 NM or better for 95 % of the flight time</p></details>
+    <details class="q"><summary>What does RNP 1 require?</summary><p class="a">&plusmn;1 NM both lateral and longitudinal for 95 % of the flight time</p></details>
+    <details class="q"><summary>What capability does a 2D, a 3D and a 4D RNAV system have?</summary><p class="a">2D horizontal; 3D adds vertical; 4D adds time</p></details>
+    <details class="q"><summary>What is a phantom station?</summary><p class="a">A waypoint defined by a radial and a DME distance from a VOR/DME station</p></details>
+    <details class="q"><summary>What is an example of a self-contained RNAV system?</summary><p class="a">INS</p></details>
+    <details class="q"><summary>What NAVAIDs are required for RNP 10 operations?</summary><p class="a">None</p></details>
+    <details class="q"><summary>What does the PBN path terminator "CF" mean?</summary><p class="a">Course to Fix</p></details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>Instruments &amp; Radio Navigation</b> &mdash; revision sheet for airline selection screening</div>
+    <div>Built from the Selection question banks and CAE Oxford 022 / 060-2</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.qbank').forEach(function(bank){
+  var btn = bank.querySelector('.reveal');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var items = bank.querySelectorAll('details.q');
+    var opening = btn.textContent.trim() === 'Reveal all';
+    items.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'Hide all' : 'Reveal all';
+  });
+});
+</script>
