@@ -1,1 +1,883 @@
+<meta charset="utf-8">
+<title>Human Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+:root{
+  --paper:#F8F4F5;
+  --surface:#FFFFFF;
+  --surface-2:#F0E9EB;
+  --ink:#241A1E;
+  --muted:#6B5C61;
+  --line:#D9CCD0;
+  --line-soft:#E9E0E3;
+  --pnk:#A83A6B;
+  --vio:#3F4E96;
+  --tea:#106B63;
+  --caution:#8A6208;
+  --accent:#A83A6B;
+  --accent-wash:#F6E8EE;
+  --caution-wash:#F6EEDA;
+  --shadow:0 1px 2px rgba(36,26,30,.07);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#161013; --surface:#1F181B; --surface-2:#2A2024; --ink:#EBE3E6;
+    --muted:#A79599; --line:#3A2C31; --line-soft:#2C2226;
+    --pnk:#F090BC; --vio:#97A3E8; --tea:#58C0B6; --caution:#E0B25C;
+    --accent:#F090BC; --accent-wash:#2A1620; --caution-wash:#241D11;
+    --shadow:0 1px 2px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#161013; --surface:#1F181B; --surface-2:#2A2024; --ink:#EBE3E6;
+  --muted:#A79599; --line:#3A2C31; --line-soft:#2C2226;
+  --pnk:#F090BC; --vio:#97A3E8; --tea:#58C0B6; --caution:#E0B25C;
+  --accent:#F090BC; --accent-wash:#2A1620; --caution-wash:#241D11;
+  --shadow:0 1px 2px rgba(0,0,0,.45);
+}
 
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.cond{font-family:"Barlow Condensed","Arial Narrow",Helvetica,sans-serif;text-wrap:balance}
+code,.mono,.num,td.n{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+
+.masthead{border-bottom:2px solid var(--ink);background:var(--surface)}
+.mast-in{max-width:1080px;margin:0 auto;padding:26px 24px 18px;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px 28px;justify-content:space-between}
+.mast-title{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.subj-code{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;
+  letter-spacing:.1em;color:var(--surface);background:var(--pnk);padding:5px 9px;border-radius:2px}
+h1{margin:0;font-size:44px;line-height:.98;font-weight:700;letter-spacing:.005em}
+.mast-sub{margin:6px 0 0;color:var(--muted);font-size:14.5px;max-width:46ch}
+.mast-meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);
+  text-align:right;line-height:1.9;letter-spacing:.04em}
+.mast-meta b{color:var(--ink);font-weight:600}
+
+.rail{position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb,var(--paper) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.rail-in{max-width:1080px;margin:0 auto;padding:9px 24px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.rail a{flex:0 0 auto;text-decoration:none;color:var(--muted);
+  font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+  letter-spacing:.03em;text-transform:uppercase;padding:5px 10px;border-radius:3px;white-space:nowrap}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .rc{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--accent);margin-right:5px}
+.rail .sep{flex:0 0 auto;width:1px;background:var(--line);margin:2px 6px}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.part-band{display:flex;align-items:baseline;gap:14px;margin:46px 0 -14px;
+  padding-bottom:9px;border-bottom:2px solid var(--ink)}
+.part-band .pn{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;
+  color:var(--surface);background:var(--ink);padding:3px 8px;border-radius:2px;letter-spacing:.09em}
+.part-band .pt{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:24px;letter-spacing:.02em}
+.part-band .pd{font-size:13.5px;color:var(--muted);margin-left:auto;text-align:right}
+
+section{padding:46px 0 8px;border-bottom:1px solid var(--line-soft)}
+section:last-of-type{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.1em}
+h2{margin:0;font-size:31px;font-weight:700;line-height:1.08}
+.lede{margin:2px 0 26px;color:var(--muted);font-size:15px;max-width:64ch}
+h3{margin:30px 0 8px;font-size:16px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.09em;color:var(--ink);padding-bottom:5px;border-bottom:1px solid var(--line)}
+p{margin:0 0 12px;max-width:68ch}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 26px;align-items:start}
+ul.tight,ol.tight{margin:0 0 12px;padding-left:19px;max-width:68ch}
+ul.tight li,ol.tight li{margin-bottom:5px}
+b,strong{font-weight:600}
+.k{color:var(--accent);font-weight:600}
+
+.numbers{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--pnk);
+  border-radius:2px;padding:15px 18px;margin:18px 0;box-shadow:var(--shadow)}
+.numbers .nh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted);margin-bottom:9px}
+.nlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:2px 26px;margin:0}
+.nrow{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding:4px 0;border-bottom:1px dotted var(--line-soft);font-size:14.5px}
+.nrow:last-child{border-bottom:0}
+.nrow span:first-child{color:var(--muted)}
+.nrow .v{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13.5px;
+  color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.tw{overflow-x:auto;margin:14px 0 18px}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:440px}
+th{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:14px;
+  text-transform:uppercase;letter-spacing:.07em;text-align:left;
+  border-bottom:1.5px solid var(--ink);padding:6px 10px 5px;color:var(--ink)}
+td{padding:6px 10px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:13.5px}
+tbody tr:hover{background:var(--surface-2)}
+
+.caution{background:var(--caution-wash);border:1px solid var(--caution);border-radius:2px;
+  padding:12px 15px;margin:16px 0;font-size:15px}
+.caution .ch{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--caution);display:block;margin-bottom:3px}
+.caution p{margin:0;max-width:none}
+
+figure{margin:24px 0;background:var(--surface);border:1px solid var(--line);border-radius:2px;
+  padding:16px 16px 10px;box-shadow:var(--shadow);overflow-x:auto}
+figure svg{display:block;width:100%;max-width:100%;height:auto;color:var(--ink)}
+figcaption{margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft);
+  font-size:13.5px;color:var(--muted);line-height:1.5}
+figcaption b{color:var(--ink)}
+
+.qbank{margin:30px 0 10px;background:var(--surface-2);border-radius:3px;padding:16px 18px 18px}
+.qb-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.qb-title{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:15px;
+  text-transform:uppercase;letter-spacing:.11em;color:var(--muted)}
+.qb-title em{font-style:normal;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-size:12px}
+.reveal{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;text-transform:uppercase;
+  letter-spacing:.07em;color:var(--accent);background:transparent;
+  border:1px solid var(--accent);border-radius:2px;padding:4px 11px;cursor:pointer}
+.reveal:hover{background:var(--accent);color:var(--surface)}
+.reveal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q{border-bottom:1px solid var(--line);padding:0}
+details.q:last-of-type{border-bottom:0}
+details.q summary{cursor:pointer;list-style:none;padding:9px 30px 9px 0;position:relative;
+  font-size:15.5px;line-height:1.45}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::after{content:"+";position:absolute;right:4px;top:8px;
+  font-family:"IBM Plex Mono",monospace;color:var(--muted);font-size:17px;line-height:1.4}
+details.q[open] summary::after{content:"\2212";color:var(--accent)}
+details.q summary:hover{color:var(--accent)}
+details.q summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+details.q .a{margin:0 0 12px;padding:9px 13px;background:var(--surface);
+  border-left:3px solid var(--accent);border-radius:0 2px 2px 0;
+  font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.6;max-width:none}
+details.q .a .why{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--muted);line-height:1.5}
+details.q .a .flag{display:block;margin-top:6px;font-family:"Source Serif 4",serif;font-size:14px;
+  color:var(--caution);line-height:1.5}
+
+.work{background:var(--surface);border:1px dashed var(--line);border-radius:2px;
+  padding:13px 16px;margin:16px 0;font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.75}
+.work .wh{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.work .res{color:var(--accent);font-weight:600}
+
+footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24px;margin-top:40px}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  font-size:13.5px;color:var(--muted)}
+.foot-in b{color:var(--ink);font-weight:600}
+
+@media (max-width:640px){
+  h1{font-size:34px} h2{font-size:26px}
+  .mast-meta{text-align:left} body{font-size:16px}
+  .part-band{flex-wrap:wrap} .part-band .pd{margin-left:0;text-align:left;width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="masthead">
+  <div class="mast-in">
+    <div class="mast-title">
+      <span class="subj-code">040</span>
+      <div>
+        <h1>Human Performance</h1>
+        <p class="mast-sub">Revision sheet for airline selection screening &mdash; theory, diagrams and the real question bank, by syllabus topic.</p>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div><b>181</b> questions &middot; <b>9</b> topics</div>
+      <div>EASA ATPL(A) &middot; CAE Oxford 040</div>
+      <div>Click a question to reveal</div>
+    </div>
+  </div>
+</header>
+
+<nav class="rail" aria-label="Topics">
+  <div class="rail-in">
+    <a href="#alt"><span class="rc">01</span>Altitude &amp; Oxygen</a>
+    <a href="#health"><span class="rc">02</span>Circulation &amp; Health</a>
+    <a href="#vision"><span class="rc">03</span>Vision</a>
+    <a href="#vest"><span class="rc">04</span>Vestibular &amp; Illusions</a>
+    <a href="#sleep"><span class="rc">05</span>Sleep &amp; Fatigue</a>
+    <span class="sep"></span>
+    <a href="#info"><span class="rc">06</span>Information Processing</a>
+    <a href="#stress"><span class="rc">07</span>Stress</a>
+    <a href="#error"><span class="rc">08</span>Human Error &amp; TEM</a>
+    <a href="#crm"><span class="rc">09</span>CRM</a>
+  </div>
+</nav>
+
+<main>
+
+<div class="part-band">
+  <span class="pn">040</span>
+  <span class="pt">HUMAN PERFORMANCE &amp; LIMITATIONS</span>
+  <span class="pd">Around 70 % of accidents involve human error</span>
+</div>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 01 ALTITUDE &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="alt">
+  <div class="sec-head"><span class="eyebrow">040 01</span><h2>Altitude, Oxygen &amp; Pressure</h2></div>
+  <p class="lede">Everything here follows from one fact: pressure falls with height, and so does the partial pressure of oxygen.</p>
+
+  <figure>
+    <svg viewBox="0 0 800 380" role="img" aria-label="Altitude scale showing pressure, gas expansion, time of useful consciousness and the limits of supplemental oxygen">
+      <line x1="150" y1="350" x2="150" y2="30" stroke="currentColor" stroke-width="1.8"/>
+      <!-- ticks -->
+      <g font-size="11.5">
+        <g stroke="currentColor" stroke-width="1">
+          <line x1="144" y1="340" x2="156" y2="340"/><line x1="144" y1="292" x2="156" y2="292"/>
+          <line x1="144" y1="256" x2="156" y2="256"/><line x1="144" y1="216" x2="156" y2="216"/>
+          <line x1="144" y1="172" x2="156" y2="172"/><line x1="144" y1="128" x2="156" y2="128"/>
+          <line x1="144" y1="88" x2="156" y2="88"/><line x1="144" y1="52" x2="156" y2="52"/>
+        </g>
+        <text x="138" y="344" text-anchor="end" fill="currentColor">SL</text>
+        <text x="138" y="296" text-anchor="end" fill="currentColor">10 000</text>
+        <text x="138" y="260" text-anchor="end" fill="currentColor">12 000</text>
+        <text x="138" y="220" text-anchor="end" fill="currentColor">18 000</text>
+        <text x="138" y="176" text-anchor="end" fill="currentColor">27 000</text>
+        <text x="138" y="132" text-anchor="end" fill="currentColor">34 000</text>
+        <text x="138" y="92" text-anchor="end" fill="currentColor">40 000</text>
+        <text x="138" y="56" text-anchor="end" fill="currentColor">45 000 ft</text>
+      </g>
+      <!-- bands -->
+      <rect x="160" y="292" width="200" height="58" fill="#106B63" opacity=".16"/>
+      <rect x="160" y="128" width="200" height="164" fill="#3F4E96" opacity=".16"/>
+      <rect x="160" y="40" width="200" height="88" fill="#A83A6B" opacity=".18"/>
+      <text x="260" y="326" font-size="11.5" text-anchor="middle" fill="#106B63" font-weight="600">INDIFFERENT</text>
+      <text x="260" y="216" font-size="11.5" text-anchor="middle" fill="#3F4E96" font-weight="600">COMPENSATORY</text>
+      <text x="260" y="232" font-size="11" text-anchor="middle" fill="#3F4E96">&rarr; DISTURBANCE</text>
+      <text x="260" y="88" font-size="11.5" text-anchor="middle" fill="#A83A6B" font-weight="600">CRITICAL</text>
+
+      <!-- annotations -->
+      <g font-size="11.5" fill="currentColor">
+        <text x="382" y="296">Performance decrement begins &mdash; oxygen required above this level</text>
+        <text x="382" y="260">Short-term memory impairment starts</text>
+        <text x="382" y="220">Pressure is <tspan font-weight="600">half</tspan> sea level &mdash; a gas <tspan font-weight="600">doubles</tspan> in volume</text>
+        <text x="382" y="176">Pressure about <tspan font-weight="600">one third</tspan> &mdash; a gas is <tspan font-weight="600">three times</tspan> its sea-level volume</text>
+        <text x="382" y="132">100 % oxygen gives roughly the <tspan font-weight="600">sea-level</tspan> equivalent</text>
+        <text x="382" y="92">Limit of useful 100 % oxygen &mdash; <tspan font-weight="600">pressure breathing</tspan> needed above</text>
+        <text x="382" y="56">A gas reaches about <tspan font-weight="600">eight times</tspan> its sea-level volume</text>
+      </g>
+      <text x="400" y="372" font-size="11.5" text-anchor="middle" fill="currentColor">Boyle's law drives the gas-expansion figures; the oxygen limits follow the falling <tspan font-style="italic">partial</tspan> pressure of O&#8322;.</text>
+    </svg>
+    <figcaption><b>Total pressure and partial pressure fall together.</b> Oxygen stays 21 % of the air all the way up &mdash; what changes is its <em>partial</em> pressure, and that is what the lungs work with. Supplemental oxygen raises the fraction to compensate, until around 40 000 ft where even 100 % is no longer enough and the gas itself has to be delivered under pressure.</figcaption>
+  </figure>
+
+  <div class="numbers">
+    <div class="nh">Time of useful consciousness (sudden decompression)</div>
+    <div class="nlist">
+      <div class="nrow"><span>FL180</span><span class="v">20&ndash;30 min</span></div>
+      <div class="nrow"><span>FL250</span><span class="v">3&ndash;5 min</span></div>
+      <div class="nrow"><span>FL300</span><span class="v">1&ndash;2 min</span></div>
+      <div class="nrow"><span>FL350</span><span class="v">30&ndash;60 s</span></div>
+      <div class="nrow"><span>FL400</span><span class="v">15&ndash;20 s</span></div>
+      <div class="nrow"><span>General gas law</span><span class="v">P &times; V / T = constant</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3>Hypoxia</h3>
+      <ul class="tight">
+        <li><b>Insufficient oxygen reaching the body tissues</b>, caused by the <b>reduced partial pressure of oxygen in the lungs</b>. It impairs thinking and reactions.</li>
+        <li>Symptoms: <b>euphoria, poor judgement, lack of concentration, fatigue, increased heart rate, cyanosis, somnolence</b>, and <b>blurred or tunnel vision</b>.</li>
+        <li>The <b>most dangerous symptom for flight safety is impaired judgement and loss of self-criticism</b> &mdash; you feel fine while performing badly.</li>
+        <li><b>Night vision is the first function to suffer</b>, from as low as 5000 ft.</li>
+        <li><b>Fatigue, stress and smoking all lower your tolerance</b> to it. Above FL100 after a slow pressurisation failure the onset is <b>gradual and hard to recognise</b>.</li>
+        <li>Hypoxia <b>can itself trigger hyperventilation</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Hyperventilation &amp; decompression sickness</h3>
+      <ul class="tight">
+        <li><b>Hyperventilation</b> is breathing beyond physiological need. It <b>washes out CO&#8322;</b>, so the <b>blood becomes more alkaline</b> (acidity reduced), cerebral vessels constrict, and paradoxically <b>less oxygen is released into the cells</b>.</li>
+        <li>Triggers: <b>anxiety, stress, pain, pressure breathing</b>. Shared symptom with hypoxia: <b>tingling in the arms and legs</b>.</li>
+        <li><b>Decompression sickness</b> = dissolved <b>nitrogen coming out of solution</b> in tissues and fluids. <b>Bends</b> = joint pain. <b>Chokes</b> = chest and lungs. It can also cause embolism.</li>
+        <li><b>Not</b> symptoms of DCS: <b>red-out</b> and <b>the leans</b> &mdash; both are asked as traps.</li>
+        <li><b>Barotrauma</b> comes from <b>pressure differentials in body cavities</b> &mdash; ears, sinuses, teeth, gut.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; altitude &amp; oxygen</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the general gas law?</summary><p class="a">Volume &times; pressure &divide; absolute temperature is constant</p></details>
+    <details class="q"><summary>At sea level a gas has what fraction of the volume it would have at 27 000 ft?</summary><p class="a">One third</p></details>
+    <details class="q"><summary>At what altitude does a gas expand to about 8 litres from 1 litre at sea level?</summary><p class="a">45 000 ft</p></details>
+    <details class="q"><summary>What is the effect of increasing altitude on pressure?</summary><p class="a">Total pressure decreases and partial pressures decrease</p></details>
+    <details class="q"><summary>What happens to the partial pressure of oxygen during a climb?</summary><p class="a">It decreases identically to atmospheric pressure</p></details>
+    <details class="q"><summary>What is hypoxia?</summary><p class="a">A lack of oxygen to body tissues causing impaired mental and motor function</p></details>
+    <details class="q"><summary>What causes hypoxia?</summary><p class="a">Reduced partial pressure of oxygen in the lungs</p></details>
+    <details class="q"><summary>What is the most dangerous hypoxia symptom for flight safety?</summary><p class="a">Impaired judgement &mdash; and loss of self-criticism</p></details>
+    <details class="q"><summary>List the symptoms of hypoxia.</summary><p class="a">Euphoria, poor judgement, increased heart rate, cyanosis, somnolence &mdash; plus lack of concentration and fatigue</p></details>
+    <details class="q"><summary>What is the visual effect of hypoxia?</summary><p class="a">Blurred and/or tunnel vision</p></details>
+    <details class="q"><summary>Which function is most sensitive to hypoxia?</summary><p class="a">Night vision</p></details>
+    <details class="q"><summary>At what altitude does short-term memory impairment begin?</summary><p class="a">12 000 ft</p></details>
+    <details class="q"><summary>What is the physiological safe altitude when breathing 100 % oxygen?</summary><p class="a">40 000 ft &mdash; effects begin around 38 000 to 40 000 ft</p></details>
+    <details class="q"><summary>Effect of fatigue and stress on hypoxia?</summary><p class="a">They lower tolerance to hypoxia</p></details>
+    <details class="q"><summary>Effect of smoking three cigarettes in one hour?</summary><p class="a">Decreases tolerance to hypoxia</p></details>
+    <details class="q"><summary>Pressurisation failure above FL100 &mdash; what is the danger?</summary><p class="a">Hypoxia effects may be gradual and difficult to recognise</p></details>
+    <details class="q"><summary>What is hyperventilation?</summary><p class="a">A normal compensatory physiological reaction to reduced oxygen pressure &mdash; increased rate and depth of breathing</p></details>
+    <details class="q"><summary>What happens to blood chemistry during hyperventilation?</summary><p class="a">Blood acidity is reduced &mdash; the blood becomes more alkaline</p></details>
+    <details class="q"><summary>What does low CO&#8322; from hyperventilation cause?</summary><p class="a">Less oxygen diffused into the cells</p></details>
+    <details class="q"><summary>Which events cause hyperventilation without physical need?</summary><p class="a">Pressure breathing, anxiety, overstress and strong pain</p></details>
+    <details class="q"><summary>Which symptom is common to both hypoxia and hyperventilation?</summary><p class="a">Tingling sensation in the arms and legs</p></details>
+    <details class="q"><summary>What characterises decompression sickness?</summary><p class="a">Over-saturated nitrogen gas in body tissues &mdash; dissolved gases released from tissues and fluids</p></details>
+    <details class="q"><summary>What are the bends, and what are the chokes?</summary><p class="a">Bends: pain in the joints. Chokes: gas bubbles affecting the lungs</p></details>
+    <details class="q"><summary>Which is NOT a symptom of decompression sickness?</summary><p class="a">Red-out &mdash; and the leans is also not one</p></details>
+    <details class="q"><summary>What causes barotrauma?</summary><p class="a">Pressure differentials in body cavities</p></details>
+    <details class="q"><summary>How is carbon monoxide poisoning treated?</summary><p class="a">By increasing the physically dissolved oxygen in the blood</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 02 HEALTH &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="health">
+  <div class="sec-head"><span class="eyebrow">040 02</span><h2>Circulation &amp; Health</h2></div>
+  <p class="lede">The physiology numbers, and the handful of medical facts the bank asks about.</p>
+
+  <div class="numbers">
+    <div class="nh">Baseline physiology</div>
+    <div class="nlist">
+      <div class="nrow"><span>Resting heart rate</span><span class="v">&asymp; 70 bpm</span></div>
+      <div class="nrow"><span>Cardiac output</span><span class="v">&asymp; 5.2 L/min</span></div>
+      <div class="nrow"><span>Breathing rate</span><span class="v">10&ndash;16 / min</span></div>
+      <div class="nrow"><span>Oxygen in air</span><span class="v">21 %</span></div>
+      <div class="nrow"><span>Oxygen in alveoli</span><span class="v">&asymp; 14.5 %</span></div>
+      <div class="nrow"><span>Alcohol elimination</span><span class="v">&asymp; 0.015 % / hour</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Blood</b>: <b>red cells carry oxygen, white cells provide immunity, platelets coagulate</b>.</li>
+        <li>A <b>stroke</b> occurs when the <b>blood supply to part of the brain is cut off</b>; a <b>heart infarction</b> follows a <b>blocked coronary artery</b>.</li>
+        <li><b>Hypertension increases the risk of heart attack and stroke.</b></li>
+        <li><b>Alcohol</b> is eliminated at roughly <b>0.015 % per hour and the rate cannot be accelerated</b> &mdash; coffee, food and time-of-day make no difference.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Signals pass between neurons by the release of chemicals</b> across the synapse.</li>
+        <li><b>+Gz (radial) acceleration</b> has the most significant physiological effect on pilots.</li>
+        <li><b>Alpha radiation is stopped by a sheet of paper</b>; beta needs metal, gamma needs lead.</li>
+        <li><b>Hepatitis A</b> can be prevented by <b>gamma-globulin or vaccination</b>.</li>
+        <li><b>Contact lenses (Part-MED)</b>: you must <b>carry a spare set of spectacles</b> approved by the AME.</li>
+        <li><b>Caffeine</b> is not only in coffee &mdash; <b>hot chocolate</b> contains it too.</li>
+        <li><b>Psychosomatic</b>: mental or emotional stress can produce genuine <b>organic reactions</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="caution">
+    <span class="ch">One figure to check</span>
+    <p>The summary in your material quotes <b>normal blood pressure as roughly 100/60 mmHg</b> and high blood pressure as <b>160/100</b>. Clinical practice more usually quotes normal as around <b>120/80</b>. Answer with the figure your own course material uses, but know both.</p>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; circulation &amp; health</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the normal breathing rate for an adult?</summary><p class="a">10&ndash;15 breaths per minute</p></details>
+    <details class="q"><summary>What are the constituent parts of blood and their functions?</summary><p class="a">Red cells carry oxygen, white cells are involved in immunity, platelets coagulate blood</p></details>
+    <details class="q"><summary>What is a stroke?</summary><p class="a">A stroke occurs when the blood supply to a certain part of the brain is cut off</p></details>
+    <details class="q"><summary>What condition results from a blocked coronary artery?</summary><p class="a">Heart infarction</p></details>
+    <details class="q"><summary>What are the risks of hypertension?</summary><p class="a">It increases the risk of heart attack and stroke</p></details>
+    <details class="q"><summary>What is the alcohol elimination rate?</summary><p class="a">Approximately 0.015 % per hour, and it cannot be accelerated</p></details>
+    <details class="q"><summary>How is signal transmission between neurons achieved?</summary><p class="a">By the release of chemicals</p></details>
+    <details class="q"><summary>Which acceleration has the most significant physiological effect on pilots?</summary><p class="a">Radial acceleration (+Gz)</p></details>
+    <details class="q"><summary>Which radiation is blocked by paper?</summary><p class="a">Alpha radiation</p></details>
+    <details class="q"><summary>How can hepatitis A infection be prevented?</summary><p class="a">By gamma-globulin or vaccination</p></details>
+    <details class="q"><summary>What does EASA Part-MED require when wearing contact lenses?</summary><p class="a">Carry a spare set of spectacles approved by the AME</p></details>
+    <details class="q"><summary>Which drink other than coffee contains caffeine?</summary><p class="a">Hot chocolate</p></details>
+    <details class="q"><summary>Which psychosomatic statement is correct?</summary><p class="a">Mental or emotional stress can manifest as organic stress reactions</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 03 VISION &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="vision">
+  <div class="sec-head"><span class="eyebrow">040 03</span><h2>Vision</h2></div>
+  <p class="lede">Rods and cones sit in different places, and that single fact explains night vision, the blind spot and off-centre viewing.</p>
+
+  <figure>
+    <svg viewBox="0 0 780 300" role="img" aria-label="Cross-section of the eye showing the light path and the distribution of rods and cones across the retina">
+      <!-- eyeball -->
+      <circle cx="270" cy="150" r="110" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <!-- cornea -->
+      <path d="M160 150 a34 60 0 0 1 8 -44 a30 30 0 0 1 0 88 a34 60 0 0 1 -8 -44z" fill="#106B63" opacity=".26" stroke="#106B63" stroke-width="1.4"/>
+      <text x="150" y="82" font-size="11.5" text-anchor="middle" fill="#106B63" font-weight="600">CORNEA</text>
+      <!-- iris/pupil -->
+      <line x1="196" y1="112" x2="196" y2="132" stroke="#3F4E96" stroke-width="4"/>
+      <line x1="196" y1="168" x2="196" y2="188" stroke="#3F4E96" stroke-width="4"/>
+      <text x="196" y="102" font-size="11.5" text-anchor="middle" fill="#3F4E96" font-weight="600">IRIS / PUPIL</text>
+      <!-- lens -->
+      <ellipse cx="214" cy="150" rx="12" ry="30" fill="#A83A6B" opacity=".3" stroke="#A83A6B" stroke-width="1.4"/>
+      <text x="222" y="212" font-size="11.5" text-anchor="middle" fill="#A83A6B" font-weight="600">LENS</text>
+      <!-- retina -->
+      <path d="M330 62 a110 110 0 0 1 0 176" fill="none" stroke="currentColor" stroke-width="5" opacity=".35"/>
+      <text x="372" y="150" font-size="11.5" fill="currentColor" font-weight="600">RETINA</text>
+      <!-- fovea -->
+      <circle cx="379" cy="150" r="6" fill="#A83A6B"/>
+      <text x="372" y="176" font-size="11" fill="#A83A6B">FOVEA &mdash; cones only</text>
+      <!-- blind spot -->
+      <circle cx="366" cy="196" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <text x="376" y="214" font-size="11" fill="currentColor">blind spot</text>
+      <!-- light rays -->
+      <g stroke="currentColor" stroke-width="1.2" opacity=".7">
+        <line x1="60" y1="120" x2="200" y2="142"/>
+        <line x1="60" y1="180" x2="200" y2="158"/>
+        <line x1="228" y1="142" x2="374" y2="150"/>
+        <line x1="228" y1="158" x2="374" y2="150"/>
+      </g>
+      <text x="70" y="106" font-size="11.5" fill="currentColor">light</text>
+
+      <!-- receptor distribution -->
+      <text x="600" y="44" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">RECEPTOR DISTRIBUTION</text>
+      <line x1="500" y1="230" x2="700" y2="230" stroke="currentColor" stroke-width="1.4"/>
+      <line x1="500" y1="230" x2="500" y2="70" stroke="currentColor" stroke-width="1.4"/>
+      <text x="600" y="252" font-size="11" text-anchor="middle" fill="currentColor">periphery &nbsp;&larr;&nbsp; fovea &nbsp;&rarr;&nbsp; periphery</text>
+      <!-- cones peak at centre -->
+      <path d="M505 226 L560 220 L595 90 L605 90 L640 220 L695 226" fill="none" stroke="#A83A6B" stroke-width="2.4"/>
+      <text x="600" y="82" font-size="11" text-anchor="middle" fill="#A83A6B" font-weight="600">CONES</text>
+      <!-- rods peak off-centre -->
+      <path d="M505 190 Q545 128 570 140 L600 226 L630 140 Q655 128 695 190" fill="none" stroke="#3F4E96" stroke-width="2.4"/>
+      <text x="524" y="122" font-size="11" fill="#3F4E96" font-weight="600">RODS</text>
+      <text x="600" y="272" font-size="11" text-anchor="middle" fill="currentColor">Rods peak <tspan font-style="italic">away</tspan> from the fovea &mdash; hence off-centre viewing at night</text>
+    </svg>
+    <figcaption><b>The sharpest part of your eye is blind in the dark.</b> The fovea contains <b>only cones</b>, which need bright light and give colour and detail; the <b>rods</b> that handle night vision sit in the periphery. So at night you must look slightly <em>off</em> the object to see it &mdash; and looking straight at a faint light makes it disappear.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li>Light path: <b>cornea &rarr; iris/pupil &rarr; lens &rarr; retina</b>.</li>
+        <li><b>Rods</b>: low light, no colour, night (scotopic) vision. <b>Cones</b>: sharp colour vision in bright light (photopic).</li>
+        <li>Preserve night vision by <b>avoiding smoking and flash-blindness</b>; full dark adaptation takes about <b>30 minutes</b>.</li>
+        <li>Factors degrading visual acuity at altitude: <b>autokinesis, carbon monoxide poisoning and hypoxia</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Empty-field myopia</b> &mdash; with <b>no distant focal points</b> the eye relaxes to a near focus, so distant traffic goes unseen.</li>
+        <li><b>Cataract</b> is a <b>clouding of the lens</b>.</li>
+        <li><b>Monocular depth cues</b>: <b>obscuration (interposition), texture gradient, atmospheric perspective</b>, relative size and motion parallax. Binocular cues need both eyes and work only close in.</li>
+        <li>Flying into <b>fog, snow or haze</b> makes objects <b>appear farther away</b> than they are.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; vision</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the correct order in which light passes through the eye?</summary><p class="a">Cornea &rarr; iris/pupil &rarr; lens &rarr; retina</p></details>
+    <details class="q"><summary>Is the fovea used in night vision?</summary><p class="a">No &mdash; it contains only cones</p></details>
+    <details class="q"><summary>What is the best way to preserve night vision?</summary><p class="a">Avoid smoking and flash-blindness</p></details>
+    <details class="q"><summary>Which factors affect visual acuity at high altitude?</summary><p class="a">Autokinesis, carbon monoxide poisoning and hypoxia</p></details>
+    <details class="q"><summary>What causes empty-field myopia?</summary><p class="a">Lack of distant focal points</p></details>
+    <details class="q"><summary>What causes a cataract?</summary><p class="a">Clouding of the lens</p></details>
+    <details class="q"><summary>Which are monocular depth cues only?</summary><p class="a">Obscuration, texture and atmospheric perspective</p></details>
+    <details class="q"><summary>What illusion occurs flying into fog, snow or haze?</summary><p class="a">Objects appear farther away</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 04 VESTIBULAR &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="vest">
+  <div class="sec-head"><span class="eyebrow">040 04</span><h2>Vestibular System &amp; Illusions</h2></div>
+  <p class="lede">Your inner ear measures acceleration, not attitude. Every illusion in this topic comes from that limitation.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li>The <b>vestibular apparatus</b> consists of the <b>semi-circular canals</b> (angular acceleration) and the <b>otoliths</b> (linear acceleration and gravity). Together they measure <b>linear and angular acceleration in the inner ear</b>.</li>
+        <li><b>Somatogravic illusion</b> &mdash; linear acceleration is felt as a change of pitch, giving a false impression of <b>climbing or descending</b>. Being <b>pressed into the seat feels like starting a climb</b>.</li>
+        <li><b>Proprioceptive senses</b> ("seat of the pants") <b>give false information once visual references are lost</b>.</li>
+        <li><b>Autokinesis</b> &mdash; a stationary light in darkness appears to move.</li>
+        <li><b>Flickering light</b> from a propeller or rotor may cause <b>disorientation or nausea</b>.</li>
+        <li>Cure for vertigo: <b>in IMC, establish an instrument cross-check, trust the instruments and ignore the sensations</b>. In good visibility, <b>look at the horizon</b>.</li>
+        <li><b>Motion sickness</b>: look at a solid point such as the horizon. <b>Euphoria is not</b> one of its symptoms.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Approach illusions</h3>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Situation</th><th>You feel</th><th>You tend to</th></tr></thead>
+          <tbody>
+            <tr><td><b>Narrow runway</b></td><td>Too high</td><td>Fly low, <b>flare too late</b></td></tr>
+            <tr><td><b>Wide runway</b></td><td><b>Too low</b></td><td>Fly high, land long</td></tr>
+            <tr><td><b>Upslope runway</b></td><td>Too high</td><td><b>Land short</b></td></tr>
+            <tr><td><b>Downslope runway</b></td><td>Too low</td><td><b>Land long</b></td></tr>
+            <tr><td><b>Black hole</b> (night over water)</td><td>Too high</td><td>Fly a <b>low approach</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The pattern is consistent: <b>whatever makes the runway look bigger makes you feel low</b>, and whatever makes it look smaller makes you feel high &mdash; and you then fly the opposite of what you feel.</p>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; vestibular &amp; illusions</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What does the vestibular system do?</summary><p class="a">Measures linear and angular acceleration in the inner ear</p></details>
+    <details class="q"><summary>What does the vestibular apparatus consist of?</summary><p class="a">The semi-circular canals and the otoliths</p></details>
+    <details class="q"><summary>What false impression does the somatogravic illusion give?</summary><p class="a">Of climbing or descending</p></details>
+    <details class="q"><summary>Why does being pressed into the seat cause an illusion?</summary><p class="a">It feels like starting a climb or a level turn</p></details>
+    <details class="q"><summary>What do the proprioceptive senses do when visual references are lost?</summary><p class="a">They give false information</p></details>
+    <details class="q"><summary>Approach to a narrow runway &mdash; what is the likely error?</summary><p class="a">Initiating the flare too late</p></details>
+    <details class="q"><summary>When does the illusion of being low on approach occur?</summary><p class="a">When the runway is wider than usual</p></details>
+    <details class="q"><summary>Approach to an upslope runway?</summary><p class="a">The pilot feels higher than actual and may land short</p></details>
+    <details class="q"><summary>Approach to a downslope runway?</summary><p class="a">Tendency to land long</p></details>
+    <details class="q"><summary>What is the black hole effect?</summary><p class="a">A night approach over water creating the illusion of being high, leading to a low approach</p></details>
+    <details class="q"><summary>What is autokinesis?</summary><p class="a">The apparent movement of a stationary light in darkness</p></details>
+    <details class="q"><summary>How do you overcome vertigo in IMC?</summary><p class="a">Establish an instrument cross-check, trust the instruments and ignore the illusions</p></details>
+    <details class="q"><summary>How do you prevent vertigo in good visibility?</summary><p class="a">Look at the horizon</p></details>
+    <details class="q"><summary>What is the best way to overcome motion sickness?</summary><p class="a">Look at a solid point such as the horizon</p></details>
+    <details class="q"><summary>Which is NOT a symptom of motion sickness?</summary><p class="a">Euphoria</p></details>
+    <details class="q"><summary>What is the effect of flickering light from a propeller or rotor?</summary><p class="a">It may cause disorientation or nausea</p></details>
+    <details class="q"><summary>Correct action if disoriented during night flying?</summary><p class="a">Rely on the instruments</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 05 SLEEP &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="sleep">
+  <div class="sec-head"><span class="eyebrow">040 05</span><h2>Sleep, Fatigue &amp; Circadian Rhythms</h2></div>
+  <p class="lede">Two kinds of sleep doing two different jobs, and why eastbound is worse.</p>
+
+  <div class="numbers">
+    <div class="nh">Sleep &amp; circadian numbers</div>
+    <div class="nlist">
+      <div class="nrow"><span>Resynchronisation rate</span><span class="v">1&ndash;1.5 h per day</span></div>
+      <div class="nrow"><span>Harder direction</span><span class="v">eastbound</span></div>
+      <div class="nrow"><span>REM sleep restores</span><span class="v">the brain</span></div>
+      <div class="nrow"><span>Deep (slow-wave) sleep restores</span><span class="v">the body</span></div>
+      <div class="nrow"><span>Fatigue categories</span><span class="v">acute and chronic</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>REM (paradoxical) sleep</b> re-vitalises the <b>brain</b> and is characterised by <b>rapid eye movements</b> and dreaming.</li>
+        <li><b>Deep sleep</b> handles <b>physical recovery</b>.</li>
+        <li><b>Lack of sleep</b> causes <b>fatigue, reduced concentration, an increased risk of sensory illusions and mood disorders</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Jet lag</b>: adaptation <b>takes longer eastbound</b> (you must shorten your day, which the body resists) and varies between individuals. Resynchronisation runs at <b>1 to 1.5 hours per day</b>.</li>
+        <li><b>Causes of fatigue</b>: sleep loss and jet lag. <b>Acute</b> fatigue is short-term and reversible with rest; <b>chronic</b> fatigue accumulates.</li>
+        <li><b>Acute fatigue symptoms</b>: <b>lack of vigilance, falling asleep, irritability and an increased error rate</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; sleep &amp; fatigue</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What does REM sleep do?</summary><p class="a">Re-vitalises the brain</p></details>
+    <details class="q"><summary>What is the role of deep sleep?</summary><p class="a">Physical recovery</p></details>
+    <details class="q"><summary>What characterises paradoxical (REM) sleep?</summary><p class="a">Rapid eye movements occur</p></details>
+    <details class="q"><summary>What are the main effects of lack of sleep on performance?</summary><p class="a">Increased fatigue, reduced concentration, increased risk of sensory illusions and mood disorders</p></details>
+    <details class="q"><summary>How does jet lag adaptation behave?</summary><p class="a">It takes longer eastbound and varies among individuals</p></details>
+    <details class="q"><summary>What is the circadian resynchronisation rate?</summary><p class="a">1 to 1.5 hours per day</p></details>
+    <details class="q"><summary>What are the causes of fatigue?</summary><p class="a">Sleep loss and jet lag</p></details>
+    <details class="q"><summary>What are the two categories of fatigue?</summary><p class="a">Acute and chronic</p></details>
+    <details class="q"><summary>What are the symptoms of acute fatigue?</summary><p class="a">Lack of vigilance, falling asleep, irritability and an increased error rate</p></details>
+    <details class="q"><summary>What causes low vigilance?</summary><p class="a">Monotony, tiredness and lack of stimulation</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 06 INFO &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="info">
+  <div class="sec-head"><span class="eyebrow">040 06</span><h2>Information Processing</h2></div>
+  <p class="lede">Perception, attention and the three memories &mdash; with the numbers they ask for.</p>
+
+  <div class="numbers">
+    <div class="nh">Memory &amp; attention</div>
+    <div class="nlist">
+      <div class="nrow"><span>Short-term memory duration</span><span class="v">&asymp; 20 seconds</span></div>
+      <div class="nrow"><span>Short-term memory capacity</span><span class="v">&asymp; 7 unrelated items</span></div>
+      <div class="nrow"><span>Long-term memory limit</span><span class="v">retrieval, not capacity</span></div>
+      <div class="nrow"><span>Minimum stimulus strength</span><span class="v">sensory threshold</span></div>
+      <div class="nrow"><span>Raising the threshold means</span><span class="v">reduced sensitivity</span></div>
+      <div class="nrow"><span>Basis of all perception</span><span class="v">intensity of the stimulus</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Working / short-term memory</b> is <b>limited in size, sensitive to interference and interruption</b>, and lasts about <b>20 seconds</b>.</li>
+        <li><b>Long-term memory</b>'s main limitation is the <b>difficulty of retrieving</b> what is stored, not storing it.</li>
+        <li><b>Divided attention</b> is <b>managing several matters sequentially</b> &mdash; not simultaneously.</li>
+        <li>The <b>cocktail party effect</b> is the ability to pick up relevant information <b>unintentionally</b>, from a channel you were not attending to.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Motor programs</b> are <b>stored routines executed without conscious control</b> &mdash; efficient, but they fire on cue.</li>
+        <li><b>Environmental capture</b> is exactly that failure: <b>applying a learned skill in an inappropriate context</b>.</li>
+        <li><b>Mental models</b> are generated by <b>experience and learning</b>.</li>
+        <li><b>Situational awareness</b> is the <b>perception, comprehension and projection</b> of the environment in time and space &mdash; in short, <b>perception matching reality</b>.</li>
+        <li><b>Confirmation bias</b> is <b>ignoring information that contradicts a decision already made</b>. <b>Habits</b> push you toward familiar rather than optimal solutions.</li>
+        <li>With a high workload on VNAV/LNAV, the way to keep situational awareness is to <b>downgrade to simpler automation modes</b> such as ALT/HDG.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; information processing</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is the basis of all perceptions?</summary><p class="a">The intensity of the stimuli</p></details>
+    <details class="q"><summary>What is the minimum stimulus strength called?</summary><p class="a">The sensory threshold</p></details>
+    <details class="q"><summary>What does raising the perceptual threshold mean?</summary><p class="a">Reduced sensitivity</p></details>
+    <details class="q"><summary>What are the limits of short-term memory?</summary><p class="a">Limited size, sensitive to interference, about 20 seconds duration</p></details>
+    <details class="q"><summary>How many unrelated items fit in working memory?</summary><p class="a">About 7</p></details>
+    <details class="q"><summary>What is the main limit of long-term memory?</summary><p class="a">Difficulty retrieving stored information</p></details>
+    <details class="q"><summary>What is divided attention?</summary><p class="a">Managing several matters of interest sequentially</p></details>
+    <details class="q"><summary>What is the cocktail party effect?</summary><p class="a">The ability to pick up relevant information unintentionally</p></details>
+    <details class="q"><summary>What are motor programs?</summary><p class="a">Stored routines executed without conscious control</p></details>
+    <details class="q"><summary>What is environmental capture?</summary><p class="a">Using a learned skill in an inappropriate context</p></details>
+    <details class="q"><summary>How are mental models generated?</summary><p class="a">By experience and learning</p></details>
+    <details class="q"><summary>What is situational awareness?</summary><p class="a">Perception, comprehension and projection of the environment in time and space &mdash; perception matching reality</p></details>
+    <details class="q"><summary>What is confirmation bias?</summary><p class="a">Ignoring information that contradicts a decision</p></details>
+    <details class="q"><summary>How do habits influence decisions?</summary><p class="a">By preferring familiar solutions over optimal ones</p></details>
+    <details class="q"><summary>Best action to maintain situational awareness with a high workload on VNAV/LNAV?</summary><p class="a">Downgrade to simpler automation modes such as ALT/HDG</p></details>
+    <details class="q"><summary>What is decision making?</summary><p class="a">Choosing between alternatives</p></details>
+    <details class="q"><summary>How do you adapt to time constraints?</summary><p class="a">Preparation and prioritisation of tasks</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 07 STRESS &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="stress">
+  <div class="sec-head"><span class="eyebrow">040 07</span><h2>Stress</h2></div>
+  <p class="lede">Stress is not the enemy &mdash; too little of it is as bad as too much.</p>
+
+  <figure>
+    <svg viewBox="0 0 740 300" role="img" aria-label="Inverted U curve showing performance rising with arousal to an optimum and then falling">
+      <defs><marker id="ha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+      <line x1="90" y1="250" x2="680" y2="250" stroke="currentColor" stroke-width="1.6" marker-end="url(#ha)"/>
+      <line x1="90" y1="250" x2="90" y2="34" stroke="currentColor" stroke-width="1.6" marker-end="url(#ha)"/>
+      <text x="672" y="274" font-size="12" text-anchor="end" fill="currentColor">AROUSAL / STRESS</text>
+      <text x="84" y="28" font-size="12" fill="currentColor">PERFORMANCE</text>
+
+      <path d="M120 234 Q200 214 270 138 T385 74 T500 138 Q570 214 650 236"
+            fill="none" stroke="#A83A6B" stroke-width="3"/>
+      <circle cx="385" cy="74" r="6" fill="#A83A6B"/>
+      <line x1="385" y1="80" x2="385" y2="250" stroke="#A83A6B" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <text x="385" y="58" font-size="12.5" text-anchor="middle" fill="#A83A6B" font-weight="600">OPTIMUM</text>
+      <text x="385" y="270" font-size="11.5" text-anchor="middle" fill="#A83A6B">moderate stress may improve performance</text>
+
+      <rect x="110" y="200" width="130" height="46" fill="#3F4E96" opacity=".14"/>
+      <text x="175" y="220" font-size="11.5" text-anchor="middle" fill="#3F4E96" font-weight="600">UNDER-AROUSAL</text>
+      <text x="175" y="236" font-size="11" text-anchor="middle" fill="#3F4E96">boredom, monotony,</text>
+      <text x="175" y="248" font-size="11" text-anchor="middle" fill="#3F4E96">low vigilance</text>
+
+      <rect x="530" y="200" width="140" height="46" fill="#106B63" opacity=".14"/>
+      <text x="600" y="220" font-size="11.5" text-anchor="middle" fill="#106B63" font-weight="600">OVER-AROUSAL</text>
+      <text x="600" y="236" font-size="11" text-anchor="middle" fill="#106B63">haste, fixation,</text>
+      <text x="600" y="248" font-size="11" text-anchor="middle" fill="#106B63">mental block</text>
+    </svg>
+    <figcaption><b>Performance is degraded at both ends.</b> Too little arousal and you stop monitoring; too much and attention narrows into fixation and mental blocks. This is why the exam answer to "moderate stress" is that it <em>may improve</em> performance, and why a long, quiet cruise is a genuine hazard rather than a rest.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li>A <b>stress reaction</b> is the <b>non-specific response of the body to any demand</b>. A <b>stressor</b> is <b>any internal or external stimulus perceived as stressful</b>.</li>
+        <li>Perception of stress depends on <b>subjective evaluation and your ability to cope</b> &mdash; which is also how <b>risk assessment</b> works.</li>
+        <li><b>Environmental stressors</b>: <b>heat, humidity, noise</b>. Stressors <b>accumulate</b> and raise the risk of exhaustion.</li>
+        <li><b>Cognitive effects</b>: haste, fixation, mental block, more errors. <b>Physical symptoms</b>: insomnia, loss of appetite, dry mouth.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>General Adaptation Syndrome</h3>
+      <ol class="tight">
+        <li><b>Alarm</b> &mdash; the body mobilises, adrenaline is released.</li>
+        <li><b>Resistance</b> &mdash; it adapts and copes at a cost.</li>
+        <li><b>Exhaustion</b> &mdash; resources run out and performance collapses.</li>
+      </ol>
+      <h3>Coping</h3>
+      <ul class="tight">
+        <li><b>Problem-focused coping</b> acts on the stressor itself and is the one that <b>reduces both physiological and psychological stress</b>.</li>
+        <li><b>Cognitive coping</b> works on your interpretation &mdash; <b>ignoring or rationalising the stressor</b>.</li>
+        <li><b>Stress management</b> means <b>recognising stress and developing coping strategies</b>. The drawback of <b>Stress Exposure Training</b> is that <b>totally unexpected situations cannot be generated</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; stress</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is a stress reaction?</summary><p class="a">The non-specific response of the body to any demand</p></details>
+    <details class="q"><summary>What is a stressor?</summary><p class="a">Any internal or external stimulus perceived as stressful</p></details>
+    <details class="q"><summary>What does the perception of stress depend on?</summary><p class="a">Subjective evaluation and coping ability</p></details>
+    <details class="q"><summary>Name some environmental stressors.</summary><p class="a">Heat, humidity and noise</p></details>
+    <details class="q"><summary>Which statement about stressors is correct?</summary><p class="a">They accumulate and increase the risk of exhaustion</p></details>
+    <details class="q"><summary>What are the cognitive effects of stress?</summary><p class="a">Haste, fixation, mental block and increased errors</p></details>
+    <details class="q"><summary>What physical symptoms are attributable to stress?</summary><p class="a">Insomnia, loss of appetite and dry mouth</p></details>
+    <details class="q"><summary>How does performance vary with arousal?</summary><p class="a">It is degraded by both low and high arousal</p></details>
+    <details class="q"><summary>What is the correct statement about stress and performance?</summary><p class="a">Moderate stress may improve performance</p></details>
+    <details class="q"><summary>What are the phases of the General Adaptation Syndrome?</summary><p class="a">Alarm &rarr; resistance &rarr; exhaustion</p></details>
+    <details class="q"><summary>What does stress management involve?</summary><p class="a">Recognising stress and developing coping strategies</p></details>
+    <details class="q"><summary>What is cognitive coping?</summary><p class="a">Ignoring or rationalising the stressor</p></details>
+    <details class="q"><summary>Which coping mechanism reduces both physiological and psychological stress?</summary><p class="a">Problem-focused coping</p></details>
+    <details class="q"><summary>What is the major drawback of Stress Exposure Training?</summary><p class="a">Totally unexpected situations cannot be generated</p></details>
+    <details class="q"><summary>What is risk assessment in a situation based on?</summary><p class="a">Subjective perception and evaluation of situational factors</p></details>
+    <details class="q"><summary>What is the purpose of cognitive and physical rehearsal in training?</summary><p class="a">Acquisition of complex perceptual-motor skills</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 08 ERROR &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="error">
+  <div class="sec-head"><span class="eyebrow">040 08</span><h2>Human Error &amp; Threat and Error Management</h2></div>
+  <p class="lede">The modern view: people will err, so build systems that tolerate it. TEM is the framework the exam wants.</p>
+
+  <figure>
+    <svg viewBox="0 0 800 300" role="img" aria-label="Threat and Error Management flow showing threats leading to errors and undesired aircraft states, with countermeasures at each stage">
+      <defs><marker id="ta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/></marker></defs>
+      <g font-size="12">
+        <rect x="30" y="96" width="180" height="72" rx="3" fill="#3F4E96" opacity=".18" stroke="#3F4E96" stroke-width="1.5"/>
+        <text x="120" y="122" text-anchor="middle" fill="currentColor" font-weight="600">THREATS</text>
+        <text x="120" y="140" text-anchor="middle" fill="currentColor" font-size="11">outside the crew's influence</text>
+        <text x="120" y="156" text-anchor="middle" fill="currentColor" font-size="11">environmental &middot; organisational</text>
+
+        <rect x="290" y="96" width="180" height="72" rx="3" fill="#A83A6B" opacity=".18" stroke="#A83A6B" stroke-width="1.5"/>
+        <text x="380" y="122" text-anchor="middle" fill="currentColor" font-weight="600">ERRORS</text>
+        <text x="380" y="140" text-anchor="middle" fill="currentColor" font-size="11">crew action or inaction that</text>
+        <text x="380" y="156" text-anchor="middle" fill="currentColor" font-size="11">deviates from intentions</text>
+
+        <rect x="550" y="96" width="220" height="72" rx="3" fill="#106B63" opacity=".18" stroke="#106B63" stroke-width="1.5"/>
+        <text x="660" y="122" text-anchor="middle" fill="currentColor" font-weight="600">UNDESIRED AIRCRAFT STATE</text>
+        <text x="660" y="140" text-anchor="middle" fill="currentColor" font-size="11">position or speed deviation with</text>
+        <text x="660" y="156" text-anchor="middle" fill="currentColor" font-size="11">a reduced margin of safety</text>
+      </g>
+      <line x1="210" y1="132" x2="284" y2="132" stroke="currentColor" stroke-width="2" marker-end="url(#ta)"/>
+      <line x1="470" y1="132" x2="544" y2="132" stroke="currentColor" stroke-width="2" marker-end="url(#ta)"/>
+
+      <!-- countermeasures -->
+      <g stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4">
+        <path d="M247 132 L247 212" fill="none"/>
+        <path d="M507 132 L507 212" fill="none"/>
+        <path d="M660 168 L660 212" fill="none"/>
+      </g>
+      <rect x="150" y="212" width="580" height="46" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <text x="440" y="232" font-size="12.5" text-anchor="middle" fill="currentColor" font-weight="600">COUNTERMEASURES</text>
+      <text x="440" y="249" font-size="11.5" text-anchor="middle" fill="currentColor">anticipate &middot; detect &middot; recover &mdash; at every stage, before the next one is reached</text>
+      <text x="400" y="60" font-size="12" text-anchor="middle" fill="currentColor">A threat does not have to become an error, and an error does not have to become an undesired state.</text>
+      <text x="400" y="78" font-size="12" text-anchor="middle" fill="currentColor">Each arrow is a chance to break the chain.</text>
+    </svg>
+    <figcaption><b>TEM is a chain, and every link can be cut.</b> The point of the model is not to classify events afterwards but to show that countermeasures apply at three separate stages &mdash; managing the threat before it produces an error, trapping the error before it produces an undesired state, and recovering the state before it becomes an incident.</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div>
+      <h3>Types of error</h3>
+      <ul class="tight">
+        <li><b>Human error</b> is a <b>mismatch between intention and outcome</b>.</li>
+        <li><b>Active errors</b> have <b>immediate effects at the human-machine interface</b> &mdash; the sharp end.</li>
+        <li><b>Latent errors</b> are <b>hidden and condition-dependent</b>, sitting in the system and giving a misleading impression of safety.</li>
+        <li>An <b>error-tolerant system</b> is one where the <b>consequences do not jeopardise safety</b>.</li>
+        <li>The <b>modern approach</b> is to <b>design systems that acknowledge human fallibility</b>, and to improve reliability by <b>understanding the causes of errors and how to recover from them</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Models &amp; culture</h3>
+      <ul class="tight">
+        <li><b>SHELL</b>: <b>Software, Hardware, Environment, Liveware</b> &mdash; with Liveware at the centre.</li>
+        <li><b>Swiss Cheese</b>: an accident happens when the <b>barriers momentarily align</b>.</li>
+        <li><b>TEM threat categories</b>: <b>organisational</b> (usually <b>latent and controllable at source</b>) and <b>environmental</b> (some predictable, some spontaneous, all managed in real time &mdash; a contaminated runway, for example).</li>
+        <li>A <b>latent threat is not directly observable by the flight crew</b>.</li>
+        <li><b>Just culture</b>: <b>honest errors are not punished, but violations are not tolerated</b>. Safety culture is promoted when <b>upper management provides the required resources</b>.</li>
+        <li>In complex organisations, <b>the safety manager and a safety review board</b> hold responsibility for flight safety.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; error &amp; TEM</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is human error?</summary><p class="a">A mismatch between intention and outcome</p></details>
+    <details class="q"><summary>What are active errors?</summary><p class="a">Errors with immediate effects at the human-machine interface</p></details>
+    <details class="q"><summary>What are latent errors?</summary><p class="a">Hidden, condition-dependent errors that give a misleading impression of safety</p></details>
+    <details class="q"><summary>What is an error-tolerant system?</summary><p class="a">One where the consequences do not jeopardise safety</p></details>
+    <details class="q"><summary>What is the modern approach to human error?</summary><p class="a">Design systems that acknowledge human fallibility</p></details>
+    <details class="q"><summary>How is human reliability improved?</summary><p class="a">By understanding the causes of errors and how to recover from them</p></details>
+    <details class="q"><summary>What does the SHELL model stand for?</summary><p class="a">Software, Hardware, Environment, Liveware</p></details>
+    <details class="q"><summary>According to the Swiss Cheese Model, when does an accident occur?</summary><p class="a">When the barriers momentarily align</p></details>
+    <details class="q"><summary>What are the basic components of the TEM model?</summary><p class="a">Threats, errors and undesired aircraft states</p></details>
+    <details class="q"><summary>What is the TEM definition of an error?</summary><p class="a">An action or inaction by an operational person that leads to deviations from organisational or the person's intentions or expectations</p></details>
+    <details class="q"><summary>What is an undesired aircraft state?</summary><p class="a">A flight crew-induced position or speed deviation associated with a reduction in margins of safety</p></details>
+    <details class="q"><summary>What are the two TEM threat categories?</summary><p class="a">Organisational and environmental</p></details>
+    <details class="q"><summary>What is true of organisational threats?</summary><p class="a">They are usually latent and can be controlled at source</p></details>
+    <details class="q"><summary>What is the definition of a latent threat?</summary><p class="a">One not directly observable by the flight crew</p></details>
+    <details class="q"><summary>Give an example of an environmental threat.</summary><p class="a">A contaminated runway</p></details>
+    <details class="q"><summary>What is a just culture?</summary><p class="a">A safety culture where honest errors are not punished but violations are not tolerated</p></details>
+    <details class="q"><summary>What promotes safety culture in a company?</summary><p class="a">Upper levels of management providing the required resources</p></details>
+    <details class="q"><summary>Who is responsible for flight safety in complex organisations?</summary><p class="a">The safety manager and a safety review board</p></details>
+  </div>
+</section>
+
+<!-- &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; 09 CRM &#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552;&#9552; -->
+<section id="crm">
+  <div class="sec-head"><span class="eyebrow">040 09</span><h2>CRM, Leadership &amp; Communication</h2></div>
+  <p class="lede">The crew as a system: what makes two pilots better than two individuals.</p>
+
+  <div class="grid2">
+    <div>
+      <ul class="tight">
+        <li><b>Personality</b> is based on <b>heredity, upbringing, experience and environment</b>, and is essentially fixed. <b>Attitudes</b> are <b>tendencies to respond in a particular manner</b> and can be changed &mdash; which is what CRM training targets.</li>
+        <li><b>Behaviour is the outward product of personality and attitude</b>, and it is <b>adaptable</b>.</li>
+        <li><b>Synergy</b>: collective performance exceeds the sum of the individuals &mdash; <b>1 + 1 &gt; 2</b>.</li>
+        <li><b>Authority gradients</b>: <b>autocratic, laissez-faire, synergistic</b>. The synergistic cockpit is the goal; the main risk of a <b>laissez-faire</b> cockpit is <b>inversion of authority</b>.</li>
+        <li><b>Primary functions of leadership</b>: information flow, coordination, motivation and decisions.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="tight">
+        <li><b>Effective communication</b> means the <b>message is transmitted with minimal change</b>. <b>Feedback</b> is the element confirming that a message was <b>received and understood</b>.</li>
+        <li><b>Intra-personal</b> conflict is conflict within one person; a cockpit disagreement over, say, smoking is best <b>discussed during the debriefing</b>, not in flight.</li>
+        <li><b>Procedures</b> give <b>procedural consistency</b>. A good <b>checklist is standardised, short and understandable</b>.</li>
+        <li><b>Monitoring</b> includes the <b>detection of unusual conditions</b>. <b>Passive monitoring</b> is watching without analysing &mdash; the failure mode. <b>Mode awareness</b> is understanding which automation modes are active and how the aircraft will respond.</li>
+        <li>Civil aviation is characterised by an <b>open knowledge and reporting culture</b>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qbank">
+    <div class="qb-head"><span class="qb-title">Sample questions <em>&middot; CRM</em></span><button class="reveal" type="button">Reveal all</button></div>
+    <details class="q"><summary>What is personality based on?</summary><p class="a">Heredity, upbringing, experience and environment</p></details>
+    <details class="q"><summary>What are attitudes?</summary><p class="a">Tendencies to respond in a particular manner</p></details>
+    <details class="q"><summary>What is behaviour a product of?</summary><p class="a">Personality and attitude &mdash; and it is adaptable</p></details>
+    <details class="q"><summary>What is synergy in a crew?</summary><p class="a">Collective performance exceeding the sum of the individuals &mdash; 1 + 1 &gt; 2</p></details>
+    <details class="q"><summary>What are the primary functions of leadership?</summary><p class="a">Information flow, coordination, motivation and decisions</p></details>
+    <details class="q"><summary>What are the three types of authority gradient cockpit?</summary><p class="a">Autocratic, laissez-faire and synergistic</p></details>
+    <details class="q"><summary>What is the main risk of a laissez-faire cockpit?</summary><p class="a">Inversion of authority</p></details>
+    <details class="q"><summary>What is effective communication?</summary><p class="a">A message transmitted with minimal change</p></details>
+    <details class="q"><summary>Which element confirms a message was received and understood?</summary><p class="a">Feedback</p></details>
+    <details class="q"><summary>What is internal conflict called?</summary><p class="a">Intra-personal conflict</p></details>
+    <details class="q"><summary>Cockpit smoking conflict &mdash; what is the correct action?</summary><p class="a">Discuss it during the debriefing</p></details>
+    <details class="q"><summary>What is the benefit of procedures?</summary><p class="a">Procedural consistency</p></details>
+    <details class="q"><summary>What are the characteristics of a good checklist?</summary><p class="a">Standardised, short and understandable</p></details>
+    <details class="q"><summary>What does CRM training achieve?</summary><p class="a">It improves attitudes and crew effectiveness</p></details>
+    <details class="q"><summary>What do monitoring tasks include?</summary><p class="a">Detection of unusual conditions</p></details>
+    <details class="q"><summary>What is passive monitoring?</summary><p class="a">Watching without analysing systems</p></details>
+    <details class="q"><summary>What is automation mode awareness?</summary><p class="a">Understanding the active modes and how the aircraft will respond</p></details>
+    <details class="q"><summary>What is civil aviation known for?</summary><p class="a">An open field of knowledge and culture</p></details>
+    <details class="q"><summary>Most accidents are caused by a lack of what?</summary><p class="a">Good judgement</p></details>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="foot-in">
+    <div><b>Human Performance</b> &mdash; revision sheet for airline selection screening</div>
+    <div>Built from the Selection question bank (181 items) and CAE Oxford 040</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('.qbank').forEach(function(bank){
+  var btn = bank.querySelector('.reveal');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    var items = bank.querySelectorAll('details.q');
+    var opening = btn.textContent.trim() === 'Reveal all';
+    items.forEach(function(d){ d.open = opening; });
+    btn.textContent = opening ? 'Hide all' : 'Reveal all';
+  });
+});
+</script>
