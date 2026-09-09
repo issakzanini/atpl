@@ -21,6 +21,7 @@
   --s-nav:#8A6508;
   --s-ins:#1F6B3A;
   --s-agk:#A8322A;
+  --s-hum:#A83A6B;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -28,7 +29,7 @@
     --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
     --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
     --s-met:#6FA8DC; --s-pof:#F79155; --s-law:#45C8D4;
-    --s-nav:#F0C05A; --s-ins:#5FC98A; --s-agk:#F08A7E;
+    --s-nav:#F0C05A; --s-ins:#5FC98A; --s-agk:#F08A7E; --s-hum:#F090BC;
   }
 }
 :root[data-theme="dark"]{
@@ -36,7 +37,7 @@
   --muted:#9C9B94; --line:#35342F; --line-soft:#2A2926;
   --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 3px 12px rgba(0,0,0,.55);
   --s-met:#6FA8DC; --s-pof:#F79155; --s-law:#45C8D4;
-    --s-nav:#F0C05A; --s-ins:#5FC98A; --s-agk:#F08A7E;
+    --s-nav:#F0C05A; --s-ins:#5FC98A; --s-agk:#F08A7E; --s-hum:#F090BC;
 }
 
 *{box-sizing:border-box}
@@ -101,6 +102,7 @@ a.card:focus-visible{outline:2px solid var(--sc);outline-offset:3px}
 .s-nav{--sc:var(--s-nav)}
 .s-ins{--sc:var(--s-ins)}
 .s-agk{--sc:var(--s-agk)}
+.s-hum{--sc:var(--s-hum)}
 
 /* ---------- how it works ---------- */
 .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:0 30px;
@@ -132,9 +134,9 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
       <p class="mast-sub">Single-page revision sheets built from the CAE Oxford syllabus and a working selection question bank. Theory, diagrams and the real questions, organised by syllabus topic.</p>
     </div>
     <div class="mast-meta">
-      <div><b>6</b> sheets ready</div>
-      <div><b>1516</b> questions in the bank</div>
-      <div><b>11</b> subject areas</div>
+      <div><b>7</b> sheets &middot; complete</div>
+      <div><b>1519</b> questions in the banks</div>
+      <div><b>12</b> subject areas covered</div>
     </div>
   </div>
 </header>
@@ -142,8 +144,8 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
 <main>
 
   <div class="shead">
-    <h2>Ready</h2>
-    <span class="count">6 sheets</span>
+    <h2>Revision sheets</h2>
+    <span class="count">7 sheets &middot; complete</span>
   </div>
   <p class="snote">Each sheet is a self-contained page: click any question to reveal its answer, or use <em>Reveal all</em> to work through a topic.</p>
 
@@ -197,22 +199,23 @@ footer{border-top:2px solid var(--ink);background:var(--surface);padding:22px 24
       <span class="go">Open sheet &rarr;</span>
     </a>
 
+    <a class="card s-hum" href="https://issakzanini.github.io/atpl/human/">
+      <div class="card-top"><span class="code">040</span><span class="state">Ready</span></div>
+      <h3>Human Performance</h3>
+      <p>Altitude physiology and hypoxia, circulation, vision and night vision, vestibular illusions, sleep and fatigue, information processing, stress, human error and TEM, CRM.</p>
+      <div class="stats"><span><b>181</b> questions</span><span><b>9</b> topics</span><span><b>4</b> diagrams</span></div>
+      <span class="go">Open sheet &rarr;</span>
+    </a>
+
   </div>
 
   <div class="shead">
-    <h2>Planned</h2>
-    <span class="count">2 subject areas</span>
+    <h2>Also in this repository</h2>
+    <span class="count">1 file</span>
   </div>
-  <p class="snote">Question banks are in hand for each of these; the sheets are not built yet.</p>
+  <p class="snote">Not a revision sheet &mdash; a Markdown review of the KSA competency area, kept alongside the site.</p>
 
   <div class="grid">
-
-    <div class="card soon">
-      <div class="card-top"><span class="code">040</span><span class="state">Planned</span></div>
-      <h3>Human Performance</h3>
-      <p>Physiology and the effects of altitude, vision and hearing, fatigue and sleep, decision making, CRM and human error.</p>
-      <div class="stats"><span><b>178</b> questions</span></div>
-    </div>
 
     <div class="card soon">
       <div class="card-top"><span class="code">100</span><span class="state">Notes only</span></div>
